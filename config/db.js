@@ -211,7 +211,6 @@ export const seedQuizzes = async () => {
     for (const course of courses) {
       let updated = false;
       for (const topic of course.topics) {
-        // Use unique questions for each topic (strict: throw if missing)
         const questions = quizQuestions[topic.title];
         if (!questions) {
           throw new Error(`No quiz questions found for topic: ${topic.title}`);
@@ -233,3 +232,4 @@ export const seedQuizzes = async () => {
     console.error("Error seeding quizzes:", error.message);
   }
 };
+
