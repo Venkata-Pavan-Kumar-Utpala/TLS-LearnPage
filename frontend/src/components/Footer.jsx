@@ -2,133 +2,119 @@ import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
-    <footer className="bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-gray-700 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 md:px-15 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Logo and Description */}
-          <div className="col-span-1 md:col-span-2">
-            <div className="mb-4">
-              <img
-                src="/logoo.png"
-                alt="TechLearn Solutions"
-                className="h-12 w-auto dark:hidden"
-              />
-              <img
-                src="/logoo2.png"
-                alt="TechLearn Solutions"
-                className="h-12 w-auto hidden dark:block"
-              />
-            </div>
-            <p className="text-gray-600 dark:text-gray-300 text-sm max-w-md">
-              Empowering the next generation of developers through comprehensive learning experiences and hands-on projects.
-            </p>
+    <footer className="bg-[#04143b] text-white relative overflow-hidden">
+      {/* Top Section with Centered Columns */}
+      <div className="py-16 pb-64 flex flex-col items-center">
+        <div className="w-full max-w-5xl flex flex-col md:flex-row justify-center items-start md:space-x-32 text-center md:text-left">
+          {/* CONNECT Section */}
+          <div className="flex-1 mb-10 md:mb-0">
+            <h3 className="font-bold text-white mb-4 text-lg uppercase tracking-wide">CONNECT</h3>
+            <ul className="space-y-2">
+              <li>
+                <a
+                  href="https://youtube.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white text-base transition-colors duration-300"
+                >
+                  YouTube
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://whatsapp.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white text-base transition-colors duration-300"
+                >
+                  WhatsApp
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white text-base transition-colors duration-300"
+                >
+                  Instagram
+                </a>
+              </li>
+            </ul>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Quick Links</h3>
+          {/* LEARN Section */}
+          <div className="flex-1 mb-10 md:mb-0">
+            <h3 className="font-bold text-white mb-4 text-lg uppercase tracking-wide">LEARN</h3>
             <ul className="space-y-2">
               <li>
                 <Link
-                  to="/learn"
-                  className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
+                  to="/courses"
+                  className="text-gray-300 hover:text-white text-base transition-colors duration-300"
                 >
-                  Learn
+                  Paid Courses
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/build"
-                  className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
+                  to="/resources"
+                  className="text-gray-300 hover:text-white text-base transition-colors duration-300"
                 >
-                  Build
+                  Free Resources
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/blogs"
+                  className="text-gray-300 hover:text-white text-base transition-colors duration-300"
+                >
+                  Blogs
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* COMPANY Section */}
+          <div className="flex-1">
+            <h3 className="font-bold text-white mb-4 text-lg uppercase tracking-wide">COMPANY</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  to="/about"
+                  className="text-gray-300 hover:text-white text-base transition-colors duration-300"
+                >
+                  About Us
                 </Link>
               </li>
               <li>
                 <Link
                   to="/careers"
-                  className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
+                  className="text-gray-300 hover:text-white text-base transition-colors duration-300"
                 >
                   Careers
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/login"
-                  className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
+                  to="/contact"
+                  className="text-gray-300 hover:text-white text-base transition-colors duration-300"
                 >
-                  Log In
+                  Contact
                 </Link>
               </li>
             </ul>
           </div>
-
-          {/* Contact Info */}
-          <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Connect</h3>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="mailto:contact@techlearnsolutions.com"
-                  className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-                >
-                  <i className="fas fa-envelope mr-2"></i>
-                  Contact Us
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-                >
-                  <i className="fab fa-linkedin mr-2"></i>
-                  LinkedIn
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-                >
-                  <i className="fab fa-github mr-2"></i>
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-                >
-                  <i className="fab fa-twitter mr-2"></i>
-                  Twitter
-                </a>
-              </li>
-            </ul>
-          </div>
         </div>
+      </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-gray-200 dark:border-gray-700 mt-8 pt-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
-              © 2025 TechLearn Solutions. All rights reserved.
-            </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link
-                to="/privacy"
-                className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                to="/terms"
-                className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-              >
-                Terms of Service
-              </Link>
-            </div>
-          </div>
-        </div>
+      {/* Bottom Logo Section - Overlapping, spans full width */}
+      <div className="absolute bottom-0 left-0 w-full pointer-events-none select-none">
+        <img
+          src="/logo-no-bg.jpg"
+          alt="TechLearn Solutions"
+          className="w-full h-44 md:h-60 object-cover object-bottom"
+          draggable="false"
+        />
       </div>
     </footer>
   )
