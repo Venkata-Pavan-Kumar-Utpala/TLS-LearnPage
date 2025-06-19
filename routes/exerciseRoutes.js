@@ -17,6 +17,12 @@ router.get('/:courseId', authMiddleware, async (req, res) => {
 // TEMP DEV ROUTE: Seed sample beginner exercises
 router.post('/seed-sample-data', async (req, res) => {
   try {
+        const course = await Course.create({
+      title: 'Beginner Python',
+      level: 'Beginner',
+      description: 'Intro to Python for complete beginners.',
+      chapters: ['Intro', 'Print', 'Variables']
+    });
     const courseId = 'REPLACE_WITH_REAL_COURSE_ID'; // 🔁 Replace this with actual Course _id
 
     const exercises = [
