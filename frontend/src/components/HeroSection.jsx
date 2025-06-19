@@ -19,9 +19,9 @@ const HeroSection = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="relative z-10 text-center max-w-4xl"
           >
-            {/* Main headline with dark navy blue */}
+            {/* Main headline with Poppins font */}
             <motion.h1
-              className="font-serif text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-8 leading-[1.1]"
+              className="font-poppins text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-8 leading-[1.1]"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}

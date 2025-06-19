@@ -141,7 +141,7 @@ const SectionCard = ({ section, index }) => {
               >
                 {section.title}
               </h2>
-              <h3 className="font-serif text-2xl lg:text-3xl font-bold text-gray-600 dark:text-gray-400">
+              <h3 className="font-sans text-2xl lg:text-3xl font-bold text-gray-600 dark:text-gray-400">
                 {section.subtitle}
               </h3>
             </div>
@@ -183,7 +183,7 @@ const SectionCard = ({ section, index }) => {
               >
                 <button
                   onClick={handleNavigation}
-                  className="h-16 px-10 font-bold text-lg text-white bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 hover:shadow-2xl transition-all duration-700 rounded-3xl group relative overflow-hidden backdrop-blur-sm border border-emerald-500/20"
+                  className="h-12 sm:h-14 lg:h-16 px-6 sm:px-8 lg:px-10 font-bold text-base sm:text-lg text-white bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 hover:shadow-2xl transition-all duration-700 rounded-2xl sm:rounded-3xl group relative overflow-hidden backdrop-blur-sm border border-emerald-500/20"
                 >
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12"
@@ -205,7 +205,7 @@ const SectionCard = ({ section, index }) => {
 
           {/* Visual Side - Always on right */}
           <motion.div
-            className="relative h-96 lg:h-[500px] transform-gpu perspective-1000"
+            className="relative h-64 sm:h-80 md:h-96 lg:h-[500px] transform-gpu perspective-1000"
             style={{
               x: containerX,
               scale: containerScale,
@@ -215,7 +215,7 @@ const SectionCard = ({ section, index }) => {
           >
             <div className="w-full h-full flex items-center justify-center relative">
               {/* 3D Model Container */}
-              <div className="relative w-80 h-80 transform-style-preserve-3d">
+              <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 transform-style-preserve-3d">
                 {section.id === 'courses' && <CoursesModel />}
                 {section.id === 'exercises' && <ChallengesModel />}
                 {section.id === 'certification' && <CertificationModel />}

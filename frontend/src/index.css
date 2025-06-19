@@ -95,9 +95,9 @@
 
   .Marquee-title {
     font-family: "Poppins", sans-serif;
-    font-size: 3.7rem;
+    font-size: 2rem;
     font-weight: 900;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     color: #f7f7ff;
     background: linear-gradient(90deg, #007bff 0%, #0600a6 50%, #e4dcff 100%);
     background-size: 200% 100%;
@@ -106,10 +106,34 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
     border: 0.5px solid #ffffff31;
-    border-radius: 20px;
-    padding: 10px;
+    border-radius: 15px;
+    padding: 8px;
     text-align: center;
     transition: all 0.5s ease-in-out;
+  }
+
+  /* Responsive font sizes for Marquee-title */
+  @media (min-width: 640px) {
+    .Marquee-title {
+      font-size: 2.5rem;
+      letter-spacing: 1.5px;
+      padding: 10px;
+      border-radius: 18px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .Marquee-title {
+      font-size: 3rem;
+      letter-spacing: 2px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .Marquee-title {
+      font-size: 3.7rem;
+      border-radius: 20px;
+    }
   }
 
   /* Desktop hover effect for Marquee-title */
