@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(json());
 
-import exerciseRoutes from './routes/exerciseRoutes';
+import exerciseRoutes from './routes/exerciseRoutes.js';
 app.use('/api/exercises', exerciseRoutes);
 
 connect(process.env.MONGO_URI)
