@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import { connectDB, seedCourses } from "./config/db.js";
+import { connectDB, seedCourses, seedQuizzes } from "./config/db.js";
 import cors from "cors";
 import exerciseRoutes from "./routes/exerciseRoutes.js";
 import courseRouter from "./routes/courseRoutes.js";
@@ -15,6 +15,7 @@ app.use(express.json());
   try {
     await connectDB();
     await seedCourses();
+    await seedQuizzes();
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () =>
       console.log(`Server running on port http://localhost:${PORT}`)

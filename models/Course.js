@@ -20,6 +20,7 @@ const courseSchema = new mongoose.Schema(
       default: "Beginner",
     },
     topics: [
+      //this is a topic sub document which which links to each of the following and has an id used for fetching quiz or exercise data
       {
         title: {
           type: String,
@@ -27,8 +28,16 @@ const courseSchema = new mongoose.Schema(
           trim: true,
         },
         quizId: {
-          type: mongoose.Schema.Types.ObjectId,
+          type: mongoose.Schema.Types.ObjectId, //pointer for the quiz model
           ref: "Quiz",
+        },
+        exerciseId: {
+          type: mongoose.Schema.Types.ObjectId, //pointer for the exercise model
+          ref: "Exercise",
+        },
+        notes: {
+          type: String,
+          trim: true,
         },
       },
     ],

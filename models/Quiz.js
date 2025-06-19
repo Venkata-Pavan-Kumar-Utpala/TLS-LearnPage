@@ -7,6 +7,10 @@ const quizSchema = new mongoose.Schema(
       ref: "Course",
       required: true,
     },
+    topicId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
     topicTitle: {
       type: String,
       required: true,
@@ -26,7 +30,7 @@ const quizSchema = new mongoose.Schema(
         correctAnswer: {
           type: Number,
           required: true,
-        }, // correct answer index because options stored in array but idk if this good practice
+        },
       },
     ],
   },
