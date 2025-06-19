@@ -4,10 +4,10 @@ const Footer = () => {
   return (
     <footer className="bg-[#04143b] text-white relative overflow-hidden">
       {/* Top Section with Centered Columns */}
-      <div className="py-16 pb-64 flex flex-col items-center">
-        <div className="w-full max-w-5xl flex flex-col md:flex-row justify-center items-start md:space-x-32 text-center md:text-left">
+      <div className="py-12 pb-56 flex flex-col items-center">
+        <div className="w-full max-w-5xl flex flex-col md:flex-row justify-center items-center md:items-start md:space-x-32 text-center md:text-left space-y-8 md:space-y-0">
           {/* CONNECT Section */}
-          <div className="flex-1 mb-10 md:mb-0">
+          <div className="flex-1 w-full">
             <h3 className="font-bold text-white mb-4 text-lg uppercase tracking-wide">CONNECT</h3>
             <ul className="space-y-2">
               <li>
@@ -44,7 +44,7 @@ const Footer = () => {
           </div>
 
           {/* LEARN Section */}
-          <div className="flex-1 mb-10 md:mb-0">
+          <div className="flex-1 w-full">
             <h3 className="font-bold text-white mb-4 text-lg uppercase tracking-wide">LEARN</h3>
             <ul className="space-y-2">
               <li>
@@ -75,7 +75,7 @@ const Footer = () => {
           </div>
 
           {/* COMPANY Section */}
-          <div className="flex-1">
+          <div className="flex-1 w-full">
             <h3 className="font-bold text-white mb-4 text-lg uppercase tracking-wide">COMPANY</h3>
             <ul className="space-y-2">
               <li>
@@ -107,12 +107,12 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom Logo Section - Overlapping, spans full width */}
-      <div className="absolute bottom-0 left-0 w-full pointer-events-none select-none">
+      {/* Bottom Logo Section - Full width on desktop, contained on mobile */}
+      <div className="absolute bottom-0 left-0 w-full pointer-events-none select-none px-4 sm:px-0">
         <img
           src="/logo-no-bg.jpg"
           alt="TechLearn Solutions"
-          className="w-full h-44 md:h-60 object-cover object-bottom"
+          className="w-full max-w-full h-12 object-contain sm:h-32 md:h-56 sm:object-cover object-bottom"
           draggable="false"
         />
       </div>
