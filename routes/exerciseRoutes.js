@@ -10,7 +10,7 @@ router.get('/:courseId', authMiddleware, async (req, res) => {
     const exercises = await Exercise.find({ courseId: req.params.courseId });
     res.json(exercises);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch exercises' });
+    res.status(500).json({ error: "Failed to fetch exercises" });
   }
 });
 
