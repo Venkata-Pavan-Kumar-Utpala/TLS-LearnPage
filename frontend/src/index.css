@@ -68,30 +68,28 @@
     @apply bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent;
   }
 
-  .hover-gradient-text {
-    @apply transition-all duration-500 ease-in-out cursor-pointer;
-    background: linear-gradient(90deg, #b4a1f4 0%, #0600a6 50%, #007bff 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    background-size: 200% 100%;
-    background-position: 100% 0;
+  /* Line clamp utilities */
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
   }
 
-  /* Desktop hover effect */
-  @media (hover: hover) and (pointer: fine) {
-    .hover-gradient-text:hover {
-      background-position: 0% 0;
-    }
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
-  /* Mobile viewport effect - applies gradient when element is in view */
-  @media (hover: none) or (pointer: coarse) {
-    .hover-gradient-text.in-viewport {
-      background-position: 0% 0;
-    }
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
+}
 
   .Marquee-title {
     font-family: "Poppins", sans-serif;
@@ -146,6 +144,60 @@
   /* Mobile viewport effect for Marquee-title */
   @media (hover: none) or (pointer: coarse) {
     .Marquee-title.in-viewport {
+      background-position: 100% 0;
+    }
+  }
+
+  /* Marquee-title without border for All Courses page */
+  .Marquee-title-no-border {
+    font-family: "Poppins", sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #f7f7ff;
+    background: linear-gradient(90deg, #007bff 0%, #0600a6 50%, #e4dcff 100%);
+    background-size: 200% 100%;
+    background-position: 0% 0%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 8px;
+    text-align: center;
+    transition: all 0.5s ease-in-out;
+  }
+
+  /* Responsive font sizes for Marquee-title-no-border */
+  @media (min-width: 640px) {
+    .Marquee-title-no-border {
+      font-size: 2.5rem;
+      letter-spacing: 1.5px;
+      padding: 10px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .Marquee-title-no-border {
+      font-size: 3rem;
+      letter-spacing: 2px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .Marquee-title-no-border {
+      font-size: 3.7rem;
+    }
+  }
+
+  /* Desktop hover effect for Marquee-title-no-border */
+  @media (hover: hover) and (pointer: fine) {
+    .Marquee-title-no-border:hover {
+      background-position: 100% 0;
+    }
+  }
+
+  /* Mobile viewport effect for Marquee-title-no-border */
+  @media (hover: none) or (pointer: coarse) {
+    .Marquee-title-no-border.in-viewport {
       background-position: 100% 0;
     }
   }
@@ -215,4 +267,32 @@
   ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(90deg, #0056b3 0%, #040074 50%, #9c8ae6 100%);
   }
+
+/* High specificity gradient text class - outside of Tailwind layers */
+.hover-gradient-text {
+  transition: all 0.5s ease-in-out !important;
+  cursor: pointer !important;
+  background: linear-gradient(90deg, #b4a1f4 0%, #0600a6 50%, #007bff 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  background-size: 200% 100% !important;
+  background-position: 100% 0 !important;
 }
+
+/* Desktop hover effect */
+@media (hover: hover) and (pointer: fine) {
+  .hover-gradient-text:hover {
+    background-position: 0% 0 !important;
+  }
+}
+
+/* Mobile viewport effect - applies gradient when element is in view */
+@media (hover: none) or (pointer: coarse) {
+  .hover-gradient-text.in-viewport {
+    background-position: 0% 0 !important;
+  }
+}
+
+
