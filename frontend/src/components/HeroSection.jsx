@@ -21,7 +21,7 @@ const HeroSection = () => {
           >
             {/* Main headline with Poppins font */}
             <motion.h1
-              className="font-poppins text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-8 leading-[1.1]"
+              className="font-poppins text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight mb-8 leading-[1.1]"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
