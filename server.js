@@ -4,7 +4,8 @@ import { connectDB, seedCourses, seedQuizzes } from "./config/db.js";
 import cors from "cors";
 import exerciseRoutes from "./routes/exerciseRoutes.js";
 import courseRouter from "./routes/courseRoutes.js";
-
+import userRoutes from "./routes/userRoutes.js";
+import userProgressRouter from "./routes/userProgressRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -27,6 +28,8 @@ app.use(express.json());
 
 app.use("/api/exercises", exerciseRoutes);
 app.use("/api/courses", courseRouter);
+app.use("/api/auth", userRoutes);
+app.use("/api/user-progress", userProgressRouter);
 app.get("/", (req, res) => {
   res.json({ message: "Server is running!" });
 });
