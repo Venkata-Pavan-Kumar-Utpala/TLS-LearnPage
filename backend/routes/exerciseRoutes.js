@@ -1,13 +1,13 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import Exercise from '../models/Exercise.js';
-import UserProgress from '../models/UserProgress.js';
-import authMiddleware from '../middleware/authMiddleware.js';
+import express from "express";
+import mongoose from "mongoose";
+import Exercise from "../models/Exercise.js";
+import UserProgress from "../models/UserProgress.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 // POST /api/exercises/:courseId/:exerciseId/submit
-router.post('/:courseId/:exerciseId/submit', authMiddleware, async (req, res) => {
+router.post("/:courseId/:exerciseId/submit", protect, async (req, res) => {
   const { courseId, exerciseId } = req.params;
   const userId = req.user._id;
 
@@ -15,7 +15,7 @@ router.post('/:courseId/:exerciseId/submit', authMiddleware, async (req, res) =>
     // Check if exercise exists
     const exercise = await Exercise.findById(exerciseId);
     if (!exercise) {
-      return res.status(404).json({ error: 'Exercise not found' });
+      return res.status(404).json({ error: "Exercise not found" });
     }
 
     // Get or create user progress
@@ -31,7 +31,7 @@ router.post('/:courseId/:exerciseId/submit', authMiddleware, async (req, res) =>
 
     // Check if already completed
     if (progress.completedExercises.includes(exerciseId)) {
-      return res.status(400).json({ message: 'Exercise already completed' });
+      return res.status(400).json({ message: "Exercise already completed" });
     }
 
     // Award XP
@@ -45,10 +45,12 @@ router.post('/:courseId/:exerciseId/submit', authMiddleware, async (req, res) =>
 
     await progress.save();
 
-    res.status(200).json({ message: 'XP awarded for this exercise', addedXP: xpToAdd });
+    res
+      .status(200)
+      .json({ message: "XP awarded for this exercise", addedXP: xpToAdd });
   } catch (err) {
-    console.error('Submit error:', err);
-    res.status(500).json({ error: 'Exercise submission failed' });
+    console.error("Submit error:", err);
+    res.status(500).json({ error: "Exercise submission failed" });
   }
 });
 
