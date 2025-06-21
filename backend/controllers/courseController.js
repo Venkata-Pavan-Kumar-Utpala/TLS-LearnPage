@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Course from "../models/Course.js";
 import Quiz from "../models/Quiz.js";
-
+import { checkQuizAttempts } from "./userProgressController.js";
 export const getAllCourses = async (req, res) => {
   try {
     const courses = await Course.find();
@@ -15,15 +15,22 @@ export const getAllCourses = async (req, res) => {
 
 export const getCourseById = async (req, res) => {
   const { courseId } = req.params;
-
   try {
     const course = await Course.findById(courseId);
-
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
-
-    res.status(200).json(course);
+    // Map topics to alias _id as topicId
+    const topics = course.topics.map((topic) => ({
+      topicId: topic._id,
+      title: topic.title,
+      quizId: topic.quizId,
+      // add other fields if needed
+    }));
+    res.status(200).json({
+      ...course.toObject(),
+      topics,
+    });
   } catch (error) {
     res
       .status(500)
@@ -83,16 +90,30 @@ export const submitQuiz = async (req, res) => {
       const userAnswer = answers.find((a) => a.questionId === q._id.toString());
       const isCorrect =
         userAnswer && userAnswer.selectedOption === q.correctAnswer;
-      if (isCorrect) xp++;
+      if (isCorrect) xp += 10;
       return {
         questionId: q._id,
-        correct: !!isCorrect, //converts truthy values to true and falsy values like undefined or didn't answer or something like that to false
-      }; // it does not return and come back out of the function except it creates a result set
+        selectedOption: userAnswer ? userAnswer.selectedOption : null,
+        correctOption: q.correctAnswer,
+        explanation: q.explanation || "No explanation found for this",
+        correct: !!isCorrect,
+      };
+    });
+    const totalQuizXP = quiz.questions.length * 10;
+    const attemptResult = await checkQuizAttempts({
+      userId: req.user.id,
+      quizId,
+      courseId,
+      xp,
     });
 
+    if (attemptResult.error) {
+      return res.status(400).json({ message: attemptResult.error });
+    }
+
     res.status(200).json({
-      xp,
-      total: quiz.questions.length,
+      receivedXP: xp,
+      totalQuizXP,
       results,
     });
   } catch (error) {
