@@ -35,9 +35,9 @@ const courseSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId, //pointer for the exercise model
           ref: "Exercise",
         },
-        notes: {
-          type: String,
-          trim: true,
+        notesId: {
+          type: mongoose.Schema.Types.ObjectId, // pointer for the notes model
+          ref: "Notes",
         },
       },
     ],

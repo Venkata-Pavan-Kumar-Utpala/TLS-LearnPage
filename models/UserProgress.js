@@ -1,46 +1,55 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const userProgressSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-    unique: true,
-  },
-
-  // XP per course for quizzes
-  courseXP: {
-    type: Map,
-    of: Number,
-    default: {},
-  },
-
-  // XP per course for exercises
-  exerciseXP: {
-    type: Map,
-    of: Number,
-    default: {},
-  },
-
-  // Total XP from quizzes
-  totalCourseXP: {
-    type: Number,
-    default: 0,
-  },
-
-  // Total XP from exercises
-  totalExerciseXP: {
-    type: Number,
-    default: 0,
-  },
-
-  // Completed exercises
-  completedExercises: [
-    {
+const userProgressSchema = new mongoose.Schema(
+  {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Exercise',
+      ref: "User",
+      required: true,
+      unique: true,
     },
-  ],
-}, { timestamps: true });
 
-export default mongoose.model('UserProgress', userProgressSchema);
+    // XP per course for quizzes
+    courseXP: {
+      type: Map,
+      of: Number,
+      default: {},
+    },
+
+    // XP per course for exercises
+    exerciseXP: {
+      type: Map,
+      of: Number,
+      default: {},
+    },
+
+    // Total XP from quizzes
+    totalCourseXP: {
+      type: Number,
+      default: 0,
+    },
+
+    // Total XP from exercises
+    totalExerciseXP: {
+      type: Number,
+      default: 0,
+    },
+
+    // Completed exercises
+    completedExercises: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Exercise",
+      },
+    ],
+    completedQuizzes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Quiz",
+      },
+    ],
+  },
+  { timestamps: true }
+);
+
+export default mongoose.model("UserProgress", userProgressSchema);
