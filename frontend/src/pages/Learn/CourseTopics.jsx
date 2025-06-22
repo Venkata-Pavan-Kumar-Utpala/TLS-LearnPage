@@ -258,7 +258,7 @@ print(df.describe())    # Statistical summary`,
         <motion.div
           initial={false}
           animate={{
-            width: sidebarCollapsed ? "80px" : "320px",
+            width: sidebarCollapsed ? "120px" : "320px",
             transition: { duration: 0.3, ease: "easeInOut" }
           }}
           className="hidden lg:flex flex-col bg-white/20 dark:bg-gray-900/40 backdrop-blur-xl border-r border-white/20 dark:border-gray-700/20 relative z-40"
@@ -314,18 +314,20 @@ print(df.describe())    # Statistical summary`,
                   whileTap={{ scale: 0.98 }}
                   className={`group relative w-full text-left rounded-xl transition-all duration-300 ${
                     selectedTopic === topic.id
-                      ? 'bg-blue-500/20 border-2 border-blue-500/50 text-blue-700 dark:text-blue-300'
-                      : 'bg-white/50 dark:bg-gray-800/50 border border-gray-200/50 dark:border-gray-600/50 hover:bg-white/70 dark:hover:bg-gray-700/50'
-                  } ${sidebarCollapsed ? 'p-3' : 'p-4'}`}
+                      ? 'bg-blue-500/20 border-2 border-blue-500/50 text-blue-700 dark:text-blue-300 shadow-lg'
+                      : 'bg-white/50 dark:bg-gray-800/50 border border-gray-200/50 dark:border-gray-600/50 hover:bg-white/70 dark:hover:bg-gray-700/50 hover:shadow-md'
+                  } ${sidebarCollapsed ? 'p-3 mx-1' : 'p-4'}`}
                 >
                   <div className={`flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-3'}`}>
-                    <div className={`${sidebarCollapsed ? 'w-10 h-10' : 'w-8 h-8'} rounded-lg flex items-center justify-center ${
-                      topic.completed ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
-                    }`}>
+                    <div className={`${sidebarCollapsed ? 'w-10 h-8' : 'w-8 h-8'} rounded-lg flex items-center justify-center ${
+                      topic.completed ? 'bg-green-500 shadow-sm' : 'bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 shadow-sm'
+                    } ${sidebarCollapsed ? 'border border-white/10 dark:border-gray-500/20' : ''}`}>
                       {topic.completed ? (
-                        <CheckCircle className={`${sidebarCollapsed ? 'w-5 h-5' : 'w-4 h-4'} text-white`} />
+                        <CheckCircle className={`${sidebarCollapsed ? 'w-4 h-4' : 'w-4 h-4'} text-white`} />
                       ) : (
-                        <span className={`${sidebarCollapsed ? 'text-sm' : 'text-xs'} font-bold text-gray-600 dark:text-gray-300`}>
+                        <span className={`${sidebarCollapsed ? 'text-sm' : 'text-xs'} font-bold ${
+                          sidebarCollapsed ? 'text-gray-700 dark:text-gray-200' : 'text-gray-600 dark:text-gray-300'
+                        }`}>
                           {index + 1}
                         </span>
                       )}
@@ -608,22 +610,15 @@ print(df.describe())    # Statistical summary`,
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.5 }}
-                  className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20"
+                  className="flex justify-center"
                 >
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <button
-                      onClick={handleTakeQuiz}
-                      className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl transition-all duration-300 hover:shadow-lg"
-                    >
-                      <Trophy className="w-5 h-5" />
-                      <span className="font-medium">Take Quiz</span>
-                    </button>
-
-                    <button className="flex items-center gap-3 p-4 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-xl transition-all duration-300">
-                      <FileText className="w-5 h-5" />
-                      <span className="font-medium">View Notes</span>
-                    </button>
-                  </div>
+                  <button
+                    onClick={handleTakeQuiz}
+                    className="flex items-center gap-3 px-6 py-3 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 text-blue-800 dark:text-blue-200 rounded-xl transition-all duration-300 hover:shadow-md border border-blue-200/50 dark:border-blue-700/50"
+                  >
+                    <Trophy className="w-5 h-5" />
+                    <span className="font-medium">Take Quiz</span>
+                  </button>
                 </motion.div>
               </div>
             </div>

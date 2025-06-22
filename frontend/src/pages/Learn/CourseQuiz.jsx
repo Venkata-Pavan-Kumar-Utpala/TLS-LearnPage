@@ -304,7 +304,7 @@ const CourseQuiz = () => {
 
               <button
                 onClick={handleStartQuiz}
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-xl transition-all duration-300 hover:shadow-lg flex items-center gap-3 mx-auto"
+                className="px-8 py-4 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 text-blue-800 dark:text-blue-200 font-bold rounded-xl transition-all duration-300 hover:shadow-md border border-blue-200/50 dark:border-blue-700/50 flex items-center gap-3 mx-auto"
               >
                 <Trophy className="w-5 h-5" />
                 <span>Start Quiz</span>
@@ -506,7 +506,7 @@ const QuizQuestion = ({
           >
             <button
               onClick={handleSubmitAnswer}
-              className="px-8 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-105 text-sm"
+              className="px-8 py-2.5 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 text-blue-800 dark:text-blue-200 font-semibold rounded-lg transition-all duration-300 hover:shadow-md hover:scale-105 text-sm border border-blue-200/50 dark:border-blue-700/50"
             >
               Submit Answer
             </button>
@@ -559,7 +559,7 @@ const QuizQuestion = ({
 
           <button
             onClick={handleNextClick}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 text-blue-800 dark:text-blue-200 border border-blue-200/50 dark:border-blue-700/50"
           >
             {isLastQuestion ? 'Finish Quiz' : 'Next Question'}
             <ArrowRight className="w-4 h-4" />
@@ -661,7 +661,7 @@ const QuizResults = ({
       <div className="flex flex-wrap gap-4 justify-center">
         <button
           onClick={onRetake}
-          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-xl transition-all duration-300"
+          className="flex items-center gap-2 px-6 py-3 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 text-blue-800 dark:text-blue-200 font-bold rounded-xl transition-all duration-300 border border-blue-200/50 dark:border-blue-700/50"
         >
           <RotateCcw className="w-4 h-4" />
           Retake Quiz
