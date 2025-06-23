@@ -369,7 +369,7 @@ const LiveBatchCard = ({ batch, index, onWhatsAppClick, onGetStarted }) => {
         type: "spring",
         stiffness: 100
       }}
-      className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 cursor-pointer h-full flex flex-col"
+      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 cursor-pointer h-full flex flex-col"
     >
       {/* Header - Fixed height section */}
       <div className="mb-6">

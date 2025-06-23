@@ -115,7 +115,7 @@ const AllCourses = () => {
         {loading && (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div key={i} className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 animate-pulse">
+              <div key={i} className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 animate-pulse">
                 <div className="h-48 bg-gray-300 dark:bg-gray-600 rounded-xl mb-4"></div>
                 <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded mb-4"></div>
                 <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded mb-2"></div>

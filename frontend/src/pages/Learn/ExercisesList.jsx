@@ -120,7 +120,7 @@ const ExercisesList = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20 mb-8"
+          className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20 mb-8"
         >
           <div className="flex items-start justify-between mb-6">
             <div>
@@ -182,7 +182,7 @@ const ExercisesList = () => {
               onClick={() => handleExerciseClick(exercise)}
               className={`group cursor-pointer ${exercise.locked && (!isAuthenticated || !user?.isClubMember) ? 'opacity-60' : ''}`}
             >
-              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
                 <div className="flex items-center justify-between">
                   {/* Exercise Info */}
                   <div className="flex items-center gap-4">

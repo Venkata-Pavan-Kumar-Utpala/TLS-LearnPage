@@ -439,7 +439,7 @@ print(df.describe())    # Statistical summary`,
                   className={`group relative w-full text-left rounded-xl transition-all duration-300 ${
                     selectedTopic === index
                       ? 'bg-blue-500/20 border-2 border-blue-500/50 text-blue-700 dark:text-blue-300 shadow-lg'
-                      : 'bg-white/50 dark:bg-gray-800/50 border border-gray-200/50 dark:border-gray-600/50 hover:bg-white/70 dark:hover:bg-gray-700/50 hover:shadow-md'
+                      : 'bg-white/40 dark:bg-gray-800/40 border border-gray-200/50 dark:border-gray-600/50 hover:bg-white/60 dark:hover:bg-gray-700/50 hover:shadow-md'
                   } ${sidebarCollapsed ? 'p-3 mx-1' : 'p-4'}`}
                 >
                   <div className={`flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-3'}`}>
@@ -546,7 +546,7 @@ print(df.describe())    # Statistical summary`,
                         className={`w-full text-left p-4 rounded-xl transition-all duration-300 ${
                           selectedTopic === index
                             ? 'bg-blue-500/20 border-2 border-blue-500/50 text-blue-700 dark:text-blue-300'
-                            : 'bg-white/50 dark:bg-gray-800/50 border border-gray-200/50 dark:border-gray-600/50 hover:bg-white/70 dark:hover:bg-gray-700/50'
+                            : 'bg-white/40 dark:bg-gray-800/40 border border-gray-200/50 dark:border-gray-600/50 hover:bg-white/60 dark:hover:bg-gray-700/50'
                         }`}
                       >
                         <div className="flex items-center gap-3 mb-2">

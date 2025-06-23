@@ -165,7 +165,7 @@ const Exercises = () => {
                       onClick={() => handleCourseClick(course._id)}
                       className="group cursor-pointer"
                     >
-                      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 hover:shadow-xl transition-all duration-300 hover:scale-105">
+                      <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 hover:shadow-xl transition-all duration-300 hover:scale-105">
                         {/* Course Header */}
                         <div className="flex items-start justify-between mb-4">
                           <div className={`p-3 rounded-xl bg-gradient-to-r ${getCategoryColor(course.level)} text-white`}>

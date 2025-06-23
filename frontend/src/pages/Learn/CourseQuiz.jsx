@@ -352,7 +352,7 @@ const QuizQuestion = ({
     if (!showFeedback) {
       return selectedAnswer === index
         ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
-        : 'border-gray-300 dark:border-gray-500 bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 hover:border-blue-400 dark:hover:border-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20';
+        : 'border-gray-300 dark:border-gray-500 bg-white/50 dark:bg-gray-700/50 text-gray-800 dark:text-gray-200 hover:border-blue-400 dark:hover:border-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20';
     }
 
     if (index === question.correct) {
@@ -410,7 +410,7 @@ const QuizQuestion = ({
       </div>
 
       {/* Question */}
-      <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20">
+      <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20">
         <h2 className="text-xl font-poppins font-medium text-gray-900 dark:text-white mb-6">
           {question.question}
         </h2>

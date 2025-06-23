@@ -215,7 +215,7 @@ const CourseDetails = () => {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20 sticky top-24"
+              className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20 sticky top-24"
             >
               <div className="text-center mb-6">
                 <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">

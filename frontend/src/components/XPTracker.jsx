@@ -89,7 +89,7 @@ const XPTracker = ({ className = '', showDetailed = true }) => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
-      className={`bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl p-4 shadow-lg border border-white/20 dark:border-gray-700/20 ${className}`}
+      className={`bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-xl p-4 shadow-lg border border-white/20 dark:border-gray-700/20 ${className}`}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">

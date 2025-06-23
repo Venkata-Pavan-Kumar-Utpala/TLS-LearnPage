@@ -33,7 +33,7 @@ const AuthModalExample = () => {
   };
 
   return (
-    <div className="p-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-gray-700/20">
+    <div className="p-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 dark:border-gray-700/20">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
         Auth Modal Example
       </h3>
