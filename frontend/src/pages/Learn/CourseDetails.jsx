@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { 
-  Clock, Users, Star, BookOpen, ArrowRight, Play, 
-  CheckCircle, Lock, Award, Calendar 
+import {
+  Clock, Users, Star, BookOpen, ArrowRight, Play,
+  CheckCircle, Lock, Award, Calendar
 } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
 import useInViewport from "../../hooks/useInViewport";
+import { courseAPI, dataAdapters } from "../../services/api";
 
 const CourseDetails = () => {
   const { courseId } = useParams();
@@ -17,332 +18,111 @@ const CourseDetails = () => {
   const [prerequisitesRef, isPrerequisitesInViewport] = useInViewport();
   const [instructorRef, isInstructorInViewport] = useInViewport();
 
-  // Course data for all available courses
-  const courseData = {
-    "python": {
-      id: "python",
-      title: "Python Programming",
-      description: "Learn Python programming from basics to advanced concepts",
-      longDescription: "Master Python programming with this comprehensive course covering everything from basic syntax to advanced concepts like object-oriented programming, data structures, and web development frameworks.",
-      difficulty: "Beginner",
-      duration: "8 weeks",
-      lessons: 24,
-      students: 1250,
-      rating: 4.8,
-      price: "Free",
-      instructor: {
-        name: "Sarah Johnson",
-        bio: "Senior Python Developer with 8+ years experience in data science and web development",
-        avatar: "/api/placeholder/100/100"
-      },
-      curriculum: [
-        {
-          id: 1,
-          title: "Introduction to JavaScript",
-          lessons: 4,
-          duration: "2 hours",
-          topics: ["What is JavaScript?", "Setting up Environment", "First Program", "Variables and Data Types"],
-          completed: false,
-          locked: false
-        },
-        {
-          id: 2,
-          title: "Control Structures",
-          lessons: 3,
-          duration: "1.5 hours",
-          topics: ["Conditional Statements", "Loops", "Switch Cases"],
-          completed: false,
-          locked: false
-        },
-        {
-          id: 3,
-          title: "Functions and Scope",
-          lessons: 4,
-          duration: "2.5 hours",
-          topics: ["Function Declaration", "Arrow Functions", "Scope", "Closures"],
-          completed: false,
-          locked: true
-        },
-        {
-          id: 4,
-          title: "Objects and Arrays",
-          lessons: 5,
-          duration: "3 hours",
-          topics: ["Object Literals", "Array Methods", "Destructuring", "Spread Operator"],
-          completed: false,
-          locked: true
-        },
-        {
-          id: 5,
-          title: "DOM Manipulation",
-          lessons: 4,
-          duration: "2 hours",
-          topics: ["Selecting Elements", "Event Handling", "Dynamic Content", "Form Validation"],
-          completed: false,
-          locked: true
-        },
-        {
-          id: 6,
-          title: "Asynchronous JavaScript",
-          lessons: 4,
-          duration: "2.5 hours",
-          topics: ["Callbacks", "Promises", "Async/Await", "Fetch API"],
-          completed: false,
-          locked: true
-        }
-      ],
-      prerequisites: ["Basic computer skills", "Text editor knowledge", "Web browser"],
-      learningOutcomes: [
-        "Write clean, efficient JavaScript code",
-        "Understand modern ES6+ features",
-        "Manipulate the DOM effectively",
-        "Handle asynchronous operations",
-        "Build interactive web applications",
-        "Debug JavaScript applications"
-      ],
-      tags: ["Python", "Programming", "Data Science"]
-    },
-    "data-science": {
-      id: "data-science",
-      title: "Data Science",
-      description: "Master data analysis, visualization, and machine learning",
-      longDescription: "Comprehensive data science course covering statistics, data analysis, visualization with Python libraries like Pandas, NumPy, Matplotlib, and machine learning fundamentals.",
-      difficulty: "Intermediate",
-      duration: "10 weeks",
-      lessons: 32,
-      students: 890,
-      rating: 4.9,
-      price: "₹2,999",
-      instructor: {
-        name: "Mike Chen",
-        bio: "Data Scientist with PhD in Statistics and 6+ years industry experience",
-        avatar: "/api/placeholder/100/100"
-      },
-      curriculum: [
-        {
-          id: 1,
-          title: "Introduction to Data Science",
-          lessons: 4,
-          duration: "2.5 hours",
-          topics: ["What is Data Science?", "Python for Data Science", "Jupyter Notebooks", "Data Types"],
-          completed: false,
-          locked: false
-        },
-        {
-          id: 2,
-          title: "Data Analysis with Pandas",
-          lessons: 6,
-          duration: "4 hours",
-          topics: ["DataFrames", "Data Cleaning", "Data Manipulation", "Grouping and Aggregation"],
-          completed: false,
-          locked: false
-        }
-      ],
-      prerequisites: ["Basic Python knowledge", "High school mathematics", "Statistics basics"],
-      learningOutcomes: [
-        "Analyze complex datasets",
-        "Create compelling data visualizations",
-        "Apply statistical methods",
-        "Build predictive models",
-        "Use Python data science libraries"
-      ],
-      tags: ["Data Science", "Python", "Machine Learning"]
-    },
-    "machine-learning": {
-      id: "machine-learning",
-      title: "Machine Learning",
-      description: "Build intelligent systems with ML algorithms",
-      longDescription: "Deep dive into machine learning algorithms, neural networks, and AI. Learn to build and deploy ML models for real-world applications using Python and popular frameworks.",
-      difficulty: "Advanced",
-      duration: "12 weeks",
-      lessons: 40,
-      students: 650,
-      rating: 4.7,
-      price: "₹4,999",
-      instructor: {
-        name: "Alex Rodriguez",
-        bio: "ML Engineer with PhD in Computer Science and 10+ years in AI research",
-        avatar: "/api/placeholder/100/100"
-      },
-      curriculum: [
-        {
-          id: 1,
-          title: "ML Fundamentals",
-          lessons: 5,
-          duration: "3 hours",
-          topics: ["Types of ML", "Supervised Learning", "Unsupervised Learning", "Model Evaluation"],
-          completed: false,
-          locked: false
-        }
-      ],
-      prerequisites: ["Python programming", "Statistics", "Linear algebra", "Calculus basics"],
-      learningOutcomes: [
-        "Implement ML algorithms from scratch",
-        "Use scikit-learn and TensorFlow",
-        "Build neural networks",
-        "Deploy ML models",
-        "Evaluate model performance"
-      ],
-      tags: ["Machine Learning", "AI", "Python"]
-    },
-    "web-development": {
-      id: "web-development",
-      title: "Web Development",
-      description: "Create modern web applications with latest technologies",
-      longDescription: "Complete web development course covering HTML, CSS, JavaScript, React, Node.js, and modern deployment strategies. Build full-stack applications from scratch.",
-      difficulty: "Beginner",
-      duration: "6 weeks",
-      lessons: 18,
-      students: 1500,
-      rating: 4.6,
-      price: "Free",
-      instructor: {
-        name: "Dr. Emily Watson",
-        bio: "Full-stack developer and computer science professor with 12+ years experience",
-        avatar: "/api/placeholder/100/100"
-      },
-      curriculum: [
-        {
-          id: 1,
-          title: "HTML & CSS Basics",
-          lessons: 4,
-          duration: "2 hours",
-          topics: ["HTML Structure", "CSS Styling", "Responsive Design", "Flexbox & Grid"],
-          completed: false,
-          locked: false
-        }
-      ],
-      prerequisites: ["Basic computer skills", "Text editor knowledge"],
-      learningOutcomes: [
-        "Build responsive websites",
-        "Master modern CSS techniques",
-        "Create interactive web apps",
-        "Understand web development workflow",
-        "Deploy websites online"
-      ],
-      tags: ["Web Development", "HTML", "CSS", "JavaScript"]
-    },
-    "react-mastery": {
-      id: "react-mastery",
-      title: "React Mastery",
-      description: "Build dynamic user interfaces with React.js, hooks, and modern development patterns",
-      longDescription: "Master React.js with this comprehensive course covering components, hooks, state management, routing, and modern development patterns. Build real-world applications.",
-      difficulty: "Intermediate",
-      duration: "10 weeks",
-      lessons: 32,
-      students: 1100,
-      rating: 4.9,
-      price: "₹3,999",
-      instructor: {
-        name: "David Kim",
-        bio: "Senior React Developer and tech lead with 7+ years experience",
-        avatar: "/api/placeholder/100/100"
-      },
-      curriculum: [
-        {
-          id: 1,
-          title: "React Fundamentals",
-          lessons: 5,
-          duration: "3 hours",
-          topics: ["Components", "JSX", "Props", "State"],
-          completed: false,
-          locked: false
-        }
-      ],
-      prerequisites: ["JavaScript ES6+", "HTML/CSS", "Basic programming concepts"],
-      learningOutcomes: [
-        "Build complex React applications",
-        "Master React hooks",
-        "Implement state management",
-        "Create reusable components",
-        "Deploy React apps"
-      ],
-      tags: ["React", "Frontend", "JavaScript"]
-    },
-    "nodejs-backend": {
-      id: "nodejs-backend",
-      title: "Node.js Backend Development",
-      description: "Create scalable server-side applications with Node.js, Express, and MongoDB",
-      longDescription: "Learn backend development with Node.js, Express framework, MongoDB database, and modern deployment strategies. Build RESTful APIs and full-stack applications.",
-      difficulty: "Advanced",
-      duration: "12 weeks",
-      lessons: 40,
-      students: 750,
-      rating: 4.8,
-      price: "₹5,999",
-      instructor: {
-        name: "Emily Watson",
-        bio: "Backend architect with 10+ years experience in scalable systems",
-        avatar: "/api/placeholder/100/100"
-      },
-      curriculum: [
-        {
-          id: 1,
-          title: "Node.js Basics",
-          lessons: 4,
-          duration: "2.5 hours",
-          topics: ["Node.js Runtime", "NPM", "Modules", "File System"],
-          completed: false,
-          locked: false
-        }
-      ],
-      prerequisites: ["JavaScript proficiency", "Basic web development", "Command line basics"],
-      learningOutcomes: [
-        "Build RESTful APIs",
-        "Work with databases",
-        "Implement authentication",
-        "Deploy Node.js applications",
-        "Handle real-time communication"
-      ],
-      tags: ["Node.js", "Backend", "API"]
-    },
-    "fullstack-mern": {
-      id: "fullstack-mern",
-      title: "Full Stack MERN Development",
-      description: "Complete web development with MongoDB, Express, React, and Node.js stack",
-      longDescription: "Master full-stack development with the MERN stack. Build complete web applications from database design to frontend deployment.",
-      difficulty: "Advanced",
-      duration: "16 weeks",
-      lessons: 48,
-      students: 500,
-      rating: 4.9,
-      price: "₹7,999",
-      instructor: {
-        name: "Michael Chen",
-        bio: "Full-stack architect and startup CTO with 12+ years experience",
-        avatar: "/api/placeholder/100/100"
-      },
-      curriculum: [
-        {
-          id: 1,
-          title: "MERN Stack Overview",
-          lessons: 3,
-          duration: "2 hours",
-          topics: ["Stack Architecture", "Development Environment", "Project Setup"],
-          completed: false,
-          locked: false
-        }
-      ],
-      prerequisites: ["React knowledge", "Node.js basics", "Database concepts", "Git/GitHub"],
-      learningOutcomes: [
-        "Build full-stack applications",
-        "Integrate frontend and backend",
-        "Implement user authentication",
-        "Deploy to production",
-        "Manage application state"
-      ],
-      tags: ["MERN", "Full Stack", "MongoDB"]
+  // State for backend data
+  const [course, setCourse] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch course data from backend
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        setLoading(true);
+        const backendCourse = await courseAPI.getCourse(courseId);
+        console.log('Course details from backend:', backendCourse);
+
+        // Create enhanced course object with default values for missing fields
+        const enhancedCourse = {
+          ...backendCourse,
+          id: backendCourse._id,
+          longDescription: backendCourse.description || 'Learn programming concepts and build practical skills with this comprehensive course.',
+          difficulty: backendCourse.level || 'Beginner',
+          duration: '8 weeks', // Default values since backend doesn't have these
+          lessons: backendCourse.topics?.length || 0,
+          students: 1250, // Default value
+          rating: 4.8, // Default value
+          price: 'Free', // Default value
+          instructor: {
+            name: 'Expert Instructor',
+            bio: 'Experienced developer and educator with years of industry experience',
+            avatar: '/api/placeholder/100/100'
+          },
+          curriculum: backendCourse.topics?.map((topic, index) => ({
+            id: index + 1,
+            title: topic.title,
+            lessons: 4, // Default
+            duration: '2 hours', // Default
+            topics: [topic.title], // Use topic title as subtopic
+            completed: false,
+            locked: index > 1 // First 2 topics unlocked
+          })) || [],
+          prerequisites: ['Basic computer skills', 'Text editor knowledge'],
+          learningOutcomes: [
+            'Master the fundamentals',
+            'Build practical projects',
+            'Understand core concepts',
+            'Apply knowledge in real scenarios',
+            'Gain confidence in programming'
+          ],
+          tags: [backendCourse.title, 'Programming']
+        };
+
+        setCourse(enhancedCourse);
+        setError(null);
+      } catch (error) {
+        console.error('Error fetching course:', error);
+        setError(error.message);
+        setCourse(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (courseId) {
+      fetchCourse();
     }
-  };
+  }, [courseId]);
 
-  const course = courseData[courseId];
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+        <ScrollProgress />
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600 dark:text-gray-400">Loading course details...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error Loading Course</h1>
+          <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
+          <button
+            onClick={() => navigate('/learn/courses')}
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400"
+          >
+            Back to Courses
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Course not found state
   if (!course) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Course Not Found</h1>
-          <button 
+          <button
             onClick={() => navigate('/learn/courses')}
             className="text-blue-600 hover:text-blue-800 dark:text-blue-400"
           >

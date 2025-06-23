@@ -4,6 +4,7 @@ import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
 import { ThemeProvider } from './context/ThemeContext'
 import { AuthProvider } from './context/AuthContext'
+import { AuthModalProvider } from './context/AuthModalContext'
 
 // Temporary components for testing
 const HomePage = () => (
@@ -41,19 +42,28 @@ import CourseQuiz from './pages/Learn/CourseQuiz'
 import CourseTopics from './pages/Learn/CourseTopics'
 import LiveBatchDetails from './pages/Learn/LiveBatchDetails'
 
-// Import Auth components
-import Login from './pages/Auth/Login'
-import Register from './pages/Auth/Register'
+// Import Exercise components
+import Exercises from './pages/Learn/Exercises'
+import ExercisesList from './pages/Learn/ExercisesList'
+import ExerciseDetail from './pages/Learn/ExerciseDetail'
+
+// Import Certification components
+import Certification from './pages/Learn/Certification'
+import CertificationPayment from './pages/Learn/CertificationPayment'
+
+// Auth components are now handled by modals in AuthModalProvider
+// Login and Register pages are deprecated
 
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Router>
-          <ScrollToTop />
-          <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128] transition-all duration-300">
-            <Navbar />
-            <main className="flex-grow">
+        <AuthModalProvider>
+          <Router>
+            <ScrollToTop />
+            <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128] transition-all duration-300">
+              <Navbar />
+              <main className="flex-grow">
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/learn" element={<LearnMain />} />
@@ -63,15 +73,20 @@ function App() {
                 <Route path="/learn/courses/:courseId/topics" element={<CourseTopics />} />
                 <Route path="/learn/courses/:courseId/quiz" element={<CourseQuiz />} />
                 <Route path="/learn/batches/:batchId" element={<LiveBatchDetails />} />
+                <Route path="/learn/exercises" element={<Exercises />} />
+                <Route path="/learn/exercises/:courseId" element={<ExercisesList />} />
+                <Route path="/learn/exercises/:courseId/:exerciseId" element={<ExerciseDetail />} />
+                <Route path="/learn/certification" element={<Certification />} />
+                <Route path="/learn/certification/payment" element={<CertificationPayment />} />
                 <Route path="/build" element={<BuildPage />} />
                 <Route path="/careers" element={<CareersPage />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                {/* Login and Register routes removed - now handled by modals */}
               </Routes>
-            </main>
-            <Footer />
-          </div>
-        </Router>
+              </main>
+              <Footer />
+            </div>
+          </Router>
+        </AuthModalProvider>
       </AuthProvider>
     </ThemeProvider>
   )

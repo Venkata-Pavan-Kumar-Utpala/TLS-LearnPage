@@ -1,156 +1,90 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Clock, CheckCircle, XCircle, ArrowRight, ArrowLeft,
   Trophy, Star, RotateCcw, Home, X
 } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
 import useInViewport from "../../hooks/useInViewport";
+import { courseAPI } from "../../services/api";
 
 const CourseQuiz = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
   const [quizStarted, setQuizStarted] = useState(false);
-  const [showExplanation, setShowExplanation] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
   const [titleRef, isTitleInViewport] = useInViewport();
 
-  // Quiz data for different courses
-  const quizData = {
-    "python": {
-      title: "Python Programming Quiz",
-      description: "Test your Python knowledge with this comprehensive quiz",
-      timeLimit: 600, // 10 minutes
-      passingScore: 70,
-      xpPerQuestion: 10,
-      questions: [
-        {
-          id: 1,
-          question: "Which of the following is a valid variable name in Python?",
-          options: [
-            "2name",
-            "_name",
-            "name-2",
-            "name 2"
-          ],
-          correct: 1,
-          explanation: "Variable names can start with letters or underscores, but not with numbers or contain spaces/hyphens."
-        },
-        {
-          id: 2,
-          question: "Which of the following is used to define a function in Python?",
-          options: [
-            "function",
-            "def",
-            "func",
-            "define"
-          ],
-          correct: 1,
-          explanation: "The 'def' keyword is used to define functions in Python"
-        },
-        {
-          id: 3,
-          question: "What will be the output of print(type([]))?",
-          options: [
-            "<class 'tuple'>",
-            "<class 'list'>",
-            "<class 'dict'>",
-            "<class 'set'>"
-          ],
-          correct: 1,
-          explanation: "[] creates an empty list, so type([]) returns <class 'list'>"
-        },
-        {
-          id: 4,
-          question: "Which operator is used for exponentiation in Python?",
-          options: [
-            "^",
-            "**",
-            "exp",
-            "pow"
-          ],
-          correct: 1,
-          explanation: "The ** operator is used for exponentiation in Python"
-        },
-        {
-          id: 5,
-          question: "What is the correct way to import a module in Python?",
-          options: [
-            "include module_name",
-            "import module_name",
-            "require module_name",
-            "use module_name"
-          ],
-          correct: 1,
-          explanation: "The 'import' keyword is used to import modules in Python"
-        }
-      ]
-    },
-    "data-science": {
-      title: "Data Science Quiz",
-      description: "Test your data science fundamentals",
-      timeLimit: 600,
-      passingScore: 70,
-      questions: [
-        {
-          id: 1,
-          question: "Which Python library is primarily used for data manipulation?",
-          options: ["NumPy", "Pandas", "Matplotlib", "Scikit-learn"],
-          correct: 1,
-          explanation: "Pandas is the primary library for data manipulation and analysis"
-        },
-        {
-          id: 2,
-          question: "What does EDA stand for in data science?",
-          options: [
-            "Exploratory Data Analysis",
-            "Extended Data Application", 
-            "Experimental Data Approach",
-            "Enhanced Data Algorithm"
-          ],
-          correct: 0,
-          explanation: "EDA stands for Exploratory Data Analysis"
-        }
-      ]
-    },
-    "machine-learning": {
-      title: "Machine Learning Quiz",
-      description: "Test your ML algorithm knowledge",
-      timeLimit: 900,
-      passingScore: 75,
-      questions: [
-        {
-          id: 1,
-          question: "Which type of learning uses labeled training data?",
-          options: ["Unsupervised", "Supervised", "Reinforcement", "Semi-supervised"],
-          correct: 1,
-          explanation: "Supervised learning uses labeled training data to learn patterns"
-        }
-      ]
-    },
-    "web-development": {
-      title: "Web Development Quiz", 
-      description: "Test your web development skills",
-      timeLimit: 600,
-      passingScore: 70,
-      questions: [
-        {
-          id: 1,
-          question: "Which HTML tag is used to create a hyperlink?",
-          options: ["<link>", "<a>", "<href>", "<url>"],
-          correct: 1,
-          explanation: "The <a> tag with href attribute is used to create hyperlinks"
-        }
-      ]
-    }
-  };
+  // Backend data state
+  const [quiz, setQuiz] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [topicId, setTopicId] = useState(null);
 
-  const quiz = quizData[courseId];
+  // Get topicId from URL params or location state
+  useEffect(() => {
+    // Try to get topicId from URL search params or location state
+    const urlParams = new URLSearchParams(window.location.search);
+    const topicIdFromUrl = urlParams.get('topicId');
+    const topicIdFromState = location.state?.topicId;
+
+    const finalTopicId = topicIdFromUrl || topicIdFromState;
+
+    if (finalTopicId) {
+      setTopicId(finalTopicId);
+    } else {
+      setError('Topic ID is required to load quiz');
+      setLoading(false);
+    }
+  }, [location]);
+
+  // Fetch quiz data from backend
+  useEffect(() => {
+    const fetchQuiz = async () => {
+      if (!topicId || !courseId) return;
+
+      try {
+        setLoading(true);
+        const quizData = await courseAPI.getQuiz(courseId, topicId);
+        console.log('Quiz data from backend:', quizData);
+
+        // Transform backend data to match frontend format
+        const transformedQuiz = {
+          title: `${quizData.topic} Quiz`,
+          description: `Test your knowledge on ${quizData.topic}`,
+          timeLimit: 600, // Default 10 minutes
+          passingScore: 70, // Default passing score
+          xpPerQuestion: 10, // Default XP per question
+          questions: quizData.questions.map((q, index) => ({
+            id: index + 1,
+            question: q.question,
+            options: q.options,
+            correct: q.correctAnswer,
+            explanation: q.explanation || "No explanation provided"
+          }))
+        };
+
+        setQuiz(transformedQuiz);
+        setTimeLeft(transformedQuiz.timeLimit);
+        setError(null);
+      } catch (error) {
+        console.error('Error fetching quiz:', error);
+        setError(error.message);
+        setQuiz(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuiz();
+  }, [courseId, topicId]);
+
   const currentQ = quiz?.questions[currentQuestion];
 
   // Scroll to top when component mounts
@@ -234,6 +168,40 @@ const CourseQuiz = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading quiz...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error Loading Quiz</h1>
+          <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
+          <button
+            onClick={() => {
+              window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+              setTimeout(() => navigate('/learn/courses'), 100);
+            }}
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400"
+          >
+            Back to Courses
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Quiz not found state
   if (!quiz) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">

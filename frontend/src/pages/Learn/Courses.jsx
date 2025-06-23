@@ -1,15 +1,17 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Clock, Calendar, MessageCircle, Dot, ArrowRight } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
 import CourseCard from "../../components/CourseCard";
 import useInViewport from "../../hooks/useInViewport";
+import { courseAPI, dataAdapters } from "../../services/api";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
   CarouselNext,
+  CarouselPrevious,
 } from "../../components/ui/carousel";
 
 const Courses = () => {
@@ -17,9 +19,38 @@ const Courses = () => {
   const [coursesHeadingRef, isCoursesHeadingInViewport] = useInViewport();
   const [liveBatchesHeadingRef, isLiveBatchesHeadingInViewport] = useInViewport();
 
+  // State for courses data
+  const [coursesData, setCoursesData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Course cards data
-  const coursesData = [
+  // Fetch courses from backend
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        setLoading(true);
+        const backendCourses = await courseAPI.getAllCourses();
+        console.log('Backend courses:', backendCourses);
+
+        // Adapt backend data to frontend format and show only first 4 courses
+        const adaptedCourses = backendCourses.map(course => dataAdapters.adaptCourse(course));
+        setCoursesData(adaptedCourses.slice(0, 4));
+        setError(null);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+        setError(error.message);
+        // Fallback to mock data if backend fails
+        setCoursesData(mockCoursesData);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  // Fallback mock data (in case backend is not available)
+  const mockCoursesData = [
     {
       id: "python",
       title: "Python",
@@ -194,16 +225,44 @@ const Courses = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mb-16"
           >
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {coursesData.map((course, index) => (
-                <CourseCard
-                  key={course.id}
-                  course={course}
-                  index={index}
-                  onClick={() => handleCourseClick(course.id)}
-                />
-              ))}
-            </div>
+            {/* Loading State */}
+            {loading && (
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 animate-pulse">
+                    <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded mb-4"></div>
+                    <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded mb-2"></div>
+                    <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Error State */}
+            {error && !loading && (
+              <div className="text-center py-8">
+                <p className="text-red-600 dark:text-red-400 mb-4">
+                  Failed to load courses: {error}
+                </p>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Showing fallback data instead.
+                </p>
+              </div>
+            )}
+
+            {/* Courses Grid */}
+            {!loading && (
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {coursesData.map((course, index) => (
+                  <CourseCard
+                    key={course.id}
+                    course={course}
+                    index={index}
+                    onClick={() => handleCourseClick(course.id)}
+                  />
+                ))}
+              </div>
+            )}
 
             {/* View All Courses Button */}
             <div className="flex justify-center mt-12">

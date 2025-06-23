@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
+import { useAuthModalContext } from '../context/AuthModalContext'
+import XPBadge from './XPBadge'
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme()
+  const { openLogin } = useAuthModalContext()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
@@ -91,8 +94,8 @@ const Navbar = () => {
           >
             Careers
           </Link>
-          <Link
-            to="/login"
+          <button
+            onClick={openLogin}
             className={`relative text-[15px] font-extralight transition-colors duration-300 hover:after:w-full after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:w-0 after:h-px after:bg-current after:transition-all after:duration-300 ${
               isDarkMode
                 ? 'text-[#e0e6f5] hover:text-white'
@@ -100,7 +103,10 @@ const Navbar = () => {
             }`}
           >
             Log In
-          </Link>
+          </button>
+
+          {/* XP Badge */}
+          <XPBadge />
 
           {/* Dark Mode Toggle - Desktop */}
           <button
@@ -174,9 +180,11 @@ const Navbar = () => {
         >
           Careers
         </Link>
-        <Link
-          to="/login"
-          onClick={closeMenu}
+        <button
+          onClick={() => {
+            closeMenu();
+            openLogin();
+          }}
           className={`relative block py-2.5 text-[14px] transition-colors duration-300 hover:after:w-full after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-px after:bg-current after:transition-all after:duration-300 ${
             isDarkMode
               ? 'text-[#e0e6f5] hover:text-white'
@@ -184,7 +192,13 @@ const Navbar = () => {
           }`}
         >
           Log In
-        </Link>
+        </button>
+
+        {/* XP Badge - Mobile */}
+        <div className="py-2">
+          <XPBadge />
+        </div>
+
         {/* Dark Mode Toggle - Mobile */}
         <button
           onClick={toggleTheme}

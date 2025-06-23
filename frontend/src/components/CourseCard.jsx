@@ -39,7 +39,8 @@ const CourseCard = ({ course, index, onClick }) => {
                   transition={{
                     duration: 3 + i * 0.2,
                     repeat: Infinity,
-                    delay: i * 0.3,
+                    delay: i * 0.3, 
+                    
                   }}
                   style={{
                     left: `${(i % 4) * 25}%`,

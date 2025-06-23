@@ -9,14 +9,44 @@ import {
 import ScrollProgress from "../../components/ScrollProgress";
 import useInViewport from "../../hooks/useInViewport";
 import Navbar from "../../components/Navbar";
+import XPTracker from "../../components/XPTracker";
+import { courseAPI } from "../../services/api";
 
 const CourseTopics = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
-  const [selectedTopic, setSelectedTopic] = useState("variables");
+  const [selectedTopic, setSelectedTopic] = useState(0); // Changed to index-based selection
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [titleRef, isTitleInViewport] = useInViewport();
+
+  // Backend data state
+  const [backendCourse, setBackendCourse] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch course data from backend to get real topic IDs
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        setLoading(true);
+        const course = await courseAPI.getCourse(courseId);
+        console.log('Backend course data for topics:', course);
+        setBackendCourse(course);
+        setError(null);
+      } catch (error) {
+        console.error('Error fetching course for topics:', error);
+        setError(error.message);
+        setBackendCourse(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (courseId) {
+      fetchCourse();
+    }
+  }, [courseId]);
 
   // Course topics data
   const courseTopicsData = {
@@ -197,14 +227,79 @@ print(df.describe())    # Statistical summary`,
     }
   };
 
-  const currentCourse = courseTopicsData[courseId];
-  const currentTopic = currentCourse?.topics.find(t => t.id === selectedTopic);
+  // Create a hybrid course object using backend data when available
+  const currentCourse = (() => {
+    if (backendCourse && backendCourse.topics) {
+      // Use backend course data with fallback content
+      return {
+        title: backendCourse.title,
+        description: `Master ${backendCourse.title} fundamentals with hands-on coding exercises`,
+        topics: backendCourse.topics.map((topic, index) => ({
+          id: topic.topicId || topic.id || `topic_${index}`,
+          title: topic.title,
+          description: `Learn about ${topic.title} concepts and applications`,
+          exercises: 5,
+          maxXP: 50,
+          completed: false,
+          content: {
+            theory: `Learn the fundamentals of ${topic.title}. This topic covers essential concepts and practical applications.`,
+            codeExample: `// Example code for ${topic.title}\nconsole.log("Learning ${topic.title}");`,
+            keyPoints: [
+              `Understand ${topic.title} basics`,
+              "Apply concepts in practical scenarios",
+              "Master key techniques",
+              "Build real-world applications"
+            ]
+          }
+        }))
+      };
+    }
+
+    // Fallback to hardcoded data for simple course IDs
+    return courseTopicsData[courseId];
+  })();
+
+  const currentTopic = currentCourse?.topics[selectedTopic];
 
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }, []);
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading course topics...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error Loading Course</h1>
+          <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
+          <button
+            onClick={() => {
+              window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+              setTimeout(() => navigate('/learn/courses'), 100);
+            }}
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400"
+          >
+            Back to Courses
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Course not found state
   if (!currentCourse) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
@@ -225,11 +320,40 @@ print(df.describe())    # Statistical summary`,
   }
 
   const handleTakeQuiz = () => {
+    // Use real backend topic ID if available, otherwise fallback to hardcoded
+    let topicId = null;
+    let topicTitle = 'Quiz';
+
+    if (backendCourse && backendCourse.topics && backendCourse.topics[selectedTopic]) {
+      // Use real backend topic ID
+      const backendTopic = backendCourse.topics[selectedTopic];
+      topicId = backendTopic.topicId || backendTopic.id;
+      topicTitle = backendTopic.title;
+      console.log('Using backend topic ID:', topicId, 'for topic:', topicTitle);
+    } else {
+      // Fallback to hardcoded data
+      const currentTopicData = currentCourse?.topics[selectedTopic];
+      if (!currentTopicData) {
+        console.error('No topic selected for quiz');
+        return;
+      }
+      topicId = `topic_${currentTopicData.id}`;
+      topicTitle = currentTopicData.title;
+      console.log('Using fallback topic ID:', topicId, 'for topic:', topicTitle);
+    }
+
+    if (!topicId) {
+      console.error('Could not determine topic ID for quiz');
+      return;
+    }
+
     // Scroll to top before navigating to quiz
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     // Small delay to ensure scroll completes before navigation
     setTimeout(() => {
-      navigate(`/learn/courses/${courseId}/quiz`);
+      navigate(`/learn/courses/${courseId}/quiz?topicId=${topicId}`, {
+        state: { topicId, topicTitle }
+      });
     }, 100);
   };
 
@@ -306,14 +430,14 @@ print(df.describe())    # Statistical summary`,
                 <motion.button
                   key={topic.id}
                   onClick={() => {
-                    setSelectedTopic(topic.id);
+                    setSelectedTopic(index);
                     // Scroll to top when changing topics
                     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
                   }}
                   whileHover={{ scale: sidebarCollapsed ? 1.05 : 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className={`group relative w-full text-left rounded-xl transition-all duration-300 ${
-                    selectedTopic === topic.id
+                    selectedTopic === index
                       ? 'bg-blue-500/20 border-2 border-blue-500/50 text-blue-700 dark:text-blue-300 shadow-lg'
                       : 'bg-white/50 dark:bg-gray-800/50 border border-gray-200/50 dark:border-gray-600/50 hover:bg-white/70 dark:hover:bg-gray-700/50 hover:shadow-md'
                   } ${sidebarCollapsed ? 'p-3 mx-1' : 'p-4'}`}
@@ -414,13 +538,13 @@ print(df.describe())    # Statistical summary`,
                       <button
                         key={topic.id}
                         onClick={() => {
-                          setSelectedTopic(topic.id);
+                          setSelectedTopic(index);
                           setMobileMenuOpen(false);
                           // Scroll to top when changing topics on mobile
                           window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
                         }}
                         className={`w-full text-left p-4 rounded-xl transition-all duration-300 ${
-                          selectedTopic === topic.id
+                          selectedTopic === index
                             ? 'bg-blue-500/20 border-2 border-blue-500/50 text-blue-700 dark:text-blue-300'
                             : 'bg-white/50 dark:bg-gray-800/50 border border-gray-200/50 dark:border-gray-600/50 hover:bg-white/70 dark:hover:bg-gray-700/50'
                         }`}
@@ -529,6 +653,16 @@ print(df.describe())    # Statistical summary`,
                   </div>
                 </motion.div>
               </div>
+
+              {/* XP Tracker */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="mb-8"
+              >
+                <XPTracker showDetailed={true} />
+              </motion.div>
 
               {/* Content Sections */}
               <div className="space-y-8">
