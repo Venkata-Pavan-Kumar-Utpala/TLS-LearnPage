@@ -33,11 +33,14 @@ const quizSchema = new mongoose.Schema(
         },
         explanation: {
           type: String,
+<<<<<<< HEAD
           default: "No explanation provided",
         },
         xp: {
           type: Number,
           default: 10,
+=======
+>>>>>>> 84bb7e81fb0ac14c170d9a8744fd74ae83060fa4
         },
       },
     ],
