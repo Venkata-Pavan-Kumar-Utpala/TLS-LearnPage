@@ -310,52 +310,60 @@ const LiveBatchCard = ({ batch, index, onWhatsAppClick, onGetStarted }) => {
         type: "spring",
         stiffness: 100
       }}
-      className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 cursor-pointer h-full"
+      className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 cursor-pointer h-full flex flex-col"
     >
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <h3 className="font-poppins font-medium text-lg text-gray-900 dark:text-white mb-1 transition-colors duration-300">
-            {batch.title}
-          </h3>
+      {/* Header - Fixed height section */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-3">
           <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${getLevelColor(batch.level)}`}>
             {batch.level}
           </span>
         </div>
-      </div>
-
-      {/* Instructor */}
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-        with <span className="text-blue-600 dark:text-blue-400 font-medium">{batch.instructor}</span>
-      </p>
-
-      {/* Schedule Info */}
-      <div className="space-y-2 mb-4">
-        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-          <Clock className="w-4 h-4" />
-          <span>{batch.duration}</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-          <Calendar className="w-4 h-4" />
-          <span>Schedule: {batch.schedule}</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-          <Clock className="w-4 h-4" />
-          <span>Time: {batch.time}</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-          <Calendar className="w-4 h-4" />
-          <span>Starts: {batch.startDate}</span>
+        <div className="h-14 flex items-start">
+          <h3 className="font-poppins font-medium text-lg text-gray-900 dark:text-white transition-colors duration-300 line-clamp-2">
+            {batch.title}
+          </h3>
         </div>
       </div>
 
-      {/* Description */}
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
-        {batch.description}
-      </p>
+      {/* Instructor - Fixed height section */}
+      <div className="h-6 mb-6 flex items-center">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          with <span className="text-blue-600 dark:text-blue-400 font-medium">{batch.instructor}</span>
+        </p>
+      </div>
 
-      {/* Price and Actions */}
-      <div className="flex items-center justify-between">
+      {/* Schedule Info - Fixed height section */}
+      <div className="h-24 mb-6">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <Clock className="w-4 h-4 flex-shrink-0" />
+            <span>{batch.duration}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <Calendar className="w-4 h-4 flex-shrink-0" />
+            <span>Schedule: {batch.schedule}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <Clock className="w-4 h-4 flex-shrink-0" />
+            <span>Time: {batch.time}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <Calendar className="w-4 h-4 flex-shrink-0" />
+            <span>Starts: {batch.startDate}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Description - Flexible section */}
+      <div className="flex-grow mb-6">
+        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3">
+          {batch.description}
+        </p>
+      </div>
+
+      {/* Price and Actions - Fixed height section */}
+      <div className="h-12 flex items-center justify-between mb-4">
         <div className="text-2xl font-bold text-gray-900 dark:text-white">
           {batch.price}
         </div>
@@ -368,10 +376,10 @@ const LiveBatchCard = ({ batch, index, onWhatsAppClick, onGetStarted }) => {
         </button>
       </div>
 
-      {/* Get Started Button */}
+      {/* Get Started Button - Fixed height */}
       <button
         onClick={onGetStarted}
-        className="w-full mt-4 h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all duration-300 hover:shadow-lg"
+        className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all duration-300 hover:shadow-lg"
       >
         Get Started
       </button>

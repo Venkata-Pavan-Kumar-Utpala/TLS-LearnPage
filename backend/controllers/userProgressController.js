@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import UserProgress from "../models/UserProgress.js";
 import Quiz from "../models/Quiz.js";
 
@@ -8,6 +7,7 @@ export const checkIfQuestionAnswered = async ({
   quizId,
   questionId,
 }) => {
+
   let userProgress = await UserProgress.findOne({ userId });
   if (!userProgress) return { answered: false };
   // Only allow one attempt per quiz as a whole
@@ -68,17 +68,27 @@ export const recordCorrectAnswer = async ({
   return { success: true };
 };
 
+// Get Current Authenticated User's Progress
 export const getUserProgress = async (req, res) => {
-  const { userId } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return res.status(400).json({ message: "Invalid UserId" });
+  const userId = req.user._id;
+
+  try {
+    const userProgress = await UserProgress.findOne({ userId }).select(
+      "courseXP exerciseXP totalCourseXP totalExerciseXP"
+    );
+
+    if (!userProgress) {
+      return res.status(200).json({
+        courseXP: {},
+        exerciseXP: {},
+        totalCourseXP: 0,
+        totalExerciseXP: 0,
+      });
+    }
+
+    return res.status(200).json(userProgress);
+  } catch (err) {
+    console.error("User Progress Fetch Error:", err.message);
+    return res.status(500).json({ message: "Failed to fetch user progress" });
   }
-  // Find by userId and select only the required fields
-  const userProgress = await UserProgress.findOne({ userId }).select(
-    "courseXP exerciseXP totalCourseXP totalExerciseXP"
-  );
-  if (!userProgress) {
-    return res.status(404).json({ message: "User progress not found" });
-  }
-  return res.status(200).json(userProgress);
 };
