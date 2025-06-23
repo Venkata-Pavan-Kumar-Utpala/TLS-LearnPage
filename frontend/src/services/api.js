@@ -76,12 +76,25 @@ export const courseAPI = {
     return handleResponse(response);
   },
 
-  // Submit quiz answers
+  // Submit quiz answers (legacy - for full quiz submission)
   submitQuiz: async (courseId, quizData) => {
     const response = await fetch(`${API_BASE}/courses/${courseId}/quiz/submit`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(quizData),
+    });
+    return handleResponse(response);
+  },
+
+  // Submit individual quiz answer (new flow)
+  submitQuizAnswer: async (courseId, topicId, questionId, selectedOption) => {
+    const response = await fetch(`${API_BASE}/courses/${courseId}/topics/${topicId}/quiz/submit`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        questionId,
+        selectedOption
+      }),
     });
     return handleResponse(response);
   },

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Clock, CheckCircle, XCircle, ArrowRight, ArrowLeft,
-  Trophy, Star, RotateCcw, Home, X
+  Trophy, Star, RotateCcw, Home, X, Send
 } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
 import useInViewport from "../../hooks/useInViewport";
@@ -56,13 +56,14 @@ const CourseQuiz = () => {
 
         // Transform backend data to match frontend format
         const transformedQuiz = {
-          title: `${quizData.topic} Quiz`,
-          description: `Test your knowledge on ${quizData.topic}`,
+          title: `${quizData.topicTitle} Quiz`,
+          description: `Test your knowledge on ${quizData.topicTitle}`,
           timeLimit: 600, // Default 10 minutes
           passingScore: 70, // Default passing score
           xpPerQuestion: 10, // Default XP per question
           questions: quizData.questions.map((q, index) => ({
-            id: index + 1,
+            id: q._id, // Use actual database ID for backend API calls
+            displayId: index + 1, // For display purposes
             question: q.question,
             options: q.options,
             correct: q.correctAnswer,
@@ -312,6 +313,8 @@ const CourseQuiz = () => {
               canGoNext={selectedAnswers[currentQuestion] !== undefined}
               canGoPrevious={currentQuestion > 0}
               isLastQuestion={currentQuestion === quiz.questions.length - 1}
+              courseId={courseId}
+              topicId={topicId}
             />
           )}
         </div>
@@ -324,10 +327,12 @@ const CourseQuiz = () => {
 const QuizQuestion = ({
   question, questionNumber, totalQuestions, selectedAnswer,
   onAnswerSelect, onNext, onPrevious, timeLeft, canGoNext,
-  canGoPrevious, isLastQuestion
+  canGoPrevious, isLastQuestion, courseId, topicId
 }) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [answerResult, setAnswerResult] = useState(null);
 
   const handleAnswerClick = (index) => {
     if (!answerSubmitted) {
@@ -335,10 +340,29 @@ const QuizQuestion = ({
     }
   };
 
-  const handleSubmitAnswer = () => {
-    if (selectedAnswer !== undefined && !answerSubmitted) {
-      setAnswerSubmitted(true);
-      setShowFeedback(true);
+  const handleSubmitAnswer = async () => {
+    if (selectedAnswer !== undefined && !answerSubmitted && !submitting) {
+      setSubmitting(true);
+      try {
+        // Call the backend API to verify the answer
+        const response = await courseAPI.submitQuizAnswer(
+          courseId,
+          topicId,
+          question.id,
+          selectedAnswer
+        );
+
+        setAnswerResult(response);
+        setAnswerSubmitted(true);
+        setShowFeedback(true);
+      } catch (error) {
+        console.error('Error submitting answer:', error);
+        // Still show feedback even if API call fails
+        setAnswerSubmitted(true);
+        setShowFeedback(true);
+      } finally {
+        setSubmitting(false);
+      }
     }
   };
 
@@ -474,29 +498,64 @@ const QuizQuestion = ({
           >
             <button
               onClick={handleSubmitAnswer}
-              className="px-8 py-2.5 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 text-blue-800 dark:text-blue-200 font-semibold rounded-lg transition-all duration-300 hover:shadow-md hover:scale-105 text-sm border border-blue-200/50 dark:border-blue-700/50"
+              disabled={submitting}
+              className={`px-8 py-2.5 font-semibold rounded-lg transition-all duration-300 hover:shadow-md hover:scale-105 text-sm border ${
+                submitting
+                  ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed border-gray-200/50 dark:border-gray-700/50'
+                  : 'bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 text-blue-800 dark:text-blue-200 border-blue-200/50 dark:border-blue-700/50'
+              }`}
             >
-              Submit Answer
+              {submitting ? 'Submitting...' : 'Submit Answer'}
             </button>
           </motion.div>
         )}
 
-        {/* Explanation */}
+        {/* Explanation with backend response */}
         {showFeedback && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl"
+            className={`mt-6 p-4 rounded-xl border ${
+              answerResult?.correct || selectedAnswer === question.correct
+                ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
+                : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
+            }`}
           >
             <div className="flex items-start gap-3">
-              <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <span className="text-white text-sm font-bold">i</span>
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                answerResult?.correct || selectedAnswer === question.correct
+                  ? 'bg-green-500'
+                  : 'bg-red-500'
+              }`}>
+                {answerResult?.correct || selectedAnswer === question.correct ? (
+                  <CheckCircle className="w-4 h-4 text-white" />
+                ) : (
+                  <X className="w-4 h-4 text-white" />
+                )}
               </div>
-              <div>
-                <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-1">Explanation</h4>
-                <p className="text-blue-600 dark:text-blue-400 text-sm leading-relaxed">
-                  {question.explanation}
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className={`font-semibold ${
+                    answerResult?.correct || selectedAnswer === question.correct
+                      ? 'text-green-700 dark:text-green-300'
+                      : 'text-red-700 dark:text-red-300'
+                  }`}>
+                    {answerResult?.correct || selectedAnswer === question.correct ? 'Correct!' : 'Incorrect'}
+                  </h4>
+                  {answerResult?.receivedXP > 0 && (
+                    <div className="flex items-center gap-1 text-yellow-600 dark:text-yellow-400">
+                      <Trophy className="w-4 h-4" />
+                      <span className="font-medium text-sm">+{answerResult.receivedXP} XP</span>
+                    </div>
+                  )}
+                </div>
+                <p className={`text-sm leading-relaxed ${
+                  answerResult?.correct || selectedAnswer === question.correct
+                    ? 'text-green-600 dark:text-green-400'
+                    : 'text-red-600 dark:text-red-400'
+                }`}>
+                  {answerResult?.explanation || question.explanation}
                 </p>
               </div>
             </div>
