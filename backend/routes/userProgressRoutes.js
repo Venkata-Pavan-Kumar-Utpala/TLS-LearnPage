@@ -3,5 +3,8 @@ import { protect } from "../middleware/authMiddleware.js";
 import { getUserProgress } from "../controllers/userProgressController.js";
 
 const userProgressRouter = express.Router();
-userProgressRouter.get("/:userId", protect, getUserProgress);
+
+// ✅ Route without userId param
+userProgressRouter.get("/", protect, getUserProgress);
+
 export default userProgressRouter;
