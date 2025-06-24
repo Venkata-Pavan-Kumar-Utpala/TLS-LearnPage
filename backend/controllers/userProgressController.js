@@ -1,5 +1,7 @@
 import UserProgress from "../models/UserProgress.js";
 import Quiz from "../models/Quiz.js";
+import Course from "../models/Course.js";
+import Exercise from "../models/Exercise.js";
 
 // Check if a question has already been answered (no mutation)
 export const checkIfQuestionAnswered = async ({
@@ -7,7 +9,6 @@ export const checkIfQuestionAnswered = async ({
   quizId,
   questionId,
 }) => {
-
   let userProgress = await UserProgress.findOne({ userId });
   if (!userProgress) return { answered: false };
   // Only allow one attempt per quiz as a whole
