@@ -6,6 +6,7 @@ import exerciseRoutes from "./routes/exerciseRoutes.js";
 import courseRouter from "./routes/courseRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import userProgressRouter from "./routes/userProgressRoutes.js";
+import paymentRouter from "./routes/paymentRoutes.js";
 import certificationRoutes from "./routes/certificationRoutes.js";
 
 
@@ -43,6 +44,7 @@ app.use("/api/exercises", exerciseRoutes);
 app.use("/api/courses", courseRouter);
 app.use("/api/auth", userRoutes);
 app.use("/api/user-progress", userProgressRouter);
+app.use("/api/certificate", paymentRouter);
 app.use("/api/certification", certificationRoutes);
 
 // Test route
