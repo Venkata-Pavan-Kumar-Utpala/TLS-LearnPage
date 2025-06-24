@@ -21,7 +21,7 @@ const CourseCard = ({ course, index, onClick }) => {
       className="group cursor-pointer"
       onClick={onClick}
     >
-      <Card className="h-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 hover:shadow-2xl hover:border-purple-300/50 dark:hover:border-purple-500/50 transition-all duration-300 overflow-hidden">
+      <Card className="h-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 hover:shadow-2xl hover:border-purple-300/50 dark:hover:border-purple-500/50 transition-all duration-300 overflow-hidden">
         <CardContent className="p-0">
           {/* Course Icon/Header */}
           <div className={`h-48 bg-gradient-to-br ${course.gradient} flex items-center justify-center relative overflow-hidden`}>
@@ -39,7 +39,8 @@ const CourseCard = ({ course, index, onClick }) => {
                   transition={{
                     duration: 3 + i * 0.2,
                     repeat: Infinity,
-                    delay: i * 0.3,
+                    delay: i * 0.3, 
+                    
                   }}
                   style={{
                     left: `${(i % 4) * 25}%`,

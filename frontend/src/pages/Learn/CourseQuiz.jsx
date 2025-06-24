@@ -1,156 +1,118 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Clock, CheckCircle, XCircle, ArrowRight, ArrowLeft,
-  Trophy, Star, RotateCcw, Home, X
+  Trophy, Star, RotateCcw, Home, X, Send
 } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
 import useInViewport from "../../hooks/useInViewport";
+import { courseAPI } from "../../services/api";
 
 const CourseQuiz = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
   const [quizStarted, setQuizStarted] = useState(false);
-  const [showExplanation, setShowExplanation] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
   const [titleRef, isTitleInViewport] = useInViewport();
 
-  // Quiz data for different courses
-  const quizData = {
-    "python": {
-      title: "Python Programming Quiz",
-      description: "Test your Python knowledge with this comprehensive quiz",
-      timeLimit: 600, // 10 minutes
-      passingScore: 70,
-      xpPerQuestion: 10,
-      questions: [
-        {
-          id: 1,
-          question: "Which of the following is a valid variable name in Python?",
-          options: [
-            "2name",
-            "_name",
-            "name-2",
-            "name 2"
-          ],
-          correct: 1,
-          explanation: "Variable names can start with letters or underscores, but not with numbers or contain spaces/hyphens."
-        },
-        {
-          id: 2,
-          question: "Which of the following is used to define a function in Python?",
-          options: [
-            "function",
-            "def",
-            "func",
-            "define"
-          ],
-          correct: 1,
-          explanation: "The 'def' keyword is used to define functions in Python"
-        },
-        {
-          id: 3,
-          question: "What will be the output of print(type([]))?",
-          options: [
-            "<class 'tuple'>",
-            "<class 'list'>",
-            "<class 'dict'>",
-            "<class 'set'>"
-          ],
-          correct: 1,
-          explanation: "[] creates an empty list, so type([]) returns <class 'list'>"
-        },
-        {
-          id: 4,
-          question: "Which operator is used for exponentiation in Python?",
-          options: [
-            "^",
-            "**",
-            "exp",
-            "pow"
-          ],
-          correct: 1,
-          explanation: "The ** operator is used for exponentiation in Python"
-        },
-        {
-          id: 5,
-          question: "What is the correct way to import a module in Python?",
-          options: [
-            "include module_name",
-            "import module_name",
-            "require module_name",
-            "use module_name"
-          ],
-          correct: 1,
-          explanation: "The 'import' keyword is used to import modules in Python"
-        }
-      ]
-    },
-    "data-science": {
-      title: "Data Science Quiz",
-      description: "Test your data science fundamentals",
-      timeLimit: 600,
-      passingScore: 70,
-      questions: [
-        {
-          id: 1,
-          question: "Which Python library is primarily used for data manipulation?",
-          options: ["NumPy", "Pandas", "Matplotlib", "Scikit-learn"],
-          correct: 1,
-          explanation: "Pandas is the primary library for data manipulation and analysis"
-        },
-        {
-          id: 2,
-          question: "What does EDA stand for in data science?",
-          options: [
-            "Exploratory Data Analysis",
-            "Extended Data Application", 
-            "Experimental Data Approach",
-            "Enhanced Data Algorithm"
-          ],
-          correct: 0,
-          explanation: "EDA stands for Exploratory Data Analysis"
-        }
-      ]
-    },
-    "machine-learning": {
-      title: "Machine Learning Quiz",
-      description: "Test your ML algorithm knowledge",
-      timeLimit: 900,
-      passingScore: 75,
-      questions: [
-        {
-          id: 1,
-          question: "Which type of learning uses labeled training data?",
-          options: ["Unsupervised", "Supervised", "Reinforcement", "Semi-supervised"],
-          correct: 1,
-          explanation: "Supervised learning uses labeled training data to learn patterns"
-        }
-      ]
-    },
-    "web-development": {
-      title: "Web Development Quiz", 
-      description: "Test your web development skills",
-      timeLimit: 600,
-      passingScore: 70,
-      questions: [
-        {
-          id: 1,
-          question: "Which HTML tag is used to create a hyperlink?",
-          options: ["<link>", "<a>", "<href>", "<url>"],
-          correct: 1,
-          explanation: "The <a> tag with href attribute is used to create hyperlinks"
-        }
-      ]
-    }
-  };
+  // Backend data state
+  const [quiz, setQuiz] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [topicId, setTopicId] = useState(null);
+  const [quizId, setQuizId] = useState(null); // Store quiz ID from backend response
 
-  const quiz = quizData[courseId];
+  // Get topicId from URL params or location state
+  useEffect(() => {
+    // Try to get topicId from URL search params or location state
+    const urlParams = new URLSearchParams(window.location.search);
+    const topicIdFromUrl = urlParams.get('topicId');
+    const topicIdFromState = location.state?.topicId;
+
+    const finalTopicId = topicIdFromUrl || topicIdFromState;
+
+    console.log('Quiz component - URL params:', urlParams.toString());
+    console.log('Quiz component - topicId from URL:', topicIdFromUrl);
+    console.log('Quiz component - topicId from state:', topicIdFromState);
+    console.log('Quiz component - final topicId:', finalTopicId);
+
+    if (finalTopicId) {
+      setTopicId(finalTopicId);
+    } else {
+      setError('Topic ID is required to load quiz');
+      setLoading(false);
+    }
+  }, [location]);
+
+  // Fetch quiz data from backend
+  useEffect(() => {
+    const fetchQuiz = async () => {
+      if (!topicId || !courseId) return;
+
+      try {
+        setLoading(true);
+
+        // First, get the course data to find the quiz ID
+        console.log('Fetching course data to get quiz ID...');
+        const courseData = await courseAPI.getCourse(courseId);
+        console.log('Course data received:', courseData);
+
+        // Find the topic and get its quiz ID
+        const topic = courseData.topics?.find(t => t.topicId === topicId || t._id === topicId);
+        console.log('Found topic:', topic);
+
+        if (topic && topic.quizId) {
+          setQuizId(topic.quizId);
+          console.log('Quiz ID found in course data:', topic.quizId);
+        } else {
+          console.error('Quiz ID not found in course data for topic:', topicId);
+        }
+
+        // Then fetch the quiz questions
+        const quizData = await courseAPI.getQuiz(courseId, topicId);
+        console.log('Quiz data from backend:', quizData);
+
+        // Transform backend data to match frontend format
+        // Handle both 'topic' and 'topicTitle' from backend response
+        const topicTitle = quizData.topicTitle || quizData.topic || topic?.title || 'Quiz';
+
+        const transformedQuiz = {
+          title: `${topicTitle} Quiz`,
+          description: `Test your knowledge on ${topicTitle}`,
+          timeLimit: 600, // Default 10 minutes
+          passingScore: 70, // Default passing score
+          xpPerQuestion: 10, // Default XP per question
+          questions: quizData.questions.map((q, index) => ({
+            id: q._id, // Use actual database ID for backend API calls
+            displayId: index + 1, // For display purposes
+            question: q.question,
+            options: q.options,
+            correct: q.correctAnswer, // This won't be available from backend for security
+            explanation: q.explanation || "No explanation provided"
+          }))
+        };
+
+        setQuiz(transformedQuiz);
+        setTimeLeft(transformedQuiz.timeLimit);
+        setError(null);
+      } catch (error) {
+        console.error('Error fetching quiz:', error);
+        setError(error.message);
+        setQuiz(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuiz();
+  }, [courseId, topicId]);
+
   const currentQ = quiz?.questions[currentQuestion];
 
   // Scroll to top when component mounts
@@ -234,6 +196,40 @@ const CourseQuiz = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading quiz...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error Loading Quiz</h1>
+          <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
+          <button
+            onClick={() => {
+              window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+              setTimeout(() => navigate('/learn/courses'), 100);
+            }}
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400"
+          >
+            Back to Courses
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Quiz not found state
   if (!quiz) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
@@ -344,6 +340,9 @@ const CourseQuiz = () => {
               canGoNext={selectedAnswers[currentQuestion] !== undefined}
               canGoPrevious={currentQuestion > 0}
               isLastQuestion={currentQuestion === quiz.questions.length - 1}
+              courseId={courseId}
+              topicId={topicId}
+              quizId={quizId}
             />
           )}
         </div>
@@ -356,10 +355,12 @@ const CourseQuiz = () => {
 const QuizQuestion = ({
   question, questionNumber, totalQuestions, selectedAnswer,
   onAnswerSelect, onNext, onPrevious, timeLeft, canGoNext,
-  canGoPrevious, isLastQuestion
+  canGoPrevious, isLastQuestion, courseId, topicId, quizId
 }) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [answerResult, setAnswerResult] = useState(null);
 
   const handleAnswerClick = (index) => {
     if (!answerSubmitted) {
@@ -367,10 +368,38 @@ const QuizQuestion = ({
     }
   };
 
-  const handleSubmitAnswer = () => {
-    if (selectedAnswer !== undefined && !answerSubmitted) {
-      setAnswerSubmitted(true);
-      setShowFeedback(true);
+  const handleSubmitAnswer = async () => {
+    if (selectedAnswer !== undefined && !answerSubmitted && !submitting) {
+      setSubmitting(true);
+      try {
+        // Call the backend API to verify the answer
+        const response = await courseAPI.submitQuizAnswer(
+          courseId,
+          topicId,
+          question.id,
+          selectedAnswer,
+          quizId // Pass the quiz ID we got from the quiz data
+        );
+
+        console.log('Backend response:', response);
+        setAnswerResult(response);
+        setAnswerSubmitted(true);
+        setShowFeedback(true);
+      } catch (error) {
+        console.error('Error submitting answer:', error);
+        // Create a fallback response for error cases
+        setAnswerResult({
+          correct: false,
+          explanation: `Error submitting answer: ${error.message}`,
+          receivedXP: 0,
+          correctOption: null,
+          selectedOption: selectedAnswer
+        });
+        setAnswerSubmitted(true);
+        setShowFeedback(true);
+      } finally {
+        setSubmitting(false);
+      }
     }
   };
 
@@ -384,15 +413,22 @@ const QuizQuestion = ({
     if (!showFeedback) {
       return selectedAnswer === index
         ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
-        : 'border-gray-300 dark:border-gray-500 bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 hover:border-blue-400 dark:hover:border-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20';
+        : 'border-gray-300 dark:border-gray-500 bg-white/50 dark:bg-gray-700/50 text-gray-800 dark:text-gray-200 hover:border-blue-400 dark:hover:border-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20';
     }
 
-    if (index === question.correct) {
+    // Use backend response for correct answer
+    if (answerResult && index === answerResult.correctOption) {
       return 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300';
     }
 
-    if (selectedAnswer === index && index !== question.correct) {
+    // Show selected answer as red if it's wrong
+    if (selectedAnswer === index && answerResult && !answerResult.correct) {
       return 'border-red-500 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300';
+    }
+
+    // Show selected answer as green if it's correct
+    if (selectedAnswer === index && answerResult && answerResult.correct) {
+      return 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300';
     }
 
     return 'border-gray-300 dark:border-gray-500 bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300';
@@ -405,11 +441,13 @@ const QuizQuestion = ({
       ) : null;
     }
 
-    if (index === question.correct) {
+    // Use backend response for correct answer
+    if (answerResult && index === answerResult.correctOption) {
       return <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />;
     }
 
-    if (selectedAnswer === index && index !== question.correct) {
+    // Show X for selected wrong answer
+    if (selectedAnswer === index && answerResult && !answerResult.correct) {
       return <X className="w-4 h-4 text-red-600 dark:text-red-400" />;
     }
 
@@ -442,7 +480,7 @@ const QuizQuestion = ({
       </div>
 
       {/* Question */}
-      <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20">
+      <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20">
         <h2 className="text-xl font-poppins font-medium text-gray-900 dark:text-white mb-6">
           {question.question}
         </h2>
@@ -461,10 +499,12 @@ const QuizQuestion = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
-                    showFeedback && index === question.correct
+                    showFeedback && answerResult && index === answerResult.correctOption
                       ? 'border-green-500 bg-green-500'
-                      : showFeedback && selectedAnswer === index && index !== question.correct
+                      : showFeedback && selectedAnswer === index && answerResult && !answerResult.correct
                       ? 'border-red-500 bg-red-500'
+                      : showFeedback && selectedAnswer === index && answerResult && answerResult.correct
+                      ? 'border-green-500 bg-green-500'
                       : selectedAnswer === index && !showFeedback
                       ? 'border-blue-500 bg-blue-500'
                       : 'border-gray-400 dark:border-gray-400'
@@ -478,13 +518,13 @@ const QuizQuestion = ({
                 </div>
 
                 {/* Visual feedback icons - only show after submission */}
-                {showFeedback && (
+                {showFeedback && answerResult && (
                   <div className="flex-shrink-0">
-                    {index === question.correct ? (
+                    {index === answerResult.correctOption ? (
                       <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
                         <CheckCircle className="w-5 h-5 text-white" />
                       </div>
-                    ) : selectedAnswer === index ? (
+                    ) : selectedAnswer === index && !answerResult.correct ? (
                       <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center">
                         <X className="w-5 h-5 text-white" />
                       </div>
@@ -506,29 +546,64 @@ const QuizQuestion = ({
           >
             <button
               onClick={handleSubmitAnswer}
-              className="px-8 py-2.5 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 text-blue-800 dark:text-blue-200 font-semibold rounded-lg transition-all duration-300 hover:shadow-md hover:scale-105 text-sm border border-blue-200/50 dark:border-blue-700/50"
+              disabled={submitting}
+              className={`px-8 py-2.5 font-semibold rounded-lg transition-all duration-300 hover:shadow-md hover:scale-105 text-sm border ${
+                submitting
+                  ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed border-gray-200/50 dark:border-gray-700/50'
+                  : 'bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 text-blue-800 dark:text-blue-200 border-blue-200/50 dark:border-blue-700/50'
+              }`}
             >
-              Submit Answer
+              {submitting ? 'Submitting...' : 'Submit Answer'}
             </button>
           </motion.div>
         )}
 
-        {/* Explanation */}
+        {/* Explanation with backend response */}
         {showFeedback && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl"
+            className={`mt-6 p-4 rounded-xl border ${
+              answerResult?.correct
+                ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
+                : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
+            }`}
           >
             <div className="flex items-start gap-3">
-              <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <span className="text-white text-sm font-bold">i</span>
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                answerResult?.correct
+                  ? 'bg-green-500'
+                  : 'bg-red-500'
+              }`}>
+                {answerResult?.correct ? (
+                  <CheckCircle className="w-4 h-4 text-white" />
+                ) : (
+                  <X className="w-4 h-4 text-white" />
+                )}
               </div>
-              <div>
-                <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-1">Explanation</h4>
-                <p className="text-blue-600 dark:text-blue-400 text-sm leading-relaxed">
-                  {question.explanation}
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className={`font-semibold ${
+                    answerResult?.correct
+                      ? 'text-green-700 dark:text-green-300'
+                      : 'text-red-700 dark:text-red-300'
+                  }`}>
+                    {answerResult?.correct ? 'Correct!' : 'Incorrect'}
+                  </h4>
+                  {answerResult?.receivedXP > 0 && (
+                    <div className="flex items-center gap-1 text-yellow-600 dark:text-yellow-400">
+                      <Trophy className="w-4 h-4" />
+                      <span className="font-medium text-sm">+{answerResult.receivedXP} XP</span>
+                    </div>
+                  )}
+                </div>
+                <p className={`text-sm leading-relaxed ${
+                  answerResult?.correct
+                    ? 'text-green-600 dark:text-green-400'
+                    : 'text-red-600 dark:text-red-400'
+                }`}>
+                  {answerResult?.explanation || question.explanation || "No explanation provided"}
                 </p>
               </div>
             </div>

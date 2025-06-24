@@ -1,136 +1,44 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Clock, Star, BookOpen, ArrowRight, Filter } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ScrollProgress from "../../components/ScrollProgress";
 import useInViewport from "../../hooks/useInViewport";
 import CourseCard from "../../components/CourseCard";
+import { courseAPI, dataAdapters } from "../../services/api";
 
 const AllCourses = () => {
   const navigate = useNavigate();
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [headingRef, isHeadingInViewport] = useInViewport();
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Course data matching the CourseCard component format
-  const courses = [
-    {
-      id: "python",
-      title: "Python",
-      description: "Learn Python programming from basics to advanced concepts",
-      gradient: "from-yellow-400 via-orange-400 to-blue-500",
-      icon: "🐍",
-      difficulty: "Beginner",
-      duration: "8 weeks",
-      lessons: 24,
-      rating: 4.8,
-      price: "Free",
-      instructor: "Sarah Johnson"
-    },
-    {
-      id: "data-science",
-      title: "Data Science",
-      description: "Master data analysis, visualization, and machine learning",
-      gradient: "from-purple-500 via-pink-500 to-purple-600",
-      icon: "📊",
-      difficulty: "Intermediate",
-      duration: "10 weeks",
-      lessons: 32,
-      rating: 4.9,
-      price: "₹2,999",
-      instructor: "Mike Chen"
-    },
-    {
-      id: "machine-learning",
-      title: "Machine Learning",
-      description: "Build intelligent systems with ML algorithms",
-      gradient: "from-green-400 via-teal-500 to-green-600",
-      icon: "🤖",
-      difficulty: "Advanced",
-      duration: "12 weeks",
-      lessons: 40,
-      rating: 4.7,
-      price: "₹4,999",
-      instructor: "Alex Rodriguez"
-    },
-    {
-      id: "web-development",
-      title: "Web Development",
-      description: "Create modern web applications with latest technologies",
-      gradient: "from-blue-500 via-blue-600 to-blue-700",
-      icon: "🌐",
-      difficulty: "Beginner",
-      duration: "6 weeks",
-      lessons: 18,
-      rating: 4.6,
-      price: "Free",
-      instructor: "Dr. Emily Watson"
-    },
-    {
-      id: "react-mastery",
-      title: "React Mastery",
-      description: "Build dynamic user interfaces with React.js, hooks, and modern development patterns",
-      gradient: "from-cyan-400 via-blue-500 to-purple-600",
-      icon: "⚛️",
-      difficulty: "Intermediate",
-      duration: "10 weeks",
-      lessons: 32,
-      rating: 4.9,
-      price: "₹3,999",
-      instructor: "David Kim"
-    },
-    {
-      id: "nodejs-backend",
-      title: "Node.js Backend",
-      description: "Create scalable server-side applications with Node.js, Express, and MongoDB",
-      gradient: "from-green-500 via-emerald-500 to-teal-600",
-      icon: "🟢",
-      difficulty: "Advanced",
-      duration: "12 weeks",
-      lessons: 40,
-      rating: 4.8,
-      price: "₹5,999",
-      instructor: "Emily Watson"
-    },
-    {
-      id: "fullstack-mern",
-      title: "Full Stack MERN",
-      description: "Complete web development with MongoDB, Express, React, and Node.js stack",
-      gradient: "from-indigo-500 via-purple-500 to-pink-500",
-      icon: "🚀",
-      difficulty: "Advanced",
-      duration: "16 weeks",
-      lessons: 48,
-      rating: 4.9,
-      price: "₹7,999",
-      instructor: "Michael Chen"
-    },
-    {
-      id: "css-animations",
-      title: "CSS & Animations",
-      description: "Create stunning visual effects and animations with modern CSS techniques",
-      gradient: "from-pink-400 via-red-500 to-yellow-500",
-      icon: "🎨",
-      difficulty: "Intermediate",
-      duration: "4 weeks",
-      lessons: 16,
-      rating: 4.5,
-      price: "₹1,999",
-      instructor: "Lisa Park"
-    },
-    {
-      id: "devops-essentials",
-      title: "DevOps Essentials",
-      description: "Learn Docker, Kubernetes, CI/CD pipelines, and cloud deployment workflows",
-      gradient: "from-gray-500 via-slate-600 to-zinc-700",
-      icon: "⚙️",
-      difficulty: "Advanced",
-      duration: "8 weeks",
-      lessons: 28,
-      rating: 4.7,
-      price: "₹4,499",
-      instructor: "James Wilson"
-    }
-  ];
+  // Fetch all courses from backend
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        setLoading(true);
+        const backendCourses = await courseAPI.getAllCourses();
+        console.log('All courses from backend:', backendCourses);
+
+        // Adapt backend data to frontend format
+        const adaptedCourses = backendCourses.map(course => dataAdapters.adaptCourse(course));
+        setCourses(adaptedCourses);
+        setError(null);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+        setError(error.message);
+        // Set empty array on error
+        setCourses([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const filters = [
     { id: "all", label: "All Courses" },
@@ -143,7 +51,7 @@ const AllCourses = () => {
   const filteredCourses = courses.filter(course => {
     if (selectedFilter === "all") return true;
     if (selectedFilter === "free") return course.price === "Free";
-    return course.difficulty.toLowerCase() === selectedFilter;
+    return course.difficulty?.toLowerCase() === selectedFilter;
   });
 
 
@@ -203,23 +111,52 @@ const AllCourses = () => {
 
       {/* Courses Grid */}
       <div className="container px-6 pb-16 mx-auto max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-        >
-          {filteredCourses.map((course, index) => (
-            <CourseCard
-              key={course.id}
-              course={course}
-              index={index}
-              onClick={() => handleCourseClick(course.id)}
-            />
-          ))}
-        </motion.div>
+        {/* Loading State */}
+        {loading && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 animate-pulse">
+                <div className="h-48 bg-gray-300 dark:bg-gray-600 rounded-xl mb-4"></div>
+                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded mb-4"></div>
+                <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded mb-2"></div>
+                <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
+              </div>
+            ))}
+          </div>
+        )}
 
-        {filteredCourses.length === 0 && (
+        {/* Error State */}
+        {error && !loading && (
+          <div className="text-center py-16">
+            <p className="text-red-600 dark:text-red-400 mb-4 text-xl">
+              Failed to load courses: {error}
+            </p>
+            <p className="text-gray-600 dark:text-gray-400">
+              Please try refreshing the page or check your connection.
+            </p>
+          </div>
+        )}
+
+        {/* Courses Grid */}
+        {!loading && !error && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          >
+            {filteredCourses.map((course, index) => (
+              <CourseCard
+                key={course.id}
+                course={course}
+                index={index}
+                onClick={() => handleCourseClick(course.id)}
+              />
+            ))}
+          </motion.div>
+        )}
+
+        {!loading && !error && filteredCourses.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
