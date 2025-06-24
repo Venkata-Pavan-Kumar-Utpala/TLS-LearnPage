@@ -1,30 +1,25 @@
 import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 
 export default function LoginModal({ isOpen, onClose, onSwitchToSignup }) {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState("");
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const result = await login(formData);
 
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        console.log("Logged in:", data);
+      if (result.success) {
+        console.log("Logged in:", result.data);
         onClose(); // Close modal on success
-        // You can add additional success handling here
       } else {
-        setError(data.message || "Login failed");
+        setError(result.error || "Login failed");
       }
     } catch (err) {
       console.error(err);

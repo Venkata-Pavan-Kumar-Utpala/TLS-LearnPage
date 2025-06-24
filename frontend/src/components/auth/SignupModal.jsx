@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 
 export default function SignupModal({ isOpen, onClose, onSwitchToLogin }) {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }) {
   });
 
   const [error, setError] = useState('');
+  const { register } = useAuth();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,20 +24,13 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }) {
     setError('');
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const result = await register(formData);
 
-      const data = await res.json();
-
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
+      if (result.success) {
+        console.log("Signed up:", result.data);
         onClose(); // Close modal on success
-        // You can add additional success handling here
       } else {
-        setError(data.message || "Signup failed");
+        setError(result.error || "Signup failed");
       }
     } catch (err) {
       console.error("Signup error:", err);

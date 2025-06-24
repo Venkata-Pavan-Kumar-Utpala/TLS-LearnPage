@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import { useAuthModalContext } from '../context/AuthModalContext'
+import { useAuth } from '../context/AuthContext'
 import XPBadge from './XPBadge'
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme()
   const { openLogin } = useAuthModalContext()
+  const { isAuthenticated, user, logout } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
@@ -94,16 +96,36 @@ const Navbar = () => {
           >
             Careers
           </Link>
-          <button
-            onClick={openLogin}
-            className={`relative text-[15px] font-extralight transition-colors duration-300 hover:after:w-full after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:w-0 after:h-px after:bg-current after:transition-all after:duration-300 ${
-              isDarkMode
-                ? 'text-[#e0e6f5] hover:text-white'
-                : 'text-[#00184f]'
-            }`}
-          >
-            Log In
-          </button>
+          {isAuthenticated ? (
+            <div className="flex items-center gap-4">
+              <span className={`text-[15px] font-extralight ${
+                isDarkMode ? 'text-[#e0e6f5]' : 'text-[#00184f]'
+              }`}>
+                Hi, {user?.firstName || user?.email || 'User'}
+              </span>
+              <button
+                onClick={logout}
+                className={`relative text-[15px] font-extralight transition-colors duration-300 hover:after:w-full after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:w-0 after:h-px after:bg-current after:transition-all after:duration-300 ${
+                  isDarkMode
+                    ? 'text-[#e0e6f5] hover:text-white'
+                    : 'text-[#00184f]'
+                }`}
+              >
+                Log Out
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={openLogin}
+              className={`relative text-[15px] font-extralight transition-colors duration-300 hover:after:w-full after:content-[''] after:absolute after:left-0 after:bottom-[-2px] after:w-0 after:h-px after:bg-current after:transition-all after:duration-300 ${
+                isDarkMode
+                  ? 'text-[#e0e6f5] hover:text-white'
+                  : 'text-[#00184f]'
+              }`}
+            >
+              Log In
+            </button>
+          )}
 
           {/* XP Badge */}
           <XPBadge />
@@ -180,19 +202,42 @@ const Navbar = () => {
         >
           Careers
         </Link>
-        <button
-          onClick={() => {
-            closeMenu();
-            openLogin();
-          }}
-          className={`relative block py-2.5 text-[14px] transition-colors duration-300 hover:after:w-full after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-px after:bg-current after:transition-all after:duration-300 ${
-            isDarkMode
-              ? 'text-[#e0e6f5] hover:text-white'
-              : 'text-black hover:text-[#333]'
-          }`}
-        >
-          Log In
-        </button>
+        {isAuthenticated ? (
+          <div className="py-2.5">
+            <div className={`text-[14px] mb-2 ${
+              isDarkMode ? 'text-[#e0e6f5]' : 'text-black'
+            }`}>
+              Hi, {user?.firstName || user?.email || 'User'}
+            </div>
+            <button
+              onClick={() => {
+                closeMenu();
+                logout();
+              }}
+              className={`relative block py-2.5 text-[14px] transition-colors duration-300 hover:after:w-full after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-px after:bg-current after:transition-all after:duration-300 ${
+                isDarkMode
+                  ? 'text-[#e0e6f5] hover:text-white'
+                  : 'text-black hover:text-[#333]'
+              }`}
+            >
+              Log Out
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => {
+              closeMenu();
+              openLogin();
+            }}
+            className={`relative block py-2.5 text-[14px] transition-colors duration-300 hover:after:w-full after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-px after:bg-current after:transition-all after:duration-300 ${
+              isDarkMode
+                ? 'text-[#e0e6f5] hover:text-white'
+                : 'text-black hover:text-[#333]'
+            }`}
+          >
+            Log In
+          </button>
+        )}
 
         {/* XP Badge - Mobile */}
         <div className="py-2">

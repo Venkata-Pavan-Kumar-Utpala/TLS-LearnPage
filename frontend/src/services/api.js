@@ -15,9 +15,15 @@ const handleResponse = async (response) => {
 // Helper function to get auth headers
 const getAuthHeaders = () => {
   const token = localStorage.getItem('authToken');
+
+  // Also check for 'token' key as backup for legacy compatibility
+  const backupToken = localStorage.getItem('token');
+
+  const finalToken = token || backupToken;
+
   return {
     'Content-Type': 'application/json',
-    ...(token && { Authorization: `Bearer ${token}` })
+    ...(finalToken && { Authorization: `Bearer ${finalToken}` })
   };
 };
 
@@ -87,16 +93,40 @@ export const courseAPI = {
   },
 
   // Submit individual quiz answer (new flow)
-  submitQuizAnswer: async (courseId, topicId, questionId, selectedOption) => {
-    const response = await fetch(`${API_BASE}/courses/${courseId}/topics/${topicId}/quiz/submit`, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({
-        questionId,
-        selectedOption
-      }),
-    });
-    return handleResponse(response);
+  submitQuizAnswer: async (courseId, topicId, questionId, selectedOption, quizId = null) => {
+    try {
+      let actualQuizId = quizId;
+
+      // If quizId is not provided, try to get it from course data
+      if (!actualQuizId) {
+        console.log('Quiz ID not provided, fetching from course data...');
+        const courseData = await courseAPI.getCourse(courseId);
+        const topic = courseData.topics?.find(t => t._id === topicId);
+        actualQuizId = topic?.quizId;
+
+        if (!actualQuizId) {
+          throw new Error('Quiz ID not found for this topic');
+        }
+      }
+
+      console.log('Submitting quiz answer:', { courseId, quizId: actualQuizId, questionId, selectedOption });
+
+      // Submit the answer with the correct quizId
+      const response = await fetch(`${API_BASE}/courses/${courseId}/quiz/submit`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          quizId: actualQuizId,
+          questionId,
+          selectedOption
+        }),
+      });
+
+      return handleResponse(response);
+    } catch (error) {
+      console.error('Error in submitQuizAnswer:', error);
+      throw error;
+    }
   },
 };
 

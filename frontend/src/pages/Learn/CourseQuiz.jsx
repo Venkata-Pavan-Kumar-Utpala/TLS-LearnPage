@@ -26,6 +26,7 @@ const CourseQuiz = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [topicId, setTopicId] = useState(null);
+  const [quizId, setQuizId] = useState(null); // Store quiz ID from backend response
 
   // Get topicId from URL params or location state
   useEffect(() => {
@@ -35,6 +36,11 @@ const CourseQuiz = () => {
     const topicIdFromState = location.state?.topicId;
 
     const finalTopicId = topicIdFromUrl || topicIdFromState;
+
+    console.log('Quiz component - URL params:', urlParams.toString());
+    console.log('Quiz component - topicId from URL:', topicIdFromUrl);
+    console.log('Quiz component - topicId from state:', topicIdFromState);
+    console.log('Quiz component - final topicId:', finalTopicId);
 
     if (finalTopicId) {
       setTopicId(finalTopicId);
@@ -51,13 +57,34 @@ const CourseQuiz = () => {
 
       try {
         setLoading(true);
+
+        // First, get the course data to find the quiz ID
+        console.log('Fetching course data to get quiz ID...');
+        const courseData = await courseAPI.getCourse(courseId);
+        console.log('Course data received:', courseData);
+
+        // Find the topic and get its quiz ID
+        const topic = courseData.topics?.find(t => t.topicId === topicId || t._id === topicId);
+        console.log('Found topic:', topic);
+
+        if (topic && topic.quizId) {
+          setQuizId(topic.quizId);
+          console.log('Quiz ID found in course data:', topic.quizId);
+        } else {
+          console.error('Quiz ID not found in course data for topic:', topicId);
+        }
+
+        // Then fetch the quiz questions
         const quizData = await courseAPI.getQuiz(courseId, topicId);
         console.log('Quiz data from backend:', quizData);
 
         // Transform backend data to match frontend format
+        // Handle both 'topic' and 'topicTitle' from backend response
+        const topicTitle = quizData.topicTitle || quizData.topic || topic?.title || 'Quiz';
+
         const transformedQuiz = {
-          title: `${quizData.topicTitle} Quiz`,
-          description: `Test your knowledge on ${quizData.topicTitle}`,
+          title: `${topicTitle} Quiz`,
+          description: `Test your knowledge on ${topicTitle}`,
           timeLimit: 600, // Default 10 minutes
           passingScore: 70, // Default passing score
           xpPerQuestion: 10, // Default XP per question
@@ -66,7 +93,7 @@ const CourseQuiz = () => {
             displayId: index + 1, // For display purposes
             question: q.question,
             options: q.options,
-            correct: q.correctAnswer,
+            correct: q.correctAnswer, // This won't be available from backend for security
             explanation: q.explanation || "No explanation provided"
           }))
         };
@@ -315,6 +342,7 @@ const CourseQuiz = () => {
               isLastQuestion={currentQuestion === quiz.questions.length - 1}
               courseId={courseId}
               topicId={topicId}
+              quizId={quizId}
             />
           )}
         </div>
@@ -327,7 +355,7 @@ const CourseQuiz = () => {
 const QuizQuestion = ({
   question, questionNumber, totalQuestions, selectedAnswer,
   onAnswerSelect, onNext, onPrevious, timeLeft, canGoNext,
-  canGoPrevious, isLastQuestion, courseId, topicId
+  canGoPrevious, isLastQuestion, courseId, topicId, quizId
 }) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
@@ -349,15 +377,24 @@ const QuizQuestion = ({
           courseId,
           topicId,
           question.id,
-          selectedAnswer
+          selectedAnswer,
+          quizId // Pass the quiz ID we got from the quiz data
         );
 
+        console.log('Backend response:', response);
         setAnswerResult(response);
         setAnswerSubmitted(true);
         setShowFeedback(true);
       } catch (error) {
         console.error('Error submitting answer:', error);
-        // Still show feedback even if API call fails
+        // Create a fallback response for error cases
+        setAnswerResult({
+          correct: false,
+          explanation: `Error submitting answer: ${error.message}`,
+          receivedXP: 0,
+          correctOption: null,
+          selectedOption: selectedAnswer
+        });
         setAnswerSubmitted(true);
         setShowFeedback(true);
       } finally {
@@ -379,12 +416,19 @@ const QuizQuestion = ({
         : 'border-gray-300 dark:border-gray-500 bg-white/50 dark:bg-gray-700/50 text-gray-800 dark:text-gray-200 hover:border-blue-400 dark:hover:border-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20';
     }
 
-    if (index === question.correct) {
+    // Use backend response for correct answer
+    if (answerResult && index === answerResult.correctOption) {
       return 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300';
     }
 
-    if (selectedAnswer === index && index !== question.correct) {
+    // Show selected answer as red if it's wrong
+    if (selectedAnswer === index && answerResult && !answerResult.correct) {
       return 'border-red-500 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300';
+    }
+
+    // Show selected answer as green if it's correct
+    if (selectedAnswer === index && answerResult && answerResult.correct) {
+      return 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300';
     }
 
     return 'border-gray-300 dark:border-gray-500 bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300';
@@ -397,11 +441,13 @@ const QuizQuestion = ({
       ) : null;
     }
 
-    if (index === question.correct) {
+    // Use backend response for correct answer
+    if (answerResult && index === answerResult.correctOption) {
       return <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />;
     }
 
-    if (selectedAnswer === index && index !== question.correct) {
+    // Show X for selected wrong answer
+    if (selectedAnswer === index && answerResult && !answerResult.correct) {
       return <X className="w-4 h-4 text-red-600 dark:text-red-400" />;
     }
 
@@ -453,10 +499,12 @@ const QuizQuestion = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
-                    showFeedback && index === question.correct
+                    showFeedback && answerResult && index === answerResult.correctOption
                       ? 'border-green-500 bg-green-500'
-                      : showFeedback && selectedAnswer === index && index !== question.correct
+                      : showFeedback && selectedAnswer === index && answerResult && !answerResult.correct
                       ? 'border-red-500 bg-red-500'
+                      : showFeedback && selectedAnswer === index && answerResult && answerResult.correct
+                      ? 'border-green-500 bg-green-500'
                       : selectedAnswer === index && !showFeedback
                       ? 'border-blue-500 bg-blue-500'
                       : 'border-gray-400 dark:border-gray-400'
@@ -470,13 +518,13 @@ const QuizQuestion = ({
                 </div>
 
                 {/* Visual feedback icons - only show after submission */}
-                {showFeedback && (
+                {showFeedback && answerResult && (
                   <div className="flex-shrink-0">
-                    {index === question.correct ? (
+                    {index === answerResult.correctOption ? (
                       <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
                         <CheckCircle className="w-5 h-5 text-white" />
                       </div>
-                    ) : selectedAnswer === index ? (
+                    ) : selectedAnswer === index && !answerResult.correct ? (
                       <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center">
                         <X className="w-5 h-5 text-white" />
                       </div>
@@ -517,18 +565,18 @@ const QuizQuestion = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
             className={`mt-6 p-4 rounded-xl border ${
-              answerResult?.correct || selectedAnswer === question.correct
+              answerResult?.correct
                 ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
                 : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
             }`}
           >
             <div className="flex items-start gap-3">
               <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                answerResult?.correct || selectedAnswer === question.correct
+                answerResult?.correct
                   ? 'bg-green-500'
                   : 'bg-red-500'
               }`}>
-                {answerResult?.correct || selectedAnswer === question.correct ? (
+                {answerResult?.correct ? (
                   <CheckCircle className="w-4 h-4 text-white" />
                 ) : (
                   <X className="w-4 h-4 text-white" />
@@ -537,11 +585,11 @@ const QuizQuestion = ({
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
                   <h4 className={`font-semibold ${
-                    answerResult?.correct || selectedAnswer === question.correct
+                    answerResult?.correct
                       ? 'text-green-700 dark:text-green-300'
                       : 'text-red-700 dark:text-red-300'
                   }`}>
-                    {answerResult?.correct || selectedAnswer === question.correct ? 'Correct!' : 'Incorrect'}
+                    {answerResult?.correct ? 'Correct!' : 'Incorrect'}
                   </h4>
                   {answerResult?.receivedXP > 0 && (
                     <div className="flex items-center gap-1 text-yellow-600 dark:text-yellow-400">
@@ -551,11 +599,11 @@ const QuizQuestion = ({
                   )}
                 </div>
                 <p className={`text-sm leading-relaxed ${
-                  answerResult?.correct || selectedAnswer === question.correct
+                  answerResult?.correct
                     ? 'text-green-600 dark:text-green-400'
                     : 'text-red-600 dark:text-red-400'
                 }`}>
-                  {answerResult?.explanation || question.explanation}
+                  {answerResult?.explanation || question.explanation || "No explanation provided"}
                 </p>
               </div>
             </div>

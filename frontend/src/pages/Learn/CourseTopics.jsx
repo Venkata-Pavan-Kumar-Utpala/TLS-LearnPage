@@ -11,6 +11,8 @@ import useInViewport from "../../hooks/useInViewport";
 import Navbar from "../../components/Navbar";
 import XPTracker from "../../components/XPTracker";
 import { courseAPI } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
+import { useAuthModalContext } from "../../context/AuthModalContext";
 
 const CourseTopics = () => {
   const { courseId } = useParams();
@@ -19,6 +21,10 @@ const CourseTopics = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [titleRef, isTitleInViewport] = useInViewport();
+
+  // Authentication hooks
+  const { isAuthenticated } = useAuth();
+  const { openLogin } = useAuthModalContext();
 
   // Backend data state
   const [backendCourse, setBackendCourse] = useState(null);
@@ -235,7 +241,7 @@ print(df.describe())    # Statistical summary`,
         title: backendCourse.title,
         description: `Master ${backendCourse.title} fundamentals with hands-on coding exercises`,
         topics: backendCourse.topics.map((topic, index) => ({
-          id: topic.topicId || topic.id || `topic_${index}`,
+          id: topic._id || topic.topicId || topic.id || `topic_${index}`,
           title: topic.title,
           description: `Learn about ${topic.title} concepts and applications`,
           exercises: 5,
@@ -320,6 +326,12 @@ print(df.describe())    # Statistical summary`,
   }
 
   const handleTakeQuiz = () => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      openLogin();
+      return;
+    }
+
     // Use real backend topic ID if available, otherwise fallback to hardcoded
     let topicId = null;
     let topicTitle = 'Quiz';
@@ -327,9 +339,10 @@ print(df.describe())    # Statistical summary`,
     if (backendCourse && backendCourse.topics && backendCourse.topics[selectedTopic]) {
       // Use real backend topic ID
       const backendTopic = backendCourse.topics[selectedTopic];
-      topicId = backendTopic.topicId || backendTopic.id;
+      topicId = backendTopic._id || backendTopic.topicId || backendTopic.id;
       topicTitle = backendTopic.title;
       console.log('Using backend topic ID:', topicId, 'for topic:', topicTitle);
+      console.log('Backend topic object:', backendTopic);
     } else {
       // Fallback to hardcoded data
       const currentTopicData = currentCourse?.topics[selectedTopic];
