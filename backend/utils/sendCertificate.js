@@ -26,4 +26,3 @@ export const sendPaymentStatusEmail = async ({ user, status }) => {
   }
   await transporter.sendMail(mailOptions);
 };
-
