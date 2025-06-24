@@ -164,11 +164,11 @@ const Navbar = () => {
       </nav>
 
       {/* Mobile Navigation Menu */}
-      <nav className={`md:hidden ${isMenuOpen ? 'flex' : 'hidden'} absolute top-full left-0 w-screen flex-col gap-2 px-5 py-2 shadow-lg z-[999] transition-all duration-300 ${
+      <nav className={`md:hidden ${isMenuOpen ? 'flex' : 'hidden'} absolute top-full left-0 w-screen flex-col gap-2 px-5 py-2 z-[999] transition-all duration-300 backdrop-blur-md border-b border-white/20 dark:border-gray-700/20 ${
         isDarkMode
-          ? 'bg-gradient-to-r from-[#0a1128] via-[#001233] to-[#0a1128]'
-          : 'bg-gradient-to-r from-[#daf0fa] via-[#bceaff] to-[#bceaff]'
-      }`} style={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' }}>
+          ? 'bg-gradient-to-r from-[#0a1128]/90 via-[#001233]/90 to-[#0a1128]/90'
+          : 'bg-gradient-to-r from-[#daf0fa]/90 via-[#bceaff]/90 to-[#bceaff]/90'
+      }`}>
         <Link
           to="/learn"
           onClick={closeMenu}

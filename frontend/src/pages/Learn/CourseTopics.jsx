@@ -9,7 +9,6 @@ import {
 import ScrollProgress from "../../components/ScrollProgress";
 import useInViewport from "../../hooks/useInViewport";
 import Navbar from "../../components/Navbar";
-import XPTracker from "../../components/XPTracker";
 import { courseAPI } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import { useAuthModalContext } from "../../context/AuthModalContext";
@@ -667,15 +666,7 @@ print(df.describe())    # Statistical summary`,
                 </motion.div>
               </div>
 
-              {/* XP Tracker */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="mb-8"
-              >
-                <XPTracker showDetailed={true} />
-              </motion.div>
+
 
               {/* Content Sections */}
               <div className="space-y-8">

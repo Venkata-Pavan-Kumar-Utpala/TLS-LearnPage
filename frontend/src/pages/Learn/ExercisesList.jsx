@@ -161,15 +161,7 @@ const ExercisesList = () => {
           </div>
         </motion.div>
 
-        {/* XP Tracker */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-8"
-        >
-          <XPTracker showDetailed={true} />
-        </motion.div>
+
 
         {/* Exercises List */}
         <div className="space-y-4">
