@@ -141,6 +141,35 @@ export const progressAPI = {
   },
 };
 
+// Payment API
+export const paymentAPI = {
+  // Check eligibility for certification
+  checkEligibility: async (userId, courseId) => {
+    const response = await fetch(`${API_BASE}/certificate/${userId}/${courseId}/status`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Submit payment for certification
+  payCertificateFee: async (paymentData) => {
+    const response = await fetch(`${API_BASE}/certificate/pay`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(paymentData),
+    });
+    return handleResponse(response);
+  },
+
+  // Get all payments (admin only)
+  getAllPayments: async () => {
+    const response = await fetch(`${API_BASE}/certificate/payments`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+};
+
 // Exercise API
 export const exerciseAPI = {
   // Submit exercise
@@ -252,6 +281,7 @@ export default {
   courseAPI,
   progressAPI,
   exerciseAPI,
+  paymentAPI,
   dataAdapters,
   apiStatus,
   API_ERRORS,

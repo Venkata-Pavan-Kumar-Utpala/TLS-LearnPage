@@ -17,30 +17,87 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useAuthModalContext } from '../../context/AuthModalContext';
+import { paymentAPI, progressAPI, courseAPI } from '../../services/api';
 
 const CertificationPayment = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { isAuthenticated, user } = useAuth();
   const { openLogin } = useAuthModalContext();
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('standard');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('upi');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [eligibilityData, setEligibilityData] = useState(null);
+  const [userProgress, setUserProgress] = useState(null);
+  const [certification, setCertification] = useState(null);
   const [formData, setFormData] = useState({
     email: user?.email || '',
     phone: '',
     name: user?.firstName || ''
   });
 
-  // Mock user XP (in real app, fetch from user profile)
-  const userXP = 1250;
-
   const certificationId = searchParams.get('id');
+  const courseId = searchParams.get('courseId') || certificationId;
 
-  // Mock certification data (in real app, fetch based on ID)
-  const certification = {
+  // Calculate user XP from progress data
+  const userXP = userProgress ? (userProgress.totalCourseXP + userProgress.totalExerciseXP) : 0;
+
+  // Fetch eligibility, user progress, and certification data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+
+        // Fetch certification details
+        if (courseId) {
+          const courseData = await courseAPI.getCourse(courseId);
+          setCertification({
+            id: courseData._id,
+            title: courseData.title,
+            description: courseData.description || "Master the fundamentals and advanced concepts",
+            duration: "12 weeks",
+            level: courseData.level || "Intermediate",
+            price: 4999,
+            originalPrice: 7999,
+            rating: 4.8,
+            studentsEnrolled: Math.floor(Math.random() * 2000) + 1000,
+            features: [
+              "Live project-based learning",
+              "Industry mentor guidance",
+              "Portfolio development",
+              "Job placement assistance",
+              "Lifetime access to materials",
+              "Certificate of completion",
+              "24/7 community support"
+            ]
+          });
+        }
+
+        if (isAuthenticated && user?._id && courseId) {
+          // Fetch user progress
+          const progressData = await progressAPI.getUserProgress(user._id);
+          setUserProgress(progressData);
+
+          // Fetch eligibility data
+          const eligibility = await paymentAPI.checkEligibility(user._id, courseId);
+          setEligibilityData(eligibility);
+        }
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [isAuthenticated, user, courseId]);
+
+  // Default certification data for fallback
+  const defaultCertification = {
     id: 1,
-    title: "Full Stack Web Development",
-    description: "Master modern web development with React, Node.js, and MongoDB",
+    title: "Certification Program",
+    description: "Complete the course requirements to earn your certification",
     duration: "12 weeks",
     level: "Intermediate",
     price: 4999,
@@ -49,7 +106,7 @@ const CertificationPayment = () => {
     studentsEnrolled: 2847,
     features: [
       "Live project-based learning",
-      "Industry mentor guidance", 
+      "Industry mentor guidance",
       "Portfolio development",
       "Job placement assistance",
       "Lifetime access to materials",
@@ -58,13 +115,15 @@ const CertificationPayment = () => {
     ]
   };
 
+  const currentCertification = certification || defaultCertification;
+
   const paymentOptions = [
     {
-      id: 'standard',
-      name: 'Standard Payment',
-      description: 'Secure payment with credit card',
-      price: certification.price,
-      icon: CreditCard,
+      id: 'upi',
+      name: 'UPI Payment',
+      description: 'Secure payment with UPI',
+      price: currentCertification.price,
+      icon: Smartphone,
       color: 'blue',
       recommended: true
     },
@@ -82,28 +141,10 @@ const CertificationPayment = () => {
 
   const paymentMethods = [
     {
-      id: 'card',
-      name: 'Credit/Debit Card',
-      icon: CreditCard,
-      description: 'Visa, Mastercard, RuPay'
-    },
-    {
       id: 'upi',
       name: 'UPI',
       icon: Smartphone,
-      description: 'Google Pay, PhonePe, Paytm'
-    },
-    {
-      id: 'wallet',
-      name: 'Wallet',
-      icon: Wallet,
-      description: 'Paytm, Mobikwik, Amazon Pay'
-    },
-    {
-      id: 'netbanking',
-      name: 'Net Banking',
-      icon: Building,
-      description: 'All major banks supported'
+      description: 'Google Pay, PhonePe, Paytm, BHIM'
     }
   ];
 
@@ -116,51 +157,77 @@ const CertificationPayment = () => {
 
   const handlePayment = async () => {
     if (!isAuthenticated) {
-      openLogin(); // Open login modal instead of navigating
+      openLogin();
+      return;
+    }
+
+    // Check if user is eligible for certification
+    if (eligibilityData && !eligibilityData.eligible) {
+      alert('You need to complete all course requirements before purchasing certification.');
       return;
     }
 
     setIsProcessing(true);
 
     try {
-      // TODO: Integrate with Razorpay
-      // const options = {
-      //   key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-      //   amount: certification.price * 100, // Amount in paise
-      //   currency: 'INR',
-      //   name: 'TechLearn Solutions',
-      //   description: certification.title,
-      //   handler: function (response) {
-      //     // Handle successful payment
-      //     console.log('Payment successful:', response);
-      //     navigate('/learn/certification/success');
-      //   },
-      //   prefill: {
-      //     name: formData.name,
-      //     email: formData.email,
-      //     contact: formData.phone
-      //   },
-      //   theme: {
-      //     color: '#3B82F6'
-      //   }
-      // };
-      // 
-      // const rzp = new window.Razorpay(options);
-      // rzp.open();
+      if (selectedPaymentMethod === 'xp') {
+        // Handle XP redemption
+        if (userXP < 1000) {
+          alert('Insufficient XP points. You need 1000 XP to redeem certification.');
+          setIsProcessing(false);
+          return;
+        }
 
-      // Mock payment processing
-      setTimeout(() => {
-        setIsProcessing(false);
-        alert('Payment successful! You are now enrolled in the certification program.');
+        // Submit XP payment
+        const paymentData = {
+          transactionId: `XP_${Date.now()}_${user._id}`,
+          paymentType: 'xp_redemption'
+        };
+
+        await paymentAPI.payCertificateFee(paymentData);
+        alert('Certification purchased successfully using XP points!');
         navigate('/learn');
-      }, 3000);
+
+      } else {
+        // Handle UPI payment
+        // Generate a mock transaction ID for UPI payment
+        const transactionId = `UPI_${Date.now()}_${user._id}`;
+
+        const paymentData = {
+          transactionId,
+          paymentType: 'upi'
+        };
+
+        // Submit payment to backend
+        await paymentAPI.payCertificateFee(paymentData);
+
+        alert('Payment submitted successfully! Your payment is being processed and you will receive confirmation via email.');
+        navigate('/learn');
+      }
 
     } catch (error) {
       console.error('Payment error:', error);
-      setIsProcessing(false);
       alert('Payment failed. Please try again.');
+    } finally {
+      setIsProcessing(false);
     }
   };
+
+  // Show loading state while fetching data
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-gray-600 dark:text-gray-400">Loading certification details...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
@@ -189,6 +256,40 @@ const CertificationPayment = () => {
               <h2 className="font-poppins text-2xl md:text-3xl font-medium brand-heading-primary mb-6 tracking-wider">
                 Complete Your Enrollment
               </h2>
+
+              {/* Eligibility Status */}
+              {eligibilityData && (
+                <div className={`mb-6 p-4 rounded-xl border ${
+                  eligibilityData.eligible
+                    ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700'
+                    : 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-700'
+                }`}>
+                  <div className="flex items-center gap-3 mb-2">
+                    {eligibilityData.eligible ? (
+                      <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
+                    ) : (
+                      <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+                    )}
+                    <h3 className={`font-semibold ${
+                      eligibilityData.eligible
+                        ? 'text-green-800 dark:text-green-200'
+                        : 'text-yellow-800 dark:text-yellow-200'
+                    }`}>
+                      {eligibilityData.eligible ? 'Eligible for Certification' : 'Complete Requirements First'}
+                    </h3>
+                  </div>
+                  <p className={`text-sm ${
+                    eligibilityData.eligible
+                      ? 'text-green-700 dark:text-green-300'
+                      : 'text-yellow-700 dark:text-yellow-300'
+                  }`}>
+                    {eligibilityData.eligible
+                      ? 'You have completed all course requirements and are eligible for certification.'
+                      : `Progress: ${eligibilityData.userTotalXP}/${eligibilityData.totalPossibleXP} XP. Complete all topics and exercises to become eligible.`
+                    }
+                  </p>
+                </div>
+              )}
 
               {/* Contact Information */}
               <div className="mb-6">
@@ -311,25 +412,28 @@ const CertificationPayment = () => {
                 </div>
               </div>
 
-              {/* Payment Methods (only show for standard payment) */}
-              {selectedPaymentMethod === 'standard' && (
+              {/* Payment Methods (only show for UPI payment) */}
+              {selectedPaymentMethod === 'upi' && (
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                    Select Payment Method
+                    UPI Payment Method
                   </h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="flex justify-center">
                     {paymentMethods.map((method) => {
                       const Icon = method.icon;
                       return (
-                        <button
+                        <div
                           key={method.id}
-                          className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-300 text-center"
+                          className="p-6 border-2 border-blue-500 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-center max-w-xs"
                         >
-                          <Icon className="w-6 h-6 text-gray-600 dark:text-gray-400 mx-auto mb-2" />
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
+                          <Icon className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
+                          <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                             {method.name}
                           </div>
-                        </button>
+                          <div className="text-sm text-gray-600 dark:text-gray-400">
+                            {method.description}
+                          </div>
+                        </div>
                       );
                     })}
                   </div>
@@ -369,8 +473,8 @@ const CertificationPayment = () => {
                   </>
                 ) : (
                   <>
-                    <Lock className="w-5 h-5" />
-                    <span>Pay ₹{certification.price.toLocaleString()}</span>
+                    <Smartphone className="w-5 h-5" />
+                    <span>Pay ₹{currentCertification.price.toLocaleString()} via UPI</span>
                   </>
                 )}
               </button>
@@ -392,10 +496,10 @@ const CertificationPayment = () => {
               {/* Certification Details */}
               <div className="mb-6">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  {certification.title}
+                  {currentCertification.title}
                 </h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                  {certification.description}
+                  {currentCertification.description}
                 </p>
                 
                 <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
@@ -420,7 +524,7 @@ const CertificationPayment = () => {
                   What's Included:
                 </h4>
                 <ul className="space-y-2">
-                  {certification.features.map((feature, idx) => (
+                  {currentCertification.features.map((feature, idx) => (
                     <li key={idx} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                       <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
                       <span>{feature}</span>
@@ -433,17 +537,17 @@ const CertificationPayment = () => {
               <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-600 dark:text-gray-400">Original Price:</span>
-                  <span className="text-gray-500 line-through">₹{certification.originalPrice.toLocaleString()}</span>
+                  <span className="text-gray-500 line-through">₹{currentCertification.originalPrice.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-600 dark:text-gray-400">Discount:</span>
                   <span className="text-green-600 dark:text-green-400">
-                    -₹{(certification.originalPrice - certification.price).toLocaleString()}
+                    -₹{(currentCertification.originalPrice - currentCertification.price).toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-xl font-bold text-gray-900 dark:text-white">
                   <span>Total:</span>
-                  <span>₹{certification.price.toLocaleString()}</span>
+                  <span>₹{currentCertification.price.toLocaleString()}</span>
                 </div>
               </div>
             </motion.div>
