@@ -25,6 +25,10 @@ const CourseQuiz = () => {
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
   const [quizStarted, setQuizStarted] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
+
+  // Track correct answers and XP from backend responses
+  const [correctAnswers, setCorrectAnswers] = useState({});
+  const [questionResults, setQuestionResults] = useState({});
   const [titleRef, isTitleInViewport] = useInViewport();
 
   // Backend data state
@@ -113,8 +117,8 @@ const CourseQuiz = () => {
             displayId: index + 1, // For display purposes
             question: q.question,
             options: q.options,
-            correct: q.correctAnswer, // This won't be available from backend for security
             explanation: q.explanation || "No explanation provided"
+            // Note: correctAnswer is not included for security - answers are verified by backend
           }))
         };
 
@@ -190,13 +194,17 @@ const CourseQuiz = () => {
   };
 
   const calculateScore = () => {
-    let correct = 0;
-    quiz.questions.forEach((question, index) => {
-      if (selectedAnswers[index] === question.correct) {
-        correct++;
-      }
-    });
-    return Math.round((correct / quiz.questions.length) * 100);
+    // Calculate score based on backend responses, not frontend comparison
+    const totalQuestions = quiz.questions.length;
+    const correctCount = Object.values(correctAnswers).filter(isCorrect => isCorrect).length;
+    return Math.round((correctCount / totalQuestions) * 100);
+  };
+
+  const calculateTotalXP = () => {
+    // Calculate total XP from backend responses
+    return Object.values(questionResults).reduce((total, result) => {
+      return total + (result?.receivedXP || 0);
+    }, 0);
   };
 
   const handleStartQuiz = () => {
@@ -215,9 +223,12 @@ const CourseQuiz = () => {
   const handleRetakeQuiz = () => {
     setCurrentQuestion(0);
     setSelectedAnswers({});
+    setCorrectAnswers({});
+    setQuestionResults({});
     setShowResults(false);
     setQuizStarted(false);
     setTimeLeft(quiz.timeLimit);
+    setEarnedXP(0);
     // Scroll to top when retaking quiz
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
@@ -363,6 +374,9 @@ const CourseQuiz = () => {
               selectedAnswers={selectedAnswers}
               questions={quiz.questions}
               xpPerQuestion={quiz.xpPerQuestion}
+              correctAnswers={correctAnswers}
+              questionResults={questionResults}
+              totalXP={calculateTotalXP()}
               onRetake={handleRetakeQuiz}
               onBackToCourse={() => {
                 window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
@@ -390,6 +404,17 @@ const CourseQuiz = () => {
               courseId={courseId}
               topicId={topicId}
               quizId={quizId}
+              onAnswerResult={(questionIndex, result) => {
+                setCorrectAnswers(prev => ({
+                  ...prev,
+                  [questionIndex]: result.correct
+                }));
+                setQuestionResults(prev => ({
+                  ...prev,
+                  [questionIndex]: result
+                }));
+              }}
+              currentQuestionIndex={currentQuestion}
             />
           )}
         </div>
@@ -402,7 +427,8 @@ const CourseQuiz = () => {
 const QuizQuestion = ({
   question, questionNumber, totalQuestions, selectedAnswer,
   onAnswerSelect, onNext, onPrevious, timeLeft, canGoNext,
-  canGoPrevious, isLastQuestion, courseId, topicId, quizId
+  canGoPrevious, isLastQuestion, courseId, topicId, quizId,
+  onAnswerResult, currentQuestionIndex
 }) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
@@ -442,18 +468,29 @@ const QuizQuestion = ({
         setAnswerResult(response);
         setAnswerSubmitted(true);
         setShowFeedback(true);
+
+        // Update parent component with the result
+        if (onAnswerResult) {
+          onAnswerResult(currentQuestionIndex, response);
+        }
       } catch (error) {
         console.error('Error submitting answer:', error);
         // Create a fallback response for error cases
-        setAnswerResult({
+        const errorResult = {
           correct: false,
           explanation: `Error submitting answer: ${error.message}`,
           receivedXP: 0,
           correctOption: null,
           selectedOption: selectedAnswer
-        });
+        };
+        setAnswerResult(errorResult);
         setAnswerSubmitted(true);
         setShowFeedback(true);
+
+        // Update parent component with the error result
+        if (onAnswerResult) {
+          onAnswerResult(currentQuestionIndex, errorResult);
+        }
       } finally {
         setSubmitting(false);
       }
@@ -705,13 +742,14 @@ const QuizQuestion = ({
 // Quiz Results Component
 const QuizResults = ({
   score, passingScore, totalQuestions, selectedAnswers,
-  questions, onRetake, onBackToCourse, onBackToHome, xpPerQuestion
+  questions, onRetake, onBackToCourse, onBackToHome, xpPerQuestion,
+  correctAnswers, questionResults, totalXP
 }) => {
   const passed = score >= passingScore;
-  const correctAnswers = questions.filter((q, index) => selectedAnswers[index] === q.correct).length;
-  const earnedXP = correctAnswers * (xpPerQuestion || 10);
-  const bonusXP = passed ? Math.floor(earnedXP * 0.2) : 0; // 20% bonus for passing
-  const totalXP = earnedXP + bonusXP;
+
+  // Use the passed totalXP from backend responses instead of calculating here
+  const earnedXP = totalXP || 0;
+  const correctCount = Object.values(correctAnswers || {}).filter(isCorrect => isCorrect).length;
 
   return (
     <motion.div
@@ -754,7 +792,7 @@ const QuizResults = ({
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-              {correctAnswers}/{totalQuestions}
+              {correctCount}/{totalQuestions}
             </div>
             <div className="text-gray-600 dark:text-gray-400">Correct Answers</div>
           </div>
@@ -766,23 +804,20 @@ const QuizResults = ({
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold text-orange-600 dark:text-orange-400 mb-2">
-              +{totalXP}
+              +{earnedXP}
             </div>
             <div className="text-gray-600 dark:text-gray-400">XP Earned</div>
           </div>
         </div>
 
         {/* XP Breakdown */}
-        {passed && bonusXP > 0 && (
+        {earnedXP > 0 && (
           <div className="mt-6 p-4 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-xl">
             <div className="text-center">
-              <h4 className="font-semibold text-orange-700 dark:text-orange-300 mb-2">🎉 XP Breakdown</h4>
+              <h4 className="font-semibold text-orange-700 dark:text-orange-300 mb-2">🎉 XP Earned</h4>
               <div className="text-sm text-orange-600 dark:text-orange-400 space-y-1">
-                <div>Base XP: {earnedXP} ({correctAnswers} correct × {xpPerQuestion || 10} XP)</div>
-                <div>Passing Bonus: +{bonusXP} XP (20% bonus)</div>
-                <div className="font-bold border-t border-orange-200 dark:border-orange-700 pt-1 mt-2">
-                  Total: {totalXP} XP
-                </div>
+                <div>You earned {earnedXP} XP from {correctCount} correct answers!</div>
+                {passed && <div className="font-semibold text-green-600 dark:text-green-400">🎉 Quiz Passed!</div>}
               </div>
             </div>
           </div>
