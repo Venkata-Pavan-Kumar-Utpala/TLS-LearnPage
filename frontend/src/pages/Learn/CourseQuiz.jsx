@@ -8,11 +8,17 @@ import {
 import ScrollProgress from "../../components/ScrollProgress";
 import useInViewport from "../../hooks/useInViewport";
 import { courseAPI } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
+import { useAuthModalContext } from "../../context/AuthModalContext";
 
 const CourseQuiz = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Authentication hooks
+  const { isAuthenticated } = useAuth();
+  const { openLogin } = useAuthModalContext();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
@@ -28,8 +34,22 @@ const CourseQuiz = () => {
   const [topicId, setTopicId] = useState(null);
   const [quizId, setQuizId] = useState(null); // Store quiz ID from backend response
 
+  // Monitor authentication status - redirect if user logs out
+  useEffect(() => {
+    if (!isAuthenticated) {
+      // User is not authenticated, redirect to courses page
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      setTimeout(() => {
+        navigate('/learn/courses', { replace: true });
+      }, 100);
+    }
+  }, [isAuthenticated, navigate]);
+
   // Get topicId from URL params or location state
   useEffect(() => {
+    // Only proceed if user is authenticated
+    if (!isAuthenticated) return;
+
     // Try to get topicId from URL search params or location state
     const urlParams = new URLSearchParams(window.location.search);
     const topicIdFromUrl = urlParams.get('topicId');
@@ -48,7 +68,7 @@ const CourseQuiz = () => {
       setError('Topic ID is required to load quiz');
       setLoading(false);
     }
-  }, [location]);
+  }, [location, isAuthenticated]);
 
   // Fetch quiz data from backend
   useEffect(() => {
@@ -180,6 +200,12 @@ const CourseQuiz = () => {
   };
 
   const handleStartQuiz = () => {
+    // Check authentication before starting quiz
+    if (!isAuthenticated) {
+      openLogin();
+      return;
+    }
+
     setQuizStarted(true);
     setTimeLeft(quiz.timeLimit);
     // Scroll to top when starting quiz
@@ -195,6 +221,27 @@ const CourseQuiz = () => {
     // Scroll to top when retaking quiz
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
+
+  // Authentication check - redirect if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Authentication Required</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">Please log in to access the quiz</p>
+          <button
+            onClick={() => {
+              window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+              setTimeout(() => navigate('/learn/courses'), 100);
+            }}
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400"
+          >
+            Back to Courses
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Loading state
   if (loading) {
@@ -362,6 +409,10 @@ const QuizQuestion = ({
   const [submitting, setSubmitting] = useState(false);
   const [answerResult, setAnswerResult] = useState(null);
 
+  // Authentication hooks for QuizQuestion component
+  const { isAuthenticated } = useAuth();
+  const { openLogin } = useAuthModalContext();
+
   const handleAnswerClick = (index) => {
     if (!answerSubmitted) {
       onAnswerSelect(index);
@@ -369,6 +420,12 @@ const QuizQuestion = ({
   };
 
   const handleSubmitAnswer = async () => {
+    // Check authentication before submitting
+    if (!isAuthenticated) {
+      openLogin();
+      return;
+    }
+
     if (selectedAnswer !== undefined && !answerSubmitted && !submitting) {
       setSubmitting(true);
       try {
