@@ -15,7 +15,14 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+// In backend server.js or similar
+app.use(cors({
+  origin: [
+    'https://your-netlify-site.netlify.app', // Your actual Netlify URL
+    'http://localhost:3000', // For local development
+    'http://localhost:5173'  // Vite dev server
+  ]
+}));
 app.use(express.json());
 
 // Connect to DB
