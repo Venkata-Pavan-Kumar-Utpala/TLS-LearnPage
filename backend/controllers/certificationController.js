@@ -1,4 +1,3 @@
-import fs from "fs";
 import PDFDocument from "pdfkit";
 import { sendCertificate } from "../utils/sendCertificate.js";
 
@@ -6,14 +5,26 @@ export const generateCertificateController = async (req, res) => {
   try {
     const { name, email, courseName, xp } = req.body;
 
-    // 1. Generate certificate PDF
-    const certPath = `./certificates/${courseName}-${name}.pdf`;
+    // 1. Generate certificate PDF as buffer
     const doc = new PDFDocument();
-    doc.pipe(fs.createWriteStream(certPath));
+    const buffers = [];
 
-    doc.fontSize(24).text("🎓 TechLearn Solutions", { align: "center" });
+    doc.on("data", buffers.push.bind(buffers));
+    doc.on("end", async () => {
+      const pdfBuffer = Buffer.concat(buffers);
+
+      // 2. Send certificate via email
+      await sendCertificate({ name, email, courseName, xp, buffer: pdfBuffer });
+
+      return res.status(200).json({
+        message: "Certificate generated and emailed successfully",
+      });
+    });
+
+    // PDF content
+    doc.fontSize(24).text("TechLearn Solutions", { align: "center" });
     doc.moveDown();
-    doc.fontSize(20).text(`Certificate of Completion`, { align: "center" });
+    doc.fontSize(20).text("Certificate of Completion", { align: "center" });
     doc.moveDown();
     doc.fontSize(16).text(`${name} has completed the course`, { align: "center" });
     doc.fontSize(18).text(`"${courseName}"`, { align: "center", underline: true });
@@ -21,14 +32,10 @@ export const generateCertificateController = async (req, res) => {
     doc.text(`XP Earned: ${xp}`, { align: "center" });
     doc.moveDown();
     doc.text(`Issued on: ${new Date().toLocaleDateString()}`, { align: "center" });
-    doc.end();
 
-    // 2. Email the certificate
-    await sendCertificate({ name, email, courseName, xp });
-
-    res.status(200).json({ message: "Certificate generated and emailed successfully" });
+    doc.end(); // End PDF stream
   } catch (err) {
     console.error("Certificate generation error:", err);
-    res.status(500).json({ error: "Failed to generate/send certificate" });
+    return res.status(500).json({ error: "Failed to generate/send certificate" });
   }
 };
