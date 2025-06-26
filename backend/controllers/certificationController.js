@@ -1,5 +1,5 @@
 import PDFDocument from "pdfkit";
-import { sendCertificate } from "../utils/sendCertificate.js";
+import { sendPaymentStatusEmail } from "../utils/sendCertificate.js";
 
 export const generateCertificateController = async (req, res) => {
   try {
@@ -26,11 +26,16 @@ export const generateCertificateController = async (req, res) => {
     doc.moveDown();
     doc.fontSize(20).text("Certificate of Completion", { align: "center" });
     doc.moveDown();
-    doc.fontSize(16).text(`${name} has completed the course`, { align: "center" });
-    doc.fontSize(18).text(`"${courseName}"`, { align: "center", underline: true });
+    doc
+      .fontSize(16)
+      .text(`${name} has completed the course`, { align: "center" });
+    doc
+      .fontSize(18)
+      .text(`"${courseName}"`, { align: "center", underline: true });
     doc.moveDown();
     doc.text(`XP Earned: ${xp}`, { align: "center" });
     doc.moveDown();
+
     doc.text(`Issued on: ${new Date().toLocaleDateString()}`, { align: "center" });
 
     doc.end(); // End PDF stream

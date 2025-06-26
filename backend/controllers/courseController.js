@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import Course from "../models/Course.js";
 import Quiz from "../models/Quiz.js";
-import { checkQuizAttempts } from "./userProgressController.js";
+import {
+  checkIfQuestionAnswered,
+  recordQuizAttempt,
+} from "./userProgressController.js";
 export const getAllCourses = async (req, res) => {
   try {
     const courses = await Course.find();
@@ -20,12 +23,11 @@ export const getCourseById = async (req, res) => {
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
-    // Map topics to alias _id as topicId
+    // map topics to alias _id as topicId because It was confusing
     const topics = course.topics.map((topic) => ({
       topicId: topic._id,
       title: topic.title,
       quizId: topic.quizId,
-      // add other fields if needed
     }));
     res.status(200).json({
       ...course.toObject(),
@@ -69,12 +71,29 @@ export const getQuizByCourseId = async (req, res) => {
 export const submitQuiz = async (req, res) => {
   try {
     const { courseId } = req.params;
-    const { quizId, answers } = req.body; // quizId and answers in body of the form quidId ,[{questionId, selectedOption }]
+    const { quizId, questionId, selectedOption } = req.body;
+
+    // Input validation
     if (!mongoose.Types.ObjectId.isValid(courseId)) {
       return res.status(400).json({ message: "Invalid Course Id" });
     }
     if (!mongoose.Types.ObjectId.isValid(quizId)) {
       return res.status(400).json({ message: "Invalid Quiz Id" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(questionId)) {
+      return res.status(400).json({ message: "Invalid Question Id" });
+    }
+
+    // Validate selectedOption
+    if (selectedOption === undefined || selectedOption === null) {
+      return res.status(400).json({ message: "Selected option is required" });
+    }
+
+    const selectedOptionNum = Number(selectedOption);
+    if (isNaN(selectedOptionNum) || selectedOptionNum < 0) {
+      return res
+        .status(400)
+        .json({ message: "Selected option must be a valid number" });
     }
 
     // Ensure the quiz belongs to the course
@@ -85,40 +104,67 @@ export const submitQuiz = async (req, res) => {
         .json({ message: "Quiz not found for this course" });
     }
 
-    let xp = 0;
-    const results = quiz.questions.map((q) => {
-      const userAnswer = answers.find((a) => a.questionId === q._id.toString());
-      const isCorrect =
-        userAnswer && userAnswer.selectedOption === q.correctAnswer;
-      if (isCorrect) xp += 10;
-      return {
-        questionId: q._id,
-        selectedOption: userAnswer ? userAnswer.selectedOption : null,
-        correctOption: q.correctAnswer,
-        explanation: q.explanation || "No explanation found for this",
-        correct: !!isCorrect,
-      };
-    });
-    const totalQuizXP = quiz.questions.length * 10;
-    const attemptResult = await checkQuizAttempts({
-      userId: req.user.id,
+    // Check if user already attempted the quiz or this question (no mutation)
+    const checkResult = await checkIfQuestionAnswered({
+      userId: req.user._id,
       quizId,
-      courseId,
-      xp,
+      questionId,
     });
-
-    if (attemptResult.error) {
-      return res.status(400).json({ message: attemptResult.error });
+    if (checkResult.error) {
+      return res.status(400).json({ message: checkResult.error });
     }
 
+    const question = quiz.questions.find(
+      (q) => q._id.toString() === questionId
+    );
+    if (!question) {
+      return res
+        .status(404)
+        .json({ message: "Question not found in this quiz" });
+    }
+
+    // Validate selectedOption is within valid range
+    if (selectedOptionNum >= question.options.length) {
+      return res
+        .status(400)
+        .json({ message: "Selected option is out of range" });
+    }
+
+    const isCorrect = selectedOptionNum === question.correctAnswer;
+    let xp = 0;
+
+    // Always record the attempt (correct or incorrect)
+    if (isCorrect) {
+      xp = 10;
+      // Update XP for this correct answer (mutation)
+      await recordQuizAttempt({
+        userId: req.user._id,
+        quizId,
+        courseId,
+        questionId,
+        xp,
+      });
+    } else {
+      // Record incorrect answer (no XP but still track the attempt)
+      await recordQuizAttempt({
+        userId: req.user._id,
+        quizId,
+        courseId,
+        questionId,
+        xp: 0, // No XP for wrong answer
+      });
+    }
     res.status(200).json({
+      questionId: question._id,
+      selectedOption: selectedOptionNum,
+      correctOption: question.correctAnswer,
+      explanation: question.explanation || "No explanation available",
+      correct: isCorrect,
       receivedXP: xp,
-      totalQuizXP,
-      results,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Error occurred while submitting the quiz answers",
+      message: "Error occurred while submitting the quiz answer",
       error: error.message,
     });
   }

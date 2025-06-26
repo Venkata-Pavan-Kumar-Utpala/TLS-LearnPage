@@ -48,6 +48,13 @@ const userProgressSchema = new mongoose.Schema(
         ref: "Quiz",
       },
     ],
+
+    // Track answered questions per quiz
+    answeredQuestions: {
+      type: Map,
+      of: [mongoose.Schema.Types.ObjectId],
+      default: {},
+    },
   },
   { timestamps: true }
 );

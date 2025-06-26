@@ -15,9 +15,15 @@ const handleResponse = async (response) => {
 // Helper function to get auth headers
 const getAuthHeaders = () => {
   const token = localStorage.getItem('authToken');
+
+  // Also check for 'token' key as backup for legacy compatibility
+  const backupToken = localStorage.getItem('token');
+
+  const finalToken = token || backupToken;
+
   return {
     'Content-Type': 'application/json',
-    ...(token && { Authorization: `Bearer ${token}` })
+    ...(finalToken && { Authorization: `Bearer ${finalToken}` })
   };
 };
 
@@ -55,7 +61,9 @@ export const courseAPI = {
     const response = await fetch(`${API_BASE}/courses`, {
       headers: getAuthHeaders(),
     });
-    return handleResponse(response);
+    const data = await handleResponse(response);
+    // Backend returns { count, courses }, we need just the courses array
+    return data.courses || [];
   },
 
   // Get specific course by ID
@@ -74,7 +82,7 @@ export const courseAPI = {
     return handleResponse(response);
   },
 
-  // Submit quiz answers
+  // Submit quiz answers (legacy - for full quiz submission)
   submitQuiz: async (courseId, quizData) => {
     const response = await fetch(`${API_BASE}/courses/${courseId}/quiz/submit`, {
       method: 'POST',
@@ -82,6 +90,43 @@ export const courseAPI = {
       body: JSON.stringify(quizData),
     });
     return handleResponse(response);
+  },
+
+  // Submit individual quiz answer (new flow)
+  submitQuizAnswer: async (courseId, topicId, questionId, selectedOption, quizId = null) => {
+    try {
+      let actualQuizId = quizId;
+
+      // If quizId is not provided, try to get it from course data
+      if (!actualQuizId) {
+        console.log('Quiz ID not provided, fetching from course data...');
+        const courseData = await courseAPI.getCourse(courseId);
+        const topic = courseData.topics?.find(t => t._id === topicId);
+        actualQuizId = topic?.quizId;
+
+        if (!actualQuizId) {
+          throw new Error('Quiz ID not found for this topic');
+        }
+      }
+
+      console.log('Submitting quiz answer:', { courseId, quizId: actualQuizId, questionId, selectedOption });
+
+      // Submit the answer with the correct quizId
+      const response = await fetch(`${API_BASE}/courses/${courseId}/quiz/submit`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          quizId: actualQuizId,
+          questionId,
+          selectedOption
+        }),
+      });
+
+      return handleResponse(response);
+    } catch (error) {
+      console.error('Error in submitQuizAnswer:', error);
+      throw error;
+    }
   },
 };
 
@@ -111,21 +156,47 @@ export const exerciseAPI = {
 // Data Adapters - Transform backend data to frontend format
 export const dataAdapters = {
   // Adapt course data from backend to frontend format
-  adaptCourse: (backendCourse) => ({
-    id: backendCourse._id,
-    title: backendCourse.title,
-    description: backendCourse.description,
-    level: backendCourse.level,
-    topics: backendCourse.topics?.map(topic => ({
-      id: topic.topicId || topic._id,
-      title: topic.title,
-      quizId: topic.quizId,
-      exerciseId: topic.exerciseId,
-      notesId: topic.notesId,
-    })) || [],
-    createdAt: backendCourse.createdAt,
-    updatedAt: backendCourse.updatedAt,
-  }),
+  adaptCourse: (backendCourse) => {
+    // Default gradients and icons for different course types
+    const getDefaultVisuals = (title) => {
+      const titleLower = title.toLowerCase();
+      if (titleLower.includes('javascript')) {
+        return { gradient: 'from-yellow-400 via-orange-400 to-red-500', icon: '⚡' };
+      } else if (titleLower.includes('python')) {
+        return { gradient: 'from-blue-400 via-green-400 to-yellow-500', icon: '🐍' };
+      } else if (titleLower.includes('java')) {
+        return { gradient: 'from-red-500 via-orange-500 to-yellow-500', icon: '☕' };
+      } else if (titleLower.includes('c++')) {
+        return { gradient: 'from-blue-600 via-purple-600 to-blue-800', icon: '⚙️' };
+      } else if (titleLower.includes('c ')) {
+        return { gradient: 'from-gray-500 via-blue-500 to-gray-700', icon: '🔧' };
+      } else {
+        return { gradient: 'from-purple-500 via-pink-500 to-purple-600', icon: '📚' };
+      }
+    };
+
+    const visuals = getDefaultVisuals(backendCourse.title);
+
+    return {
+      id: backendCourse._id,
+      title: backendCourse.title,
+      description: backendCourse.description || 'Learn programming concepts and build practical skills',
+      level: backendCourse.level,
+      gradient: visuals.gradient,
+      icon: visuals.icon,
+      price: "Free", // Default to free for now since backend doesn't have pricing
+      difficulty: backendCourse.level, // Add difficulty alias for filtering
+      topics: backendCourse.topics?.map(topic => ({
+        id: topic.topicId || topic._id,
+        title: topic.title,
+        quizId: topic.quizId,
+        exerciseId: topic.exerciseId,
+        notesId: topic.notesId,
+      })) || [],
+      createdAt: backendCourse.createdAt,
+      updatedAt: backendCourse.updatedAt,
+    };
+  },
 
   // Adapt quiz data from backend to frontend format
   adaptQuiz: (backendQuiz) => ({
