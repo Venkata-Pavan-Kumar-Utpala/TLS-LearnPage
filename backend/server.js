@@ -17,14 +17,40 @@ const app = express();
 // Middleware
 // In backend server.js or similar
 app.use(cors({
-  origin: [
-    'https://roaring-nougat-709de4.netlify.app', // Your actual Netlify URL
-    'https://roaring-nougat-709de4.netlify.app/', // Your actual Netlify URL with trailing slash
-    'http://localhost:3000', // For local development
-    'http://localhost:5173'  // Vite dev server
-  ],
+  origin: function (origin, callback) {
+    console.log('🔍 CORS Check - Origin:', origin);
+
+    const allowedOrigins = [
+      'https://roaring-nougat-709de4.netlify.app',
+      'https://roaring-nougat-709de4.netlify.app/',
+      'http://localhost:3000',
+      'http://localhost:5173'
+    ];
+
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      console.log('✅ CORS Allowed for:', origin);
+      return callback(null, true);
+    } else {
+      console.log('❌ CORS Blocked for:', origin);
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
+
+// Debug CORS requests
+app.use((req, res, next) => {
+  console.log('🌐 Incoming request:', {
+    method: req.method,
+    origin: req.headers.origin,
+    url: req.url,
+    userAgent: req.headers['user-agent']
+  });
+  next();
+});
 app.use(express.json());
 
 // Connect to DB

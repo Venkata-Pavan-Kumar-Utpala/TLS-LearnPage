@@ -30,17 +30,9 @@ const Courses = () => {
       try {
         setLoading(true);
 
-        // First, check if backend is healthy
-        console.log('🏥 Checking backend health...');
-        const isHealthy = await apiStatus.checkHealth();
-        console.log('🏥 Backend health status:', isHealthy);
-
-        if (!isHealthy) {
-          throw new Error('Backend is not responding to health check');
-        }
-
+        console.log('🚀 Fetching courses directly...');
         const backendCourses = await courseAPI.getAllCourses();
-        console.log('Backend courses:', backendCourses);
+        console.log('✅ Backend courses received:', backendCourses);
 
         // Adapt backend data to frontend format and show only first 4 courses
         const adaptedCourses = backendCourses.map(course => dataAdapters.adaptCourse(course));
