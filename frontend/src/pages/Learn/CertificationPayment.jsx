@@ -82,6 +82,17 @@ const CertificationPayment = () => {
     fetchCertificationDetails();
   }, [courseId, user]);
 
+  // Auto-populate form data when user is authenticated
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.firstName || '',
+        email: user.email || ''
+      }));
+    }
+  }, [user]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -239,7 +250,7 @@ const CertificationPayment = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Raunak"
+                      placeholder="Enter your full name"
                     />
                   </div>
                   <div>
@@ -250,7 +261,7 @@ const CertificationPayment = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="abc@gmail.com"
+                      placeholder="Enter your email address"
                     />
                   </div>
                   <div className="md:col-span-2">
