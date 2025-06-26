@@ -141,7 +141,7 @@ const Certification = () => {
 
   const handleGetCertified = (certificationId) => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-    setTimeout(() => navigate(`/learn/certification/payment?id=${certificationId}&courseId=${certificationId}`), 100);
+    setTimeout(() => navigate(`/learn/certification/payment?courseId=${certificationId}`), 100);
   };
 
   // Show loading state while fetching certifications
