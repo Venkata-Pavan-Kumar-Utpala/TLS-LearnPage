@@ -6,8 +6,10 @@ import {
   payCertificateFee,
   paymentConfirmation,
 } from "../controllers/paymentController.js";
+
 const paymentRouter = Router();
-paymentRouter.get("/:userId/:courseId/status", protect, checkEligibility);
+
+paymentRouter.get("/:courseId/status", protect, checkEligibility);
 paymentRouter.post("/pay", protect, payCertificateFee);
 paymentRouter.get("/payments", protect, isAdmin, getAllPayments);
 paymentRouter.patch(

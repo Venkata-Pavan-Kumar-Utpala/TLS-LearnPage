@@ -3,7 +3,7 @@ import Course from "../models/Course.js";
 import Quiz from "../models/Quiz.js";
 import {
   checkIfQuestionAnswered,
-  recordCorrectAnswer,
+  recordQuizAttempt,
 } from "./userProgressController.js";
 export const getAllCourses = async (req, res) => {
   try {
@@ -72,6 +72,8 @@ export const submitQuiz = async (req, res) => {
   try {
     const { courseId } = req.params;
     const { quizId, questionId, selectedOption } = req.body;
+
+    // Input validation
     if (!mongoose.Types.ObjectId.isValid(courseId)) {
       return res.status(400).json({ message: "Invalid Course Id" });
     }
@@ -80,6 +82,18 @@ export const submitQuiz = async (req, res) => {
     }
     if (!mongoose.Types.ObjectId.isValid(questionId)) {
       return res.status(400).json({ message: "Invalid Question Id" });
+    }
+
+    // Validate selectedOption
+    if (selectedOption === undefined || selectedOption === null) {
+      return res.status(400).json({ message: "Selected option is required" });
+    }
+
+    const selectedOptionNum = Number(selectedOption);
+    if (isNaN(selectedOptionNum) || selectedOptionNum < 0) {
+      return res
+        .status(400)
+        .json({ message: "Selected option must be a valid number" });
     }
 
     // Ensure the quiz belongs to the course
@@ -92,7 +106,7 @@ export const submitQuiz = async (req, res) => {
 
     // Check if user already attempted the quiz or this question (no mutation)
     const checkResult = await checkIfQuestionAnswered({
-      userId: req.user.id,
+      userId: req.user._id,
       quizId,
       questionId,
     });
@@ -108,29 +122,43 @@ export const submitQuiz = async (req, res) => {
         .status(404)
         .json({ message: "Question not found in this quiz" });
     }
-    // Ensure selectedOption is a number for comparison
-    const selectedOptionTypeChecked =
-      typeof selectedOption === "number"
-        ? selectedOption
-        : Number(selectedOption);
-    const isCorrect = selectedOptionTypeChecked === question.correctAnswer;
+
+    // Validate selectedOption is within valid range
+    if (selectedOptionNum >= question.options.length) {
+      return res
+        .status(400)
+        .json({ message: "Selected option is out of range" });
+    }
+
+    const isCorrect = selectedOptionNum === question.correctAnswer;
     let xp = 0;
+
+    // Always record the attempt (correct or incorrect)
     if (isCorrect) {
       xp = 10;
       // Update XP for this correct answer (mutation)
-      await recordCorrectAnswer({
-        userId: req.user.id,
+      await recordQuizAttempt({
+        userId: req.user._id,
         quizId,
         courseId,
         questionId,
         xp,
       });
+    } else {
+      // Record incorrect answer (no XP but still track the attempt)
+      await recordQuizAttempt({
+        userId: req.user._id,
+        quizId,
+        courseId,
+        questionId,
+        xp: 0, // No XP for wrong answer
+      });
     }
     res.status(200).json({
       questionId: question._id,
-      selectedOption: selectedOptionTypeChecked,
+      selectedOption: selectedOptionNum,
       correctOption: question.correctAnswer,
-      explanation: question.explanation || "No explanation found for this",
+      explanation: question.explanation || "No explanation available",
       correct: isCorrect,
       receivedXP: xp,
     });

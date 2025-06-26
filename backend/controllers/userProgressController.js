@@ -26,8 +26,8 @@ export const checkIfQuestionAnswered = async ({
   return { answered: false };
 };
 
-// Update progress and XP for a correct answer (mutation)
-export const recordCorrectAnswer = async ({
+// Update progress and XP for any answer attempt (correct or incorrect)
+export const recordQuizAttempt = async ({
   userId,
   quizId,
   courseId,

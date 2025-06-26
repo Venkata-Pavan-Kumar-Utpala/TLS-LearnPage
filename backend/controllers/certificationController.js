@@ -1,5 +1,6 @@
 import fs from "fs";
 import PDFDocument from "pdfkit";
+import { sendPaymentStatusEmail } from "../utils/sendCertificate.js";
 
 export const generateCertificateController = async (req, res) => {
   try {
@@ -29,7 +30,7 @@ export const generateCertificateController = async (req, res) => {
     doc.end();
 
     // 2. Email the certificate
-    await sendCertificate({ name, email, courseName, xp });
+    await sendPaymentStatusEmail({ user: { firstName: name, email }, status: "approved" });
 
     res
       .status(200)
