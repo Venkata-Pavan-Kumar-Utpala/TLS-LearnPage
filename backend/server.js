@@ -18,7 +18,7 @@ const app = express();
 // In backend server.js or similar
 app.use(cors({
   origin: [
-    'https://your-netlify-site.netlify.app', // Your actual Netlify URL
+    'https://roaring-nougat-709de4.netlify.app/', // Your actual Netlify URL
     'http://localhost:3000', // For local development
     'http://localhost:5173'  // Vite dev server
   ]
