@@ -5,7 +5,7 @@ import { Clock, Calendar, MessageCircle, Dot, ArrowRight } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
 import CourseCard from "../../components/CourseCard";
 import useInViewport from "../../hooks/useInViewport";
-import { courseAPI, dataAdapters } from "../../services/api";
+import { courseAPI, dataAdapters, apiStatus } from "../../services/api";
 import {
   Carousel,
   CarouselContent,
@@ -29,6 +29,16 @@ const Courses = () => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
+
+        // First, check if backend is healthy
+        console.log('🏥 Checking backend health...');
+        const isHealthy = await apiStatus.checkHealth();
+        console.log('🏥 Backend health status:', isHealthy);
+
+        if (!isHealthy) {
+          throw new Error('Backend is not responding to health check');
+        }
+
         const backendCourses = await courseAPI.getAllCourses();
         console.log('Backend courses:', backendCourses);
 
@@ -37,7 +47,7 @@ const Courses = () => {
         setCoursesData(adaptedCourses.slice(0, 4));
         setError(null);
       } catch (error) {
-        console.error('Error fetching courses:', error);
+        console.error('❌ Error fetching courses:', error);
         setError(error.message);
         // Fallback to mock data if backend fails
         setCoursesData(mockCoursesData);
