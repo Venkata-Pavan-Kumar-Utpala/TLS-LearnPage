@@ -52,7 +52,7 @@ export const seedQuizzes = async () => {
           console.warn(
             `Warning: No quiz questions found for topic: ${topic.title}. Skipping...`
           );
-          continue; // Skip this topic instead of throwing an error
+          continue;
         }
 
         try {
@@ -84,7 +84,6 @@ export const seedQuizzes = async () => {
     }
     console.log("Sample quizzes seeded and linked to topics");
   } catch (error) {
-    console.error("Error seeding quizzes:", error.message);
-    // Don't exit process in production, just log the error
+    console.log("Error seeding quizzes:", error.message);
   }
 };

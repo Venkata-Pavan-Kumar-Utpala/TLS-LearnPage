@@ -31,16 +31,22 @@ router.post("/:courseId/:exerciseId/submit", protect, async (req, res) => {
     // Get or create user progress
     let progress = await UserProgress.findOne({ userId });
     if (!progress) {
-      progress = await UserProgress.create({
+      progress = new UserProgress({
         userId,
         totalExerciseXP: 0,
         exerciseXP: new Map(),
         completedExercises: [],
+        courseXP: new Map(),
+        totalCourseXP: 0,
+        completedQuizzes: [],
+        answeredQuestions: new Map(),
       });
     }
 
     // Check if already completed
-    if (progress.completedExercises.includes(exerciseId)) {
+    if (
+      progress.completedExercises.some((id) => id.toString() === exerciseId)
+    ) {
       return res.status(400).json({ message: "Exercise already completed" });
     }
 
@@ -48,17 +54,23 @@ router.post("/:courseId/:exerciseId/submit", protect, async (req, res) => {
     const xpToAdd = 10;
     const currentXP = progress.exerciseXP.get(courseId) || 0;
     progress.exerciseXP.set(courseId, currentXP + xpToAdd);
-    progress.totalExerciseXP += xpToAdd;
+    // Note: totalExerciseXP will be calculated in getUserProgress for consistency
 
     // Mark as completed
     progress.completedExercises.push(new mongoose.Types.ObjectId(exerciseId));
 
     await progress.save();
 
+    // Calculate current total exercise XP for response
+    let totalExerciseXP = 0;
+    for (const xp of progress.exerciseXP.values()) {
+      totalExerciseXP += xp;
+    }
+
     res.status(200).json({
       message: "Exercise completed successfully",
       addedXP: xpToAdd,
-      totalExerciseXP: progress.totalExerciseXP,
+      totalExerciseXP: totalExerciseXP,
     });
   } catch (err) {
     console.error("Submit error:", err);
