@@ -1,16 +1,21 @@
 import { Router } from "express";
 import { protect, isAdmin } from "../middleware/authMiddleware.js";
 import {
-  checkEligibility,
+  initiatePayment,
+  submitPayment,
   getAllPayments,
-  payCertificateFee,
   paymentConfirmation,
 } from "../controllers/paymentController.js";
 
 const paymentRouter = Router();
 
-paymentRouter.get("/:courseId/status", protect, checkEligibility);
-paymentRouter.post("/pay", protect, payCertificateFee);
+// Combined endpoint: Check eligibility and allow payment if eligible
+paymentRouter.get("/:courseId/initiate", protect, initiatePayment);
+
+// Submit payment details (only after initiation confirms eligibility)
+paymentRouter.post("/Pay", protect, submitPayment);
+
+// Admin routes
 paymentRouter.get("/payments", protect, isAdmin, getAllPayments);
 paymentRouter.patch(
   "/payments/:paymentId",

@@ -5,54 +5,100 @@ import Quiz from "../models/Quiz.js";
 import UserProgress from "../models/UserProgress.js";
 import { sendPaymentStatusEmail } from "../utils/sendCertificate.js";
 
-export const checkEligibility = async (req, res) => {
+// Helper function to check eligibility (without sending response)
+const getEligibilityData = async (userId, courseId) => {
+  // Validate courseId
+  if (!mongoose.Types.ObjectId.isValid(courseId)) {
+    throw new Error("Invalid course ID");
+  }
+
+  const course = await Course.findById(courseId);
+  if (!course) throw new Error("Course not found");
+
+  // Calculate total possible XP
+  let totalQuizXP = 0;
+  let totalExerciseXP = 0;
+  for (const topic of course.topics) {
+    if (topic.quizId) {
+      const quiz = await Quiz.findById(topic.quizId);
+      if (quiz) totalQuizXP += quiz.questions.length * 10;
+    }
+    if (topic.exerciseId) {
+      totalExerciseXP += 10;
+    }
+  }
+  const totalPossibleXP = totalQuizXP + totalExerciseXP;
+
+  // Fetch user progress
+  const userProgress = await UserProgress.findOne({ userId });
+  const userQuizXP = userProgress?.courseXP.get(courseId) || 0;
+  const userExerciseXP = userProgress?.exerciseXP.get(courseId) || 0;
+  const userTotalXP = userQuizXP + userExerciseXP;
+
+  return {
+    eligible: userTotalXP >= totalPossibleXP,
+    userTotalXP,
+    totalPossibleXP,
+    details: { userQuizXP, userExerciseXP, totalQuizXP, totalExerciseXP },
+  };
+};
+
+// Combined endpoint: Check eligibility and initiate payment if eligible
+export const initiatePayment = async (req, res) => {
   try {
-    const userId = req.user._id;
     const { courseId } = req.params;
+    const userId = req.user._id;
 
     if (!userId || !courseId) {
       return res.status(400).json({ message: "Missing user or course ID" });
     }
 
-    // Validate courseId
-    if (!mongoose.Types.ObjectId.isValid(courseId)) {
-      return res.status(400).json({ message: "Invalid course ID" });
+    // Check eligibility first
+    const eligibilityData = await getEligibilityData(userId, courseId);
+
+    if (!eligibilityData.eligible) {
+      return res.status(400).json({
+        message:
+          "Not eligible for certificate yet. Complete all quizzes and exercises first.",
+        eligible: false,
+        ...eligibilityData,
+        paymentAllowed: false,
+      });
     }
 
-    const course = await Course.findById(courseId);
-    if (!course) return res.status(404).json({ message: "Course not found" });
-    // Calculate total possible XP
-    let totalQuizXP = 0;
-    let totalExerciseXP = 0;
-    for (const topic of course.topics) {
-      if (topic.quizId) {
-        const quiz = await Quiz.findById(topic.quizId);
-        if (quiz) totalQuizXP += quiz.questions.length * 10;
-      }
-      if (topic.exerciseId) {
-        totalExerciseXP += 10;
-      }
+    // Check if user already has a pending/approved payment for this course
+    const existingUserPayment = await Payment.findOne({
+      userId,
+      courseId,
+      status: { $in: ["pending", "approved"] },
+    });
+
+    if (existingUserPayment) {
+      return res.status(400).json({
+        message:
+          "You already have a pending or approved payment for this course",
+        eligible: true,
+        paymentAllowed: false,
+        existingPayment: existingUserPayment,
+      });
     }
-    const totalPossibleXP = totalQuizXP + totalExerciseXP;
-    // Fetch user progress
-    const userProgress = await UserProgress.findOne({ userId });
-    const userQuizXP = userProgress?.courseXP.get(courseId) || 0;
-    const userExerciseXP = userProgress?.exerciseXP.get(courseId) || 0;
-    const userTotalXP = userQuizXP + userExerciseXP;
+
+    // User is eligible and can proceed with payment
     res.json({
-      eligible: userTotalXP >= totalPossibleXP,
-      userTotalXP,
-      totalPossibleXP,
-      details: { userQuizXP, userExerciseXP, totalQuizXP, totalExerciseXP },
+      message: "Eligible for certificate. You can proceed with payment.",
+      eligible: true,
+      paymentAllowed: true,
+      ...eligibilityData,
     });
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Eligibility check failed", error: error.message });
+      .json({ message: "Payment initiation failed", error: error.message });
   }
 };
 
-export const payCertificateFee = async (req, res) => {
+// Simplified payment submission endpoint - no eligibility check needed
+export const submitPayment = async (req, res) => {
   try {
     const { transactionId, paymentType, courseId } = req.body;
     const userId = req.user._id;
@@ -96,14 +142,22 @@ export const payCertificateFee = async (req, res) => {
       });
     }
 
-    const payment = await Payment.create({
+    // Create payment
+    const paymentData = {
       userId,
       transactionId: transactionId.trim(),
       paymentType: paymentType.trim(),
       courseId,
+    };
+
+    const payment = await Payment.create(paymentData);
+    res.status(201).json({
+      success: true,
+      message: "Payment submitted successfully",
+      payment,
     });
-    res.status(201).json({ success: true, payment });
   } catch (error) {
+    console.error("Payment submission error:", error);
     res
       .status(500)
       .json({ message: "Payment submission failed", error: error.message });
