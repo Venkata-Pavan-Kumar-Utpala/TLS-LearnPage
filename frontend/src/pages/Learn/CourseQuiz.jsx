@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Clock, CheckCircle, XCircle, ArrowRight, ArrowLeft,
-  Trophy, Star, RotateCcw, Home, X, Send
+  Trophy, Star, Home, X, Send
 } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
 import useInViewport from "../../hooks/useInViewport";
@@ -220,18 +220,7 @@ const CourseQuiz = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
 
-  const handleRetakeQuiz = () => {
-    setCurrentQuestion(0);
-    setSelectedAnswers({});
-    setCorrectAnswers({});
-    setQuestionResults({});
-    setShowResults(false);
-    setQuizStarted(false);
-    setTimeLeft(quiz.timeLimit);
-    setEarnedXP(0);
-    // Scroll to top when retaking quiz
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-  };
+
 
   // Authentication check - redirect if not authenticated
   if (!isAuthenticated) {
@@ -377,7 +366,6 @@ const CourseQuiz = () => {
               correctAnswers={correctAnswers}
               questionResults={questionResults}
               totalXP={calculateTotalXP()}
-              onRetake={handleRetakeQuiz}
               onBackToCourse={() => {
                 window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
                 setTimeout(() => navigate(`/learn/courses/${courseId}`), 100);
@@ -753,7 +741,7 @@ const QuizQuestion = ({
 // Quiz Results Component
 const QuizResults = ({
   score, passingScore, totalQuestions, selectedAnswers,
-  questions, onRetake, onBackToCourse, onBackToHome, xpPerQuestion,
+  questions, onBackToCourse, onBackToHome, xpPerQuestion,
   correctAnswers, questionResults, totalXP
 }) => {
   const passed = score >= passingScore;
@@ -837,14 +825,6 @@ const QuizResults = ({
 
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-4 justify-center">
-        <button
-          onClick={onRetake}
-          className="flex items-center gap-2 px-6 py-3 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 text-blue-800 dark:text-blue-200 font-bold rounded-xl transition-all duration-300 border border-blue-200/50 dark:border-blue-700/50"
-        >
-          <RotateCcw className="w-4 h-4" />
-          Retake Quiz
-        </button>
-
         <button
           onClick={onBackToCourse}
           className="flex items-center gap-2 px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 font-medium rounded-xl transition-all duration-300"
