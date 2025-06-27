@@ -3,10 +3,30 @@
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+// Debug logging
+console.log('🔧 API Configuration Debug:');
+console.log('Environment VITE_API_URL:', import.meta.env.VITE_API_URL);
+console.log('Final API_BASE:', API_BASE);
+console.log('Mode:', import.meta.env.MODE);
+console.log('All env vars:', import.meta.env);
+
 // Helper function to handle API responses
 const handleResponse = async (response) => {
+  console.log('🌐 Response received:', {
+    status: response.status,
+    statusText: response.statusText,
+    url: response.url,
+    headers: Object.fromEntries(response.headers.entries())
+  });
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: 'Network error' }));
+    console.error('❌ API Error:', {
+      status: response.status,
+      statusText: response.statusText,
+      url: response.url,
+      error
+    });
     throw new Error(error.message || `HTTP error! status: ${response.status}`);
   }
   return response.json();
@@ -58,12 +78,22 @@ export const authAPI = {
 export const courseAPI = {
   // Get all courses
   getAllCourses: async () => {
-    const response = await fetch(`${API_BASE}/courses`, {
-      headers: getAuthHeaders(),
-    });
-    const data = await handleResponse(response);
-    // Backend returns { count, courses }, we need just the courses array
-    return data.courses || [];
+    const url = `${API_BASE}/courses`;
+    console.log('🚀 Making request to:', url);
+    console.log('📋 Request headers:', getAuthHeaders());
+
+    try {
+      const response = await fetch(url, {
+        headers: getAuthHeaders(),
+      });
+      const data = await handleResponse(response);
+      console.log('✅ Courses data received:', data);
+      // Backend returns { count, courses }, we need just the courses array
+      return data.courses || [];
+    } catch (error) {
+      console.error('❌ getAllCourses failed:', error);
+      throw error;
+    }
   },
 
   // Get specific course by ID
@@ -135,6 +165,35 @@ export const progressAPI = {
   // Get user progress
   getUserProgress: async (userId) => {
     const response = await fetch(`${API_BASE}/user-progress/${userId}`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+};
+
+// Payment API
+export const paymentAPI = {
+  // Check eligibility for certification
+  checkEligibility: async (userId, courseId) => {
+    const response = await fetch(`${API_BASE}/certificate/${userId}/${courseId}/status`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Submit payment for certification
+  payCertificateFee: async (paymentData) => {
+    const response = await fetch(`${API_BASE}/certificate/pay`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(paymentData),
+    });
+    return handleResponse(response);
+  },
+
+  // Get all payments (admin only)
+  getAllPayments: async () => {
+    const response = await fetch(`${API_BASE}/certificate/payments`, {
       headers: getAuthHeaders(),
     });
     return handleResponse(response);
@@ -227,12 +286,27 @@ export const apiStatus = {
   // Check if backend is running
   checkHealth: async () => {
     try {
-      const response = await fetch(`${API_BASE.replace('/api', '')}/`, {
+      const healthUrl = `${API_BASE.replace('/api', '')}/`;
+      console.log('🏥 Health check URL:', healthUrl);
+
+      const response = await fetch(healthUrl, {
         method: 'GET',
       });
+
+      console.log('🏥 Health check response:', {
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('🏥 Health check data:', data);
+      }
+
       return response.ok;
     } catch (error) {
-      console.error('Backend health check failed:', error);
+      console.error('❌ Backend health check failed:', error);
       return false;
     }
   },
@@ -252,6 +326,7 @@ export default {
   courseAPI,
   progressAPI,
   exerciseAPI,
+  paymentAPI,
   dataAdapters,
   apiStatus,
   API_ERRORS,

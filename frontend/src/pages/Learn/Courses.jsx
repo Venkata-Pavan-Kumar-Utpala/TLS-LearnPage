@@ -5,7 +5,7 @@ import { Clock, Calendar, MessageCircle, Dot, ArrowRight } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
 import CourseCard from "../../components/CourseCard";
 import useInViewport from "../../hooks/useInViewport";
-import { courseAPI, dataAdapters } from "../../services/api";
+import { courseAPI, dataAdapters, apiStatus } from "../../services/api";
 import {
   Carousel,
   CarouselContent,
@@ -29,15 +29,17 @@ const Courses = () => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
+
+        console.log('🚀 Fetching courses directly...');
         const backendCourses = await courseAPI.getAllCourses();
-        console.log('Backend courses:', backendCourses);
+        console.log('✅ Backend courses received:', backendCourses);
 
         // Adapt backend data to frontend format and show only first 4 courses
         const adaptedCourses = backendCourses.map(course => dataAdapters.adaptCourse(course));
         setCoursesData(adaptedCourses.slice(0, 4));
         setError(null);
       } catch (error) {
-        console.error('Error fetching courses:', error);
+        console.error('❌ Error fetching courses:', error);
         setError(error.message);
         // Fallback to mock data if backend fails
         setCoursesData(mockCoursesData);

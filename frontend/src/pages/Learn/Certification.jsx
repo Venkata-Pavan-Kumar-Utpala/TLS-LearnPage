@@ -17,108 +17,104 @@ import {
 } from 'lucide-react';
 import ScrollProgress from '../../components/ScrollProgress';
 import useInViewport from '../../hooks/useInViewport';
+import { courseAPI } from '../../services/api';
 
 const Certification = () => {
   const navigate = useNavigate();
   const [certificationsHeadingRef, isCertificationsHeadingInViewport] = useInViewport();
   const [benefitsHeadingRef, isBenefitsHeadingInViewport] = useInViewport();
+  const [certifications, setCertifications] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock certification data
-  const certifications = [
-    {
-      id: 1,
-      title: "Advanced Web Development",
-      description: "Master modern web development with React, Node.js, and MongoDB",
-      duration: "12 weeks",
-      level: "Intermediate",
-      price: 4999,
-      originalPrice: 7999,
-      rating: 4.8,
-      studentsEnrolled: 2458,
-      modules: 12,
-      hours: 40,
-      chapters: 30,
-      quizzes: 50,
-      forms: 2,
-      totalHours: 10,
-      skills: ["React.js", "Node.js", "MongoDB", "Express.js", "JavaScript", "HTML/CSS"],
-      features: [
-        "Blockchain-verified authenticity",
-        "LinkedIn credential integration",
-        "Lifetime validity",
-        "Employer verification portal",
-        "Downloadable PDF certificate",
-        "Industry mentor guidance",
-        "Portfolio development",
-        "Job placement assistance"
-      ],
-      image: "/api/placeholder/400/250",
-      icon: "WD",
-      iconColor: "bg-orange-500"
-    },
-    {
-      id: 2,
-      title: "Data Science & Analytics",
-      description: "Learn Python, Machine Learning, and data visualization techniques",
-      duration: "16 weeks",
-      level: "Advanced",
-      price: 6999,
-      originalPrice: 9999,
-      rating: 4.9,
-      studentsEnrolled: 1923,
-      modules: 18,
-      hours: 60,
-      chapters: 45,
-      quizzes: 75,
-      forms: 3,
-      totalHours: 15,
-      skills: ["Python", "Pandas", "NumPy", "Scikit-learn", "TensorFlow", "Tableau"],
-      features: [
-        "Blockchain-verified authenticity",
-        "LinkedIn credential integration",
-        "Lifetime validity",
-        "Employer verification portal",
-        "Downloadable PDF certificate",
-        "Real-world datasets",
-        "ML model deployment",
-        "Industry case studies"
-      ],
-      image: "/api/placeholder/400/250",
-      icon: "DS",
-      iconColor: "bg-purple-500"
-    },
-    {
-      id: 3,
-      title: "Mobile App Development",
-      description: "Build cross-platform mobile apps with React Native and Flutter",
-      duration: "10 weeks",
-      level: "Intermediate",
-      price: 3999,
-      originalPrice: 5999,
-      rating: 4.7,
-      studentsEnrolled: 1654,
-      modules: 10,
-      hours: 35,
-      chapters: 25,
-      quizzes: 40,
-      forms: 2,
-      totalHours: 8,
-      skills: ["React Native", "Flutter", "Dart", "Firebase", "API Integration"],
-      features: [
-        "Blockchain-verified authenticity",
-        "LinkedIn credential integration",
-        "Lifetime validity",
-        "Employer verification portal",
-        "Downloadable PDF certificate",
-        "Cross-platform development",
-        "App store deployment",
-        "UI/UX best practices"
-      ],
-      image: "/api/placeholder/400/250",
-      icon: "MA",
-      iconColor: "bg-green-500"
+  // Fetch courses from backend for certifications
+  useEffect(() => {
+    const fetchCertifications = async () => {
+      try {
+        setIsLoading(true);
+        const courses = await courseAPI.getAllCourses();
+
+        // Transform courses into certification format
+        const transformedCertifications = courses.map((course, index) => {
+          // Generate certification-specific data based on course
+          const certificationData = {
+            id: course._id,
+            title: course.title,
+            description: course.description || "Master the fundamentals and advanced concepts",
+            duration: "12 weeks", // Default duration
+            level: course.level || "Intermediate",
+            price: 4999, // Default price for certifications
+            originalPrice: 7999,
+            rating: 4.8, // Default rating
+            studentsEnrolled: Math.floor(Math.random() * 2000) + 1000, // Random enrollment
+            modules: course.topics?.length || 10,
+            hours: (course.topics?.length || 10) * 3, // Estimate 3 hours per topic
+            chapters: (course.topics?.length || 10) * 2, // Estimate 2 chapters per topic
+            quizzes: course.topics?.length || 10, // One quiz per topic
+            forms: 2,
+            totalHours: Math.floor(((course.topics?.length || 10) * 3) / 4), // Estimate
+            skills: getSkillsForCourse(course.title),
+            features: [
+              "Blockchain-verified authenticity",
+              "LinkedIn credential integration",
+              "Lifetime validity",
+              "Employer verification portal",
+              "Downloadable PDF certificate",
+              "Industry mentor guidance",
+              "Portfolio development",
+              "Job placement assistance"
+            ],
+            image: "/api/placeholder/400/250",
+            icon: getIconForCourse(course.title),
+            iconColor: getIconColorForCourse(index)
+          };
+
+          return certificationData;
+        });
+
+        setCertifications(transformedCertifications);
+      } catch (error) {
+        console.error('Error fetching certifications:', error);
+        // Fallback to empty array on error
+        setCertifications([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCertifications();
+  }, []);
+
+  // Helper functions to generate course-specific data
+  const getSkillsForCourse = (title) => {
+    const titleLower = title.toLowerCase();
+    if (titleLower.includes('web') || titleLower.includes('react') || titleLower.includes('javascript')) {
+      return ["React.js", "Node.js", "MongoDB", "Express.js", "JavaScript", "HTML/CSS"];
+    } else if (titleLower.includes('python') || titleLower.includes('data') || titleLower.includes('machine')) {
+      return ["Python", "Pandas", "NumPy", "Scikit-learn", "TensorFlow", "Tableau"];
+    } else if (titleLower.includes('mobile') || titleLower.includes('app') || titleLower.includes('android') || titleLower.includes('ios')) {
+      return ["React Native", "Flutter", "Dart", "Firebase", "API Integration"];
+    } else if (titleLower.includes('java')) {
+      return ["Java", "Spring Boot", "MySQL", "REST APIs", "Maven", "JUnit"];
+    } else {
+      return ["Programming", "Problem Solving", "Algorithms", "Data Structures"];
     }
-  ];
+  };
+
+  const getIconForCourse = (title) => {
+    const titleLower = title.toLowerCase();
+    if (titleLower.includes('web') || titleLower.includes('react')) return "WD";
+    if (titleLower.includes('data') || titleLower.includes('python')) return "DS";
+    if (titleLower.includes('mobile') || titleLower.includes('app')) return "MA";
+    if (titleLower.includes('java')) return "JA";
+    return title.substring(0, 2).toUpperCase();
+  };
+
+  const getIconColorForCourse = (index) => {
+    const colors = ["bg-blue-500", "bg-purple-500", "bg-green-500", "bg-orange-500", "bg-red-500", "bg-indigo-500"];
+    return colors[index % colors.length];
+  };
+
+
 
   const benefits = [
     {
@@ -145,8 +141,24 @@ const Certification = () => {
 
   const handleGetCertified = (certificationId) => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-    setTimeout(() => navigate(`/learn/certification/payment?id=${certificationId}`), 100);
+    setTimeout(() => navigate(`/learn/certification/payment?courseId=${certificationId}`), 100);
   };
+
+  // Show loading state while fetching certifications
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-gray-600 dark:text-gray-400">Loading certifications...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">

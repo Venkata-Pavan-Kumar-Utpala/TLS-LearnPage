@@ -50,17 +50,19 @@ const Navbar = () => {
       <nav className="flex justify-between items-center px-4 md:px-15 py-2.5 md:py-8 bg-transparent relative z-[1000]">
         {/* Logo */}
         <div className="logo">
-          <Link to="/" className="logo">
-            <img
-              src="/logoo.png"
-              alt="Light Logo"
-              className={`h-12 md:h-19 w-auto transition-all duration-300 ${isDarkMode ? 'hidden' : 'inline'}`}
-            />
-            <img
-              src="/logoo2.png"
-              alt="Dark Logo"
-              className={`h-12 md:h-19 w-auto transition-all duration-300 ${isDarkMode ? 'inline' : 'hidden'}`}
-            />
+          <Link to="/" className="logo flex items-center">
+            <div className="relative" style={{ height: '48px', minWidth: '120px' }}>
+              <img
+                src="/logoo.png"
+                alt="Light Logo"
+                className={`absolute top-0 left-0 h-12 md:h-19 w-auto transition-all duration-300 ${isDarkMode ? 'opacity-0' : 'opacity-100'}`}
+              />
+              <img
+                src="/logoo2.png"
+                alt="Dark Logo"
+                className={`absolute top-0 left-0 h-12 md:h-19 w-auto transition-all duration-300 ${isDarkMode ? 'opacity-100' : 'opacity-0'}`}
+              />
+            </div>
           </Link>
         </div>
 

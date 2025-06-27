@@ -8,17 +8,27 @@ import {
 import ScrollProgress from "../../components/ScrollProgress";
 import useInViewport from "../../hooks/useInViewport";
 import { courseAPI } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
+import { useAuthModalContext } from "../../context/AuthModalContext";
 
 const CourseQuiz = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Authentication hooks
+  const { isAuthenticated } = useAuth();
+  const { openLogin } = useAuthModalContext();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
   const [quizStarted, setQuizStarted] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
+
+  // Track correct answers and XP from backend responses
+  const [correctAnswers, setCorrectAnswers] = useState({});
+  const [questionResults, setQuestionResults] = useState({});
   const [titleRef, isTitleInViewport] = useInViewport();
 
   // Backend data state
@@ -28,8 +38,22 @@ const CourseQuiz = () => {
   const [topicId, setTopicId] = useState(null);
   const [quizId, setQuizId] = useState(null); // Store quiz ID from backend response
 
+  // Monitor authentication status - redirect if user logs out
+  useEffect(() => {
+    if (!isAuthenticated) {
+      // User is not authenticated, redirect to courses page
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      setTimeout(() => {
+        navigate('/learn/courses', { replace: true });
+      }, 100);
+    }
+  }, [isAuthenticated, navigate]);
+
   // Get topicId from URL params or location state
   useEffect(() => {
+    // Only proceed if user is authenticated
+    if (!isAuthenticated) return;
+
     // Try to get topicId from URL search params or location state
     const urlParams = new URLSearchParams(window.location.search);
     const topicIdFromUrl = urlParams.get('topicId');
@@ -48,7 +72,7 @@ const CourseQuiz = () => {
       setError('Topic ID is required to load quiz');
       setLoading(false);
     }
-  }, [location]);
+  }, [location, isAuthenticated]);
 
   // Fetch quiz data from backend
   useEffect(() => {
@@ -93,8 +117,8 @@ const CourseQuiz = () => {
             displayId: index + 1, // For display purposes
             question: q.question,
             options: q.options,
-            correct: q.correctAnswer, // This won't be available from backend for security
             explanation: q.explanation || "No explanation provided"
+            // Note: correctAnswer is not included for security - answers are verified by backend
           }))
         };
 
@@ -170,16 +194,26 @@ const CourseQuiz = () => {
   };
 
   const calculateScore = () => {
-    let correct = 0;
-    quiz.questions.forEach((question, index) => {
-      if (selectedAnswers[index] === question.correct) {
-        correct++;
-      }
-    });
-    return Math.round((correct / quiz.questions.length) * 100);
+    // Calculate score based on backend responses, not frontend comparison
+    const totalQuestions = quiz.questions.length;
+    const correctCount = Object.values(correctAnswers).filter(isCorrect => isCorrect).length;
+    return Math.round((correctCount / totalQuestions) * 100);
+  };
+
+  const calculateTotalXP = () => {
+    // Calculate total XP from backend responses
+    return Object.values(questionResults).reduce((total, result) => {
+      return total + (result?.receivedXP || 0);
+    }, 0);
   };
 
   const handleStartQuiz = () => {
+    // Check authentication before starting quiz
+    if (!isAuthenticated) {
+      openLogin();
+      return;
+    }
+
     setQuizStarted(true);
     setTimeLeft(quiz.timeLimit);
     // Scroll to top when starting quiz
@@ -189,12 +223,36 @@ const CourseQuiz = () => {
   const handleRetakeQuiz = () => {
     setCurrentQuestion(0);
     setSelectedAnswers({});
+    setCorrectAnswers({});
+    setQuestionResults({});
     setShowResults(false);
     setQuizStarted(false);
     setTimeLeft(quiz.timeLimit);
+    setEarnedXP(0);
     // Scroll to top when retaking quiz
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
+
+  // Authentication check - redirect if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Authentication Required</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">Please log in to access the quiz</p>
+          <button
+            onClick={() => {
+              window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+              setTimeout(() => navigate('/learn/courses'), 100);
+            }}
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400"
+          >
+            Back to Courses
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Loading state
   if (loading) {
@@ -316,6 +374,9 @@ const CourseQuiz = () => {
               selectedAnswers={selectedAnswers}
               questions={quiz.questions}
               xpPerQuestion={quiz.xpPerQuestion}
+              correctAnswers={correctAnswers}
+              questionResults={questionResults}
+              totalXP={calculateTotalXP()}
               onRetake={handleRetakeQuiz}
               onBackToCourse={() => {
                 window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
@@ -343,6 +404,17 @@ const CourseQuiz = () => {
               courseId={courseId}
               topicId={topicId}
               quizId={quizId}
+              onAnswerResult={(questionIndex, result) => {
+                setCorrectAnswers(prev => ({
+                  ...prev,
+                  [questionIndex]: result.correct
+                }));
+                setQuestionResults(prev => ({
+                  ...prev,
+                  [questionIndex]: result
+                }));
+              }}
+              currentQuestionIndex={currentQuestion}
             />
           )}
         </div>
@@ -355,12 +427,17 @@ const CourseQuiz = () => {
 const QuizQuestion = ({
   question, questionNumber, totalQuestions, selectedAnswer,
   onAnswerSelect, onNext, onPrevious, timeLeft, canGoNext,
-  canGoPrevious, isLastQuestion, courseId, topicId, quizId
+  canGoPrevious, isLastQuestion, courseId, topicId, quizId,
+  onAnswerResult, currentQuestionIndex
 }) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [answerSubmitted, setAnswerSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [answerResult, setAnswerResult] = useState(null);
+
+  // Authentication hooks for QuizQuestion component
+  const { isAuthenticated } = useAuth();
+  const { openLogin } = useAuthModalContext();
 
   const handleAnswerClick = (index) => {
     if (!answerSubmitted) {
@@ -369,6 +446,12 @@ const QuizQuestion = ({
   };
 
   const handleSubmitAnswer = async () => {
+    // Check authentication before submitting
+    if (!isAuthenticated) {
+      openLogin();
+      return;
+    }
+
     if (selectedAnswer !== undefined && !answerSubmitted && !submitting) {
       setSubmitting(true);
       try {
@@ -385,18 +468,29 @@ const QuizQuestion = ({
         setAnswerResult(response);
         setAnswerSubmitted(true);
         setShowFeedback(true);
+
+        // Update parent component with the result
+        if (onAnswerResult) {
+          onAnswerResult(currentQuestionIndex, response);
+        }
       } catch (error) {
         console.error('Error submitting answer:', error);
         // Create a fallback response for error cases
-        setAnswerResult({
+        const errorResult = {
           correct: false,
           explanation: `Error submitting answer: ${error.message}`,
           receivedXP: 0,
           correctOption: null,
           selectedOption: selectedAnswer
-        });
+        };
+        setAnswerResult(errorResult);
         setAnswerSubmitted(true);
         setShowFeedback(true);
+
+        // Update parent component with the error result
+        if (onAnswerResult) {
+          onAnswerResult(currentQuestionIndex, errorResult);
+        }
       } finally {
         setSubmitting(false);
       }
@@ -648,13 +742,14 @@ const QuizQuestion = ({
 // Quiz Results Component
 const QuizResults = ({
   score, passingScore, totalQuestions, selectedAnswers,
-  questions, onRetake, onBackToCourse, onBackToHome, xpPerQuestion
+  questions, onRetake, onBackToCourse, onBackToHome, xpPerQuestion,
+  correctAnswers, questionResults, totalXP
 }) => {
   const passed = score >= passingScore;
-  const correctAnswers = questions.filter((q, index) => selectedAnswers[index] === q.correct).length;
-  const earnedXP = correctAnswers * (xpPerQuestion || 10);
-  const bonusXP = passed ? Math.floor(earnedXP * 0.2) : 0; // 20% bonus for passing
-  const totalXP = earnedXP + bonusXP;
+
+  // Use the passed totalXP from backend responses instead of calculating here
+  const earnedXP = totalXP || 0;
+  const correctCount = Object.values(correctAnswers || {}).filter(isCorrect => isCorrect).length;
 
   return (
     <motion.div
@@ -697,7 +792,7 @@ const QuizResults = ({
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-              {correctAnswers}/{totalQuestions}
+              {correctCount}/{totalQuestions}
             </div>
             <div className="text-gray-600 dark:text-gray-400">Correct Answers</div>
           </div>
@@ -709,23 +804,20 @@ const QuizResults = ({
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold text-orange-600 dark:text-orange-400 mb-2">
-              +{totalXP}
+              +{earnedXP}
             </div>
             <div className="text-gray-600 dark:text-gray-400">XP Earned</div>
           </div>
         </div>
 
         {/* XP Breakdown */}
-        {passed && bonusXP > 0 && (
+        {earnedXP > 0 && (
           <div className="mt-6 p-4 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-xl">
             <div className="text-center">
-              <h4 className="font-semibold text-orange-700 dark:text-orange-300 mb-2">🎉 XP Breakdown</h4>
+              <h4 className="font-semibold text-orange-700 dark:text-orange-300 mb-2">🎉 XP Earned</h4>
               <div className="text-sm text-orange-600 dark:text-orange-400 space-y-1">
-                <div>Base XP: {earnedXP} ({correctAnswers} correct × {xpPerQuestion || 10} XP)</div>
-                <div>Passing Bonus: +{bonusXP} XP (20% bonus)</div>
-                <div className="font-bold border-t border-orange-200 dark:border-orange-700 pt-1 mt-2">
-                  Total: {totalXP} XP
-                </div>
+                <div>You earned {earnedXP} XP from {correctCount} correct answers!</div>
+                {passed && <div className="font-semibold text-green-600 dark:text-green-400">🎉 Quiz Passed!</div>}
               </div>
             </div>
           </div>

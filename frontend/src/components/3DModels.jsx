@@ -288,3 +288,100 @@ export const CertificationModel = () => {
     </div>
   );
 };
+
+// 3D Membership Model - Crown and Premium Elements
+export const MembershipModel = () => {
+  return (
+    <div className="relative w-full h-full flex items-center justify-center">
+      {/* Main Crown */}
+      <motion.div
+        className="relative z-10"
+        animate={{
+          rotateY: [0, 10, 0, -10, 0],
+          y: [0, -8, 0, -4, 0]
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      >
+        <div className="w-32 h-24 relative">
+          {/* Crown Base */}
+          <div className="absolute bottom-0 w-full h-8 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 rounded-lg shadow-xl">
+            <div className="w-full h-2 bg-yellow-600 rounded-t-lg"></div>
+          </div>
+
+          {/* Crown Points */}
+          <div className="absolute bottom-6 w-full flex justify-between items-end">
+            <div className="w-4 h-8 bg-gradient-to-t from-yellow-500 to-yellow-300 rounded-t-full shadow-lg"></div>
+            <div className="w-6 h-12 bg-gradient-to-t from-yellow-500 to-yellow-300 rounded-t-full shadow-lg"></div>
+            <div className="w-8 h-16 bg-gradient-to-t from-yellow-500 to-yellow-300 rounded-t-full shadow-lg"></div>
+            <div className="w-6 h-12 bg-gradient-to-t from-yellow-500 to-yellow-300 rounded-t-full shadow-lg"></div>
+            <div className="w-4 h-8 bg-gradient-to-t from-yellow-500 to-yellow-300 rounded-t-full shadow-lg"></div>
+          </div>
+
+          {/* Crown Gems */}
+          <motion.div
+            className="absolute top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full shadow-lg"
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+      </motion.div>
+
+      {/* Floating Premium Badges */}
+      <motion.div
+        className="absolute top-4 right-8 w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full shadow-lg flex items-center justify-center"
+        animate={{
+          y: [0, -12, 0],
+          rotateZ: [0, 15, 0]
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 0.3
+        }}
+      >
+        <div className="w-3 h-3 bg-white rounded-full"></div>
+      </motion.div>
+
+      <motion.div
+        className="absolute bottom-8 left-4 w-6 h-6 bg-gradient-to-br from-orange-400 to-orange-600 rounded shadow-lg"
+        animate={{
+          y: [0, -8, 0],
+          rotateZ: [0, -10, 0]
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 0.8
+        }}
+      />
+
+      {/* Sparkle Effects */}
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 bg-yellow-300 rounded-full"
+          style={{
+            top: `${20 + i * 10}%`,
+            left: `${15 + i * 12}%`,
+          }}
+          animate={{
+            scale: [0, 1, 0],
+            opacity: [0, 1, 0]
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.3
+          }}
+        />
+      ))}
+    </div>
+  );
+};

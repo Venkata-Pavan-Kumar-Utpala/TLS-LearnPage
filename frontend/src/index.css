@@ -41,26 +41,26 @@
 
   .brand-heading-primary {
     @apply transition-all duration-500 ease-in-out;
-    background: linear-gradient(90deg, #b4a1f4 0%, #0600a6 50%, #007bff 100%);
+    background: linear-gradient(90deg, #007bff 0%, #0600a6 50%, #b5a3f0 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
     background-size: 200% 100%;
-    background-position: 100% 0;
+    background-position: 0% 0;
   }
 
   /* Desktop hover effect for brand-heading-primary */
   @media (hover: hover) and (pointer: fine) {
     .brand-heading-primary:hover {
-      background-position: 0% 0;
+      background-position: 100% 0;
     }
   }
 
   /* Mobile viewport effect for brand-heading-primary */
   @media (hover: none) or (pointer: coarse) {
     .brand-heading-primary.in-viewport {
-      background-position: 0% 0;
+      background-position: 100% 0;
     }
   }
 
@@ -97,7 +97,7 @@
     font-weight: 600;
     letter-spacing: 1px;
     color: #f7f7ff;
-    background: linear-gradient(90deg, #007bff 0%, #0600a6 50%, #e4dcff 100%);
+    background: linear-gradient(90deg, #007bff 0%, #0600a6 50%, #b5a3f0 100%);
     background-size: 200% 100%;
     background-position: 0% 0%;
     -webkit-background-clip: text;
@@ -155,7 +155,7 @@
     font-weight: 600;
     letter-spacing: 1px;
     color: #f7f7ff;
-    background: linear-gradient(90deg, #007bff 0%, #0600a6 50%, #e4dcff 100%);
+    background: linear-gradient(90deg, #007bff 0%, #0600a6 50%, #b5a3f0 100%);
     background-size: 200% 100%;
     background-position: 0% 0%;
     -webkit-background-clip: text;
@@ -260,7 +260,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(90deg, #007bff 0%, #0600a6 50%, #b4a1f4 100%);
+    background: linear-gradient(90deg, #007bff 0%, #0600a6 50%, #b5a3f0 100%);
     border-radius: 4px;
   }
 
@@ -272,26 +272,26 @@
 .hover-gradient-text {
   transition: all 0.5s ease-in-out !important;
   cursor: pointer !important;
-  background: linear-gradient(90deg, #b4a1f4 0%, #0600a6 50%, #007bff 100%) !important;
+  background: linear-gradient(90deg, #007bff 0%, #0600a6 50%, #b5a3f0 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
   background-size: 200% 100% !important;
-  background-position: 100% 0 !important;
+  background-position: 0% 0 !important;
 }
 
 /* Desktop hover effect */
 @media (hover: hover) and (pointer: fine) {
   .hover-gradient-text:hover {
-    background-position: 0% 0 !important;
+    background-position: 100% 0 !important;
   }
 }
 
 /* Mobile viewport effect - applies gradient when element is in view */
 @media (hover: none) or (pointer: coarse) {
   .hover-gradient-text.in-viewport {
-    background-position: 0% 0 !important;
+    background-position: 100% 0 !important;
   }
 }
 
