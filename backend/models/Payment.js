@@ -23,16 +23,6 @@ const paymentSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    amount: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    currency: {
-      type: String,
-      default: "USD",
-      trim: true,
-    },
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],

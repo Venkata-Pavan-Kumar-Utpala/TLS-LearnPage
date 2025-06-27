@@ -23,38 +23,49 @@ const isValidPassword = (password) => {
 export const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, email, password, confirmPassword } = req.body;
-    
+
     // Input validation
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
       return res.status(400).json({ message: "Please fill all fields" });
     }
-    
+
     // Trim and validate inputs
     const trimmedFirstName = firstName.trim();
     const trimmedLastName = lastName.trim();
     const trimmedEmail = email.trim().toLowerCase();
-    
+
     if (trimmedFirstName.length < 2 || trimmedLastName.length < 2) {
-      return res.status(400).json({ message: "First name and last name must be at least 2 characters" });
+      return res
+        .status(400)
+        .json({
+          message: "First name and last name must be at least 2 characters",
+        });
     }
-    
+
     if (!isValidEmail(trimmedEmail)) {
-      return res.status(400).json({ message: "Please provide a valid email address" });
+      return res
+        .status(400)
+        .json({ message: "Please provide a valid email address" });
     }
-    
+
     if (!isValidPassword(password)) {
-      return res.status(400).json({ message: "Password must be at least 6 characters with at least one letter and one number" });
+      return res
+        .status(400)
+        .json({
+          message:
+            "Password must be at least 6 characters with at least one letter and one number",
+        });
     }
-    
+
     if (password !== confirmPassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
-    
+
     const existingUser = await User.findOne({ email: trimmedEmail });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
-    
+
     const hashedPassword = await bcrypt.hash(password, 12);
     const newUser = new User({
       firstName: trimmedFirstName,
@@ -81,24 +92,26 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     // Input validation
     if (!email || !password) {
       return res
         .status(400)
         .json({ message: "Please provide email and password" });
     }
-    
+
     const trimmedEmail = email.trim().toLowerCase();
     if (!isValidEmail(trimmedEmail)) {
-      return res.status(400).json({ message: "Please provide a valid email address" });
+      return res
+        .status(400)
+        .json({ message: "Please provide a valid email address" });
     }
-    
+
     const user = await User.findOne({ email: trimmedEmail });
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-    
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
@@ -110,6 +123,7 @@ export const loginUser = async (req, res) => {
         id: user._id,
         firstName: user.firstName,
         email: user.email,
+        role: user.role, // Add this line
       },
       token,
     });

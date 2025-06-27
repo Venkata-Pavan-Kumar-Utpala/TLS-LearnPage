@@ -11,18 +11,13 @@ export const checkIfQuestionAnswered = async ({
 }) => {
   let userProgress = await UserProgress.findOne({ userId });
   if (!userProgress) return { answered: false };
-  // Only allow one attempt per quiz as a whole
-  if (
-    userProgress.completedQuizzes
-      .map((id) => id.toString())
-      .includes(quizId.toString())
-  ) {
-    return { error: "Quiz can be submitted only once" };
-  }
+
+  // Check if this specific question has already been answered
   const answered = userProgress.answeredQuestions.get(quizId.toString()) || [];
   if (answered.map((id) => id.toString()).includes(questionId.toString())) {
     return { error: "You have already answered this question." };
   }
+
   return { answered: false };
 };
 
@@ -44,29 +39,42 @@ export const recordQuizAttempt = async ({
       answeredQuestions: {},
     });
   }
+
   // Add this questionId to answeredQuestions for this quiz
   const answered = userProgress.answeredQuestions.get(quizId.toString()) || [];
   answered.push(questionId);
   userProgress.answeredQuestions.set(quizId.toString(), answered);
-  // --- Mark quiz as completed if all questions are answered ---
-  const quizComplete = await Quiz.findById(quizId);
-  if (quizComplete && answered.length === quizComplete.questions.length) {
-    if (
-      !userProgress.completedQuizzes
-        .map((id) => id.toString())
-        .includes(quizId.toString())
-    ) {
-      userProgress.completedQuizzes.push(quizId);
-    }
-  }
+
   // Add XP for this question
   userProgress.courseXP.set(
     courseId,
     (userProgress.courseXP.get(courseId) ?? 0) + xp
   );
-  userProgress.totalCourseXP += xp;
+  // Note: totalCourseXP will be calculated in getUserProgress for consistency
+
   await userProgress.save();
-  return { success: true };
+
+  // Check if quiz is now complete (all questions answered)
+  const quiz = await Quiz.findById(quizId);
+  const isQuizComplete = quiz && answered.length === quiz.questions.length;
+
+  // Mark quiz as completed if all questions are answered
+  if (
+    isQuizComplete &&
+    !userProgress.completedQuizzes
+      .map((id) => id.toString())
+      .includes(quizId.toString())
+  ) {
+    userProgress.completedQuizzes.push(quizId);
+    await userProgress.save();
+  }
+
+  return {
+    success: true,
+    quizComplete: isQuizComplete,
+    totalAnswered: answered.length,
+    totalQuestions: quiz ? quiz.questions.length : 0,
+  };
 };
 
 // Get Current Authenticated User's Progress
@@ -87,7 +95,31 @@ export const getUserProgress = async (req, res) => {
       });
     }
 
-    return res.status(200).json(userProgress);
+    // Recalculate totals to ensure consistency
+    let recalculatedTotalCourseXP = 0;
+    let recalculatedTotalExerciseXP = 0;
+
+    // Convert Maps to plain objects for JSON response
+    const courseXPObject = {};
+    const exerciseXPObject = {};
+
+    for (const [courseId, xp] of userProgress.courseXP) {
+      courseXPObject[courseId] = xp;
+      recalculatedTotalCourseXP += xp;
+    }
+
+    for (const [courseId, xp] of userProgress.exerciseXP) {
+      exerciseXPObject[courseId] = xp;
+      recalculatedTotalExerciseXP += xp;
+    }
+
+    return res.status(200).json({
+      _id: userProgress._id,
+      courseXP: courseXPObject,
+      exerciseXP: exerciseXPObject,
+      totalCourseXP: recalculatedTotalCourseXP,
+      totalExerciseXP: recalculatedTotalExerciseXP,
+    });
   } catch (err) {
     console.error("User Progress Fetch Error:", err.message);
     return res.status(500).json({ message: "Failed to fetch user progress" });
