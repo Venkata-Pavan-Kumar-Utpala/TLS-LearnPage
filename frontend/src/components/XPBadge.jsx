@@ -35,13 +35,13 @@ const XPBadge = () => {
 
   useEffect(() => {
     const fetchXP = async () => {
-      if (!isAuthenticated || !user?._id) {
+      if (!isAuthenticated) {
         setLoading(false);
         return;
       }
 
       try {
-        const response = await fetch(`/api/user-progress/${user._id}`, {
+        const response = await fetch(`/api/user-progress`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
           }

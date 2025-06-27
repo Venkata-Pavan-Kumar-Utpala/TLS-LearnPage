@@ -15,13 +15,13 @@ const XPTracker = ({ className = '', showDetailed = true }) => {
 
   useEffect(() => {
     const fetchProgress = async () => {
-      if (!isAuthenticated || !user?._id) {
+      if (!isAuthenticated) {
         setLoading(false);
         return;
       }
 
       try {
-        const response = await fetch(`/api/user-progress/${user._id}`, {
+        const response = await fetch(`/api/user-progress`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
           }

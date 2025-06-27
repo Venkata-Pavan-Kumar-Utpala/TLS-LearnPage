@@ -162,9 +162,9 @@ export const courseAPI = {
 
 // User Progress API
 export const progressAPI = {
-  // Get user progress
-  getUserProgress: async (userId) => {
-    const response = await fetch(`${API_BASE}/user-progress/${userId}`, {
+  // Get user progress (userId is extracted from JWT token on backend)
+  getUserProgress: async () => {
+    const response = await fetch(`${API_BASE}/user-progress`, {
       headers: getAuthHeaders(),
     });
     return handleResponse(response);
@@ -173,7 +173,25 @@ export const progressAPI = {
 
 // Payment API
 export const paymentAPI = {
-  // Check eligibility for certification
+  // Initiate payment - checks eligibility and returns payment permission
+  initiatePayment: async (courseId) => {
+    const response = await fetch(`${API_BASE}/certificate/${courseId}/initiate`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
+
+  // Submit payment for certification
+  submitPayment: async (paymentData) => {
+    const response = await fetch(`${API_BASE}/certificate/Pay`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(paymentData),
+    });
+    return handleResponse(response);
+  },
+
+  // Legacy - Check eligibility for certification (keeping for backward compatibility)
   checkEligibility: async (userId, courseId) => {
     const response = await fetch(`${API_BASE}/certificate/${userId}/${courseId}/status`, {
       headers: getAuthHeaders(),
@@ -181,7 +199,7 @@ export const paymentAPI = {
     return handleResponse(response);
   },
 
-  // Submit payment for certification
+  // Legacy - Submit payment (keeping for backward compatibility)
   payCertificateFee: async (paymentData) => {
     const response = await fetch(`${API_BASE}/certificate/pay`, {
       method: 'POST',

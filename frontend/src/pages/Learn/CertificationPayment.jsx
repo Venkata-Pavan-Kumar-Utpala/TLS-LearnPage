@@ -29,6 +29,12 @@ const CertificationPayment = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('upi');
   const [userXP, setUserXP] = useState(0);
   const [showPaymentDetails, setShowPaymentDetails] = useState(false);
+
+  // Payment flow states
+  const [paymentStatus, setPaymentStatus] = useState(null); // null, 'eligible', 'not-eligible', 'already-paid'
+  const [eligibilityData, setEligibilityData] = useState(null);
+  const [paymentInitiated, setPaymentInitiated] = useState(false);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -68,7 +74,9 @@ const CertificationPayment = () => {
         if (user) {
           try {
             const xpResponse = await progressAPI.getUserProgress();
-            setUserXP(xpResponse.data.totalXP || 0);
+            // Calculate total XP from both course and exercise XP
+            const totalXP = (xpResponse.totalCourseXP || 0) + (xpResponse.totalExerciseXP || 0);
+            setUserXP(totalXP);
           } catch (error) {
             console.error('Error fetching user XP:', error);
           }
@@ -102,7 +110,7 @@ const CertificationPayment = () => {
     });
   };
 
-  const handleInitiatePayment = () => {
+  const handleInitiatePayment = async () => {
     if (!isAuthenticated) {
       openLogin();
       return;
@@ -118,8 +126,37 @@ const CertificationPayment = () => {
       return;
     }
 
-    // Show payment details (QR code and UPI ID)
-    setShowPaymentDetails(true);
+    setIsProcessing(true);
+
+    try {
+      // Step 1: Call the initiate endpoint to check eligibility
+      const response = await paymentAPI.initiatePayment(courseId);
+
+      setEligibilityData(response);
+
+      if (response.eligible && response.paymentAllowed) {
+        // User is eligible and can pay
+        setPaymentStatus('eligible');
+        setShowPaymentDetails(true);
+        setPaymentInitiated(true);
+      } else if (response.eligible && !response.paymentAllowed) {
+        // User is eligible but already paid
+        setPaymentStatus('already-paid');
+        alert('You already have a pending or approved payment for this course.');
+      } else {
+        // User is not eligible yet
+        setPaymentStatus('not-eligible');
+        alert(`Not eligible for certificate yet. You need to complete all quizzes and exercises first.\n\nYour Progress: ${response.userTotalXP}/${response.totalPossibleXP} XP`);
+      }
+    } catch (error) {
+      console.error('Error initiating payment:', error);
+
+      // Show the actual error message from the backend if available
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to check payment eligibility. Please try again.';
+      alert(errorMessage);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleSubmit = async () => {
@@ -128,54 +165,49 @@ const CertificationPayment = () => {
       return;
     }
 
+    // Check if payment was properly initiated
+    if (!paymentInitiated || paymentStatus !== 'eligible') {
+      alert('Please initiate payment first by clicking "Get Certificate".');
+      return;
+    }
+
     setIsProcessing(true);
 
     try {
       if (selectedPaymentMethod === 'xp') {
-        // Handle XP redemption
-        const xpRedemptionData = {
-          courseId: certification.id,
-          courseName: certification.title,
+        // Handle XP redemption - use new payment endpoint
+        const paymentData = {
+          transactionId: 'XP_REDEMPTION_' + Date.now(),
           paymentType: 'certificate',
-          redemptionType: 'xp',
-          xpPointsUsed: 1000,
-          userDetails: {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone
-          }
+          courseId: certification.id
         };
 
-        // For now, we'll use the existing payment API with a special flag
-        const response = await paymentAPI.payCertificateFee({
-          ...xpRedemptionData,
-          transactionId: 'XP_REDEMPTION_' + Date.now()
-        });
-
+        await paymentAPI.submitPayment(paymentData);
         alert('Certificate redeemed successfully with XP points! You will receive your certificate via email within 48 hours.');
         navigate('/learn/certification');
       } else {
-        // Handle UPI payment
+        // Handle UPI payment - use new payment endpoint
         const paymentData = {
           transactionId: formData.transactionId,
           paymentType: 'certificate',
-          courseId: certification.id,
-          courseName: certification.title,
-          amount: certification.price,
-          userDetails: {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone
-          }
+          courseId: certification.id
         };
 
-        await paymentAPI.payCertificateFee(paymentData);
+        await paymentAPI.submitPayment(paymentData);
         alert('Payment submitted successfully! Your payment is being processed and you will receive confirmation via email within 48 hours.');
         navigate('/learn/certification');
       }
     } catch (error) {
-      console.error('Payment/Redemption error:', error);
-      alert('An error occurred while processing your request. Please try again.');
+      console.error('Payment submission error:', error);
+
+      // Handle specific error messages from backend
+      if (error.message?.includes('Transaction ID already exists')) {
+        alert('This transaction ID has already been used. Please enter a different transaction ID.');
+      } else if (error.message?.includes('already have a pending or approved payment')) {
+        alert('You already have a pending or approved payment for this course.');
+      } else {
+        alert('An error occurred while processing your payment. Please try again.');
+      }
     } finally {
       setIsProcessing(false);
     }
@@ -429,20 +461,69 @@ const CertificationPayment = () => {
                 </div>
               )}
 
+              {/* Payment Status Messages */}
+              {paymentStatus === 'not-eligible' && eligibilityData && (
+                <div className="mb-6 bg-yellow-50 dark:bg-yellow-500/20 border border-yellow-200 dark:border-yellow-500 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+                    <span className="text-yellow-700 dark:text-yellow-400 font-medium">Course Not Completed</span>
+                  </div>
+                  <p className="text-yellow-700 dark:text-yellow-400 text-sm">
+                    Complete all quizzes and exercises to become eligible for certification.
+                  </p>
+                  <p className="text-yellow-700 dark:text-yellow-400 text-sm mt-1">
+                    Progress: {eligibilityData.userTotalXP}/{eligibilityData.totalPossibleXP} XP
+                  </p>
+                </div>
+              )}
+
+              {paymentStatus === 'already-paid' && (
+                <div className="mb-6 bg-blue-50 dark:bg-blue-500/20 border border-blue-200 dark:border-blue-500 rounded-lg p-4">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    <span className="text-blue-700 dark:text-blue-400 font-medium">Payment Already Submitted</span>
+                  </div>
+                  <p className="text-blue-700 dark:text-blue-400 text-sm mt-1">
+                    You already have a pending or approved payment for this course.
+                  </p>
+                </div>
+              )}
+
+              {paymentStatus === 'eligible' && paymentInitiated && (
+                <div className="mb-6 bg-green-50 dark:bg-green-500/20 border border-green-200 dark:border-green-500 rounded-lg p-4">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
+                    <span className="text-green-700 dark:text-green-400 font-medium">Eligible for Certification</span>
+                  </div>
+                  <p className="text-green-700 dark:text-green-400 text-sm mt-1">
+                    You can now proceed with the payment.
+                  </p>
+                </div>
+              )}
+
               {/* Submit Button */}
               {!showPaymentDetails ? (
                 <button
                   onClick={handleInitiatePayment}
-                  disabled={selectedPaymentMethod === 'xp' && userXP < 1000}
+                  disabled={isProcessing || (selectedPaymentMethod === 'xp' && userXP < 1000)}
                   className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
-                  <CreditCard className="w-5 h-5" />
-                  {selectedPaymentMethod === 'upi' ? 'Proceed to Pay' : 'Redeem with XP'}
+                  {isProcessing ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Checking Eligibility...
+                    </>
+                  ) : (
+                    <>
+                      <CreditCard className="w-5 h-5" />
+                      {selectedPaymentMethod === 'upi' ? 'Get Certificate' : 'Redeem with XP'}
+                    </>
+                  )}
                 </button>
               ) : (
                 <button
                   onClick={handleSubmit}
-                  disabled={isProcessing || (selectedPaymentMethod === 'upi' && !formData.transactionId)}
+                  disabled={isProcessing || (selectedPaymentMethod === 'upi' && !formData.transactionId) || paymentStatus !== 'eligible'}
                   className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   {isProcessing ? (
