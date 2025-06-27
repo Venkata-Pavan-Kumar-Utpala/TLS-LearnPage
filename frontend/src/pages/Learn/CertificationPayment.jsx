@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useAuthModalContext } from '../../context/AuthModalContext';
-import { paymentAPI, courseAPI, progressAPI } from '../../services/api';
+import { paymentAPI, courseAPI, progressAPI, certificateAPI } from '../../services/api';
 
 const CertificationPayment = () => {
   const navigate = useNavigate();
@@ -159,6 +159,24 @@ const CertificationPayment = () => {
     }
   };
 
+  // Helper function to generate certificate after successful payment
+  const generateCertificate = async () => {
+    try {
+      const certificateData = {
+        name: formData.name,
+        email: formData.email,
+        courseName: certification.title,
+        xp: eligibilityData?.userTotalXP || 0
+      };
+
+      await certificateAPI.generateCertificate(certificateData);
+      console.log('Certificate generated and emailed successfully');
+    } catch (error) {
+      console.error('Certificate generation failed:', error);
+      // Don't block the payment flow if certificate generation fails
+    }
+  };
+
   const handleSubmit = async () => {
     if (selectedPaymentMethod === 'upi' && !formData.transactionId) {
       alert('Please enter the transaction ID after completing the payment.');
@@ -183,7 +201,11 @@ const CertificationPayment = () => {
         };
 
         await paymentAPI.submitPayment(paymentData);
-        alert('Certificate redeemed successfully with XP points! You will receive your certificate via email within 48 hours.');
+
+        // For XP redemption, generate certificate immediately
+        await generateCertificate();
+
+        alert('Certificate redeemed successfully with XP points! Your certificate has been generated and emailed to you.');
         navigate('/learn/certification');
       } else {
         // Handle UPI payment - use new payment endpoint

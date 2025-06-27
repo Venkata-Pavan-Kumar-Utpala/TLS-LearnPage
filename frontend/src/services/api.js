@@ -218,6 +218,19 @@ export const paymentAPI = {
   },
 };
 
+// Certificate API
+export const certificateAPI = {
+  // Generate and email certificate
+  generateCertificate: async (certificateData) => {
+    const response = await fetch(`${API_BASE}/certification/generate`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(certificateData),
+    });
+    return handleResponse(response);
+  },
+};
+
 // Exercise API
 export const exerciseAPI = {
   // Submit exercise
