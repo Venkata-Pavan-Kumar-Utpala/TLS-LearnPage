@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Payment from "../models/Payment.js";
 import Course from "../models/Course.js";
 import Quiz from "../models/Quiz.js";
@@ -8,9 +9,16 @@ export const checkEligibility = async (req, res) => {
   try {
     const userId = req.user._id;
     const { courseId } = req.params;
+
     if (!userId || !courseId) {
       return res.status(400).json({ message: "Missing user or course ID" });
     }
+
+    // Validate courseId
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({ message: "Invalid course ID" });
+    }
+
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ message: "Course not found" });
     // Calculate total possible XP
@@ -46,15 +54,53 @@ export const checkEligibility = async (req, res) => {
 
 export const payCertificateFee = async (req, res) => {
   try {
-    const { transactionId, paymentType } = req.body;
+    const { transactionId, paymentType, courseId } = req.body;
     const userId = req.user._id;
-    if (!transactionId || !paymentType) {
-      return res.status(400).json({ message: "All fields are required" });
+
+    // Input validation
+    if (!transactionId || !paymentType || !courseId) {
+      return res.status(400).json({
+        message: "Transaction ID, payment type, and course ID are required",
+      });
     }
+
+    // Validate courseId
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({ message: "Invalid course ID" });
+    }
+
+    // Check if course exists
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    // Check for duplicate transaction ID
+    const existingPayment = await Payment.findOne({
+      transactionId: transactionId.trim(),
+    });
+    if (existingPayment) {
+      return res.status(400).json({ message: "Transaction ID already exists" });
+    }
+
+    // Check if user already has a pending/approved payment for this course
+    const existingUserPayment = await Payment.findOne({
+      userId,
+      courseId,
+      status: { $in: ["pending", "approved"] },
+    });
+    if (existingUserPayment) {
+      return res.status(400).json({
+        message:
+          "You already have a pending or approved payment for this course",
+      });
+    }
+
     const payment = await Payment.create({
       userId,
-      transactionId,
-      paymentType,
+      transactionId: transactionId.trim(),
+      paymentType: paymentType.trim(),
+      courseId,
     });
     res.status(201).json({ success: true, payment });
   } catch (error) {
@@ -65,34 +111,67 @@ export const payCertificateFee = async (req, res) => {
 };
 
 export const getAllPayments = async (req, res) => {
-  const payments = await Payment.find().populate(
-    "userId",
-    "firstName",
-    " email"
-  );
-  if (!payments || payments.length === 0) {
-    return res.status(404).json({ message: "No payments found" });
+  try {
+    const payments = await Payment.find()
+      .populate("userId", "firstName lastName email")
+      .populate("courseId", "title")
+      .sort({ createdAt: -1 });
+
+    if (!payments || payments.length === 0) {
+      return res
+        .status(200)
+        .json({ message: "No payments found", payments: [] });
+    }
+
+    res.json({ count: payments.length, payments });
+  } catch (error) {
+    console.error("Get payments error:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to fetch payments", error: error.message });
   }
-  res.json(payments);
 };
 
 export const paymentConfirmation = async (req, res) => {
   try {
     const { paymentId } = req.params;
     const { status } = req.body; // "approved" or "rejected"
-    if (!["approved", "rejected"].includes(status)) {
-      return res.status(400).json({ message: "Invalid status" });
+
+    // Validate paymentId
+    if (!mongoose.Types.ObjectId.isValid(paymentId)) {
+      return res.status(400).json({ message: "Invalid payment ID" });
     }
+
+    if (!["approved", "rejected"].includes(status)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid status. Must be 'approved' or 'rejected'" });
+    }
+
     const payment = await Payment.findById(paymentId).populate(
       "userId",
       "firstName email"
     );
-    if (!payment) return res.status(404).json({ message: "Payment not found" });
+    if (!payment) {
+      return res.status(404).json({ message: "Payment not found" });
+    }
+
+    // Check if payment is already processed
+    if (payment.status !== "pending") {
+      return res
+        .status(400)
+        .json({ message: "Payment has already been processed" });
+    }
+
     payment.status = status;
     await payment.save();
+
+    // Send email notification
     await sendPaymentStatusEmail({ user: payment.userId, status });
+
     res.json({ success: true, payment });
   } catch (error) {
+    console.error("Payment confirmation error:", error);
     return res
       .status(500)
       .json({ message: "Payment confirmation failed", error: error.message });

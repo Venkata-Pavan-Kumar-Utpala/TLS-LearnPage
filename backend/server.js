@@ -35,7 +35,8 @@ app.use(express.json());
     await seedQuizzes();
 
     const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () => console.log(`Server running`));
+
   } catch (error) {
     console.error("MongoDB connection failed:", error.message);
   }

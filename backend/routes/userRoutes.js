@@ -1,6 +1,5 @@
 import express from "express";
 import { registerUser, loginUser } from "../controllers/userController.js";
-import Payment from "../models/Payment.js";
 
 const userRoutes = express.Router();
 
