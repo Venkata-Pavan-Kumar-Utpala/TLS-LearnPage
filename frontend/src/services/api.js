@@ -167,7 +167,8 @@ export const progressAPI = {
     const response = await fetch(`${API_BASE}/user-progress`, {
       headers: getAuthHeaders(),
     });
-    return handleResponse(response);
+    const data = await handleResponse(response);
+    return dataAdapters.adaptUserProgress(data);
   },
 };
 
@@ -303,12 +304,15 @@ export const dataAdapters = {
   // Adapt user progress data
   adaptUserProgress: (backendProgress) => ({
     userId: backendProgress.userId,
-    courseXP: Object.fromEntries(backendProgress.courseXP || new Map()),
-    exerciseXP: Object.fromEntries(backendProgress.exerciseXP || new Map()),
+    courseXP: backendProgress.courseXP || {},
+    exerciseXP: backendProgress.exerciseXP || {},
     totalCourseXP: backendProgress.totalCourseXP || 0,
     totalExerciseXP: backendProgress.totalExerciseXP || 0,
+    // Note: Backend /user-progress endpoint doesn't return these fields
+    // They exist in the model but are not included in the response
     completedQuizzes: backendProgress.completedQuizzes || [],
     completedExercises: backendProgress.completedExercises || [],
+    answeredQuestions: backendProgress.answeredQuestions || {},
   }),
 };
 

@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
 import useInViewport from "../../hooks/useInViewport";
-import { courseAPI } from "../../services/api";
+import { courseAPI, progressAPI } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import { useAuthModalContext } from "../../context/AuthModalContext";
 
@@ -37,6 +37,8 @@ const CourseQuiz = () => {
   const [error, setError] = useState(null);
   const [topicId, setTopicId] = useState(null);
   const [quizId, setQuizId] = useState(null); // Store quiz ID from backend response
+  const [userProgress, setUserProgress] = useState(null);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   // Monitor authentication status - redirect if user logs out
   useEffect(() => {
@@ -136,6 +138,47 @@ const CourseQuiz = () => {
 
     fetchQuiz();
   }, [courseId, topicId]);
+
+  // Fetch user progress and check if quiz is already completed
+  useEffect(() => {
+    const fetchUserProgress = async () => {
+      if (!isAuthenticated || !quizId) return;
+
+      try {
+        console.log('Fetching user progress to check quiz completion...');
+        const progress = await progressAPI.getUserProgress();
+        console.log('User progress received:', progress);
+        setUserProgress(progress);
+
+        // Check if quiz is already completed by checking the completedQuizzes array
+        const isQuizCompleted = progress.completedQuizzes?.some(
+          completedQuizId => completedQuizId.toString() === quizId.toString()
+        );
+
+        console.log('Quiz access check:', {
+          quizId,
+          completedQuizzes: progress.completedQuizzes,
+          isQuizCompleted,
+          shouldBlockAccess: isQuizCompleted
+        });
+
+        if (isQuizCompleted) {
+          setQuizCompleted(true);
+          setError('You have already completed this quiz. Each quiz can only be attempted once.');
+        } else {
+          setQuizCompleted(false);
+          setError(null);
+        }
+      } catch (error) {
+        console.error('Error fetching user progress:', error);
+        // Don't block quiz access if progress fetch fails
+        setUserProgress(null);
+        setQuizCompleted(false);
+      }
+    };
+
+    fetchUserProgress();
+  }, [isAuthenticated, quizId]);
 
   const currentQ = quiz?.questions[currentQuestion];
 
@@ -260,8 +303,8 @@ const CourseQuiz = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error Loading Quiz</h1>
-          <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Quiz Already Completed</h1>
+          <p className="text-orange-600 dark:text-orange-400 mb-4">{error}</p>
           <button
             onClick={() => {
               window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
@@ -291,6 +334,45 @@ const CourseQuiz = () => {
           >
             Back to Courses
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Quiz already completed state
+  if (quizCompleted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+        <div className="text-center">
+          <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20 max-w-md mx-auto">
+            <div className="text-green-500 mb-4">
+              <CheckCircle size={64} className="mx-auto" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Quiz Already Attempted</h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              You have already attempted this quiz. Each quiz can only be attempted once to maintain the integrity of your progress and prevent multiple attempts.
+            </p>
+            <div className="space-y-3">
+              <button
+                onClick={() => {
+                  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                  setTimeout(() => navigate(`/learn/courses/${courseId}/topics`), 100);
+                }}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors duration-200"
+              >
+                Back to Topics
+              </button>
+              <button
+                onClick={() => {
+                  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                  setTimeout(() => navigate('/learn/courses'), 100);
+                }}
+                className="w-full text-blue-600 hover:text-blue-800 dark:text-blue-400 font-semibold py-3 px-6 rounded-xl border border-blue-600/20 hover:border-blue-600/40 transition-colors duration-200"
+              >
+                Back to Courses
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -474,7 +556,16 @@ const QuizQuestion = ({
         }
       } catch (error) {
         console.error('Error submitting answer:', error);
-        // Create a fallback response for error cases
+
+        // Check if this is an "already answered" error
+        if (error.message.includes('already answered')) {
+          // This indicates the quiz has been attempted before
+          setQuizCompleted(true);
+          setError('You have already attempted this quiz. Each quiz can only be attempted once.');
+          return;
+        }
+
+        // Create a fallback response for other error cases
         const errorResult = {
           correct: false,
           explanation: `Error submitting answer: ${error.message}`,

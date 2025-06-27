@@ -9,7 +9,7 @@ import {
 import ScrollProgress from "../../components/ScrollProgress";
 import useInViewport from "../../hooks/useInViewport";
 import Navbar from "../../components/Navbar";
-import { courseAPI } from "../../services/api";
+import { courseAPI, progressAPI } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import { useAuthModalContext } from "../../context/AuthModalContext";
 
@@ -29,6 +29,7 @@ const CourseTopics = () => {
   const [backendCourse, setBackendCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userProgress, setUserProgress] = useState(null);
 
   // Fetch course data from backend to get real topic IDs
   useEffect(() => {
@@ -52,6 +53,25 @@ const CourseTopics = () => {
       fetchCourse();
     }
   }, [courseId]);
+
+  // Fetch user progress to check completed quizzes
+  useEffect(() => {
+    const fetchUserProgress = async () => {
+      if (!isAuthenticated) return;
+
+      try {
+        console.log('Fetching user progress for quiz completion check...');
+        const progress = await progressAPI.getUserProgress();
+        console.log('User progress received in CourseTopics:', progress);
+        setUserProgress(progress);
+      } catch (error) {
+        console.error('Error fetching user progress in CourseTopics:', error);
+        setUserProgress(null);
+      }
+    };
+
+    fetchUserProgress();
+  }, [isAuthenticated]);
 
   // Course topics data
   const courseTopicsData = {
@@ -334,13 +354,16 @@ print(df.describe())    # Statistical summary`,
     // Use real backend topic ID if available, otherwise fallback to hardcoded
     let topicId = null;
     let topicTitle = 'Quiz';
+    let quizId = null;
 
     if (backendCourse && backendCourse.topics && backendCourse.topics[selectedTopic]) {
       // Use real backend topic ID
       const backendTopic = backendCourse.topics[selectedTopic];
       topicId = backendTopic._id || backendTopic.topicId || backendTopic.id;
       topicTitle = backendTopic.title;
+      quizId = backendTopic.quizId; // Get quiz ID for completion check
       console.log('Using backend topic ID:', topicId, 'for topic:', topicTitle);
+      console.log('Quiz ID for completion check:', quizId);
       console.log('Backend topic object:', backendTopic);
     } else {
       // Fallback to hardcoded data
@@ -357,6 +380,35 @@ print(df.describe())    # Statistical summary`,
     if (!topicId) {
       console.error('Could not determine topic ID for quiz');
       return;
+    }
+
+    // Check if quiz is already completed OR if any questions have been answered (only if we have quizId and userProgress)
+    if (quizId && userProgress) {
+      const isFullyCompleted = userProgress.completedQuizzes?.some(
+        completedQuizId => completedQuizId.toString() === quizId.toString()
+      );
+
+      // Check if any questions have been answered for this quiz
+      const answeredQuestions = userProgress.answeredQuestions?.[quizId.toString()] || [];
+      const hasAnsweredQuestions = answeredQuestions.length > 0;
+
+      console.log('Quiz access check in CourseTopics:', {
+        quizId,
+        completedQuizzes: userProgress.completedQuizzes,
+        answeredQuestions: answeredQuestions,
+        isFullyCompleted,
+        hasAnsweredQuestions,
+        shouldBlockAccess: isFullyCompleted || hasAnsweredQuestions
+      });
+
+      if (isFullyCompleted || hasAnsweredQuestions) {
+        if (isFullyCompleted) {
+          alert(`You have already completed the quiz for "${topicTitle}". Each quiz can only be attempted once.`);
+        } else {
+          alert(`You have already started the quiz for "${topicTitle}". Each quiz can only be attempted once.`);
+        }
+        return;
+      }
     }
 
     // Scroll to top before navigating to quiz
