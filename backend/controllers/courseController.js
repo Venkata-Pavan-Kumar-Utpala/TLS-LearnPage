@@ -131,29 +131,17 @@ export const submitQuiz = async (req, res) => {
     }
 
     const isCorrect = selectedOptionNum === question.correctAnswer;
-    let xp = 0;
+    let xp = isCorrect ? 10 : 0; // 10 XP for correct answer, 0 for incorrect
 
     // Always record the attempt (correct or incorrect)
-    if (isCorrect) {
-      xp = 10;
-      // Update XP for this correct answer (mutation)
-      await recordQuizAttempt({
-        userId: req.user._id,
-        quizId,
-        courseId,
-        questionId,
-        xp,
-      });
-    } else {
-      // Record incorrect answer (no XP but still track the attempt)
-      await recordQuizAttempt({
-        userId: req.user._id,
-        quizId,
-        courseId,
-        questionId,
-        xp: 0, // No XP for wrong answer
-      });
-    }
+    const result = await recordQuizAttempt({
+      userId: req.user._id,
+      quizId,
+      courseId,
+      questionId,
+      xp,
+    });
+
     res.status(200).json({
       questionId: question._id,
       selectedOption: selectedOptionNum,
@@ -161,6 +149,12 @@ export const submitQuiz = async (req, res) => {
       explanation: question.explanation || "No explanation available",
       correct: isCorrect,
       receivedXP: xp,
+      quizComplete: result.quizComplete,
+      progress: {
+        answered: result.totalAnswered,
+        total: result.totalQuestions,
+        remaining: result.totalQuestions - result.totalAnswered,
+      },
     });
   } catch (error) {
     return res.status(500).json({

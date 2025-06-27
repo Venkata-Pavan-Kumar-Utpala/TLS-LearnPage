@@ -11,18 +11,13 @@ export const checkIfQuestionAnswered = async ({
 }) => {
   let userProgress = await UserProgress.findOne({ userId });
   if (!userProgress) return { answered: false };
-  // Only allow one attempt per quiz as a whole
-  if (
-    userProgress.completedQuizzes
-      .map((id) => id.toString())
-      .includes(quizId.toString())
-  ) {
-    return { error: "Quiz can be submitted only once" };
-  }
+
+  // Check if this specific question has already been answered
   const answered = userProgress.answeredQuestions.get(quizId.toString()) || [];
   if (answered.map((id) => id.toString()).includes(questionId.toString())) {
     return { error: "You have already answered this question." };
   }
+
   return { answered: false };
 };
 
@@ -44,29 +39,42 @@ export const recordQuizAttempt = async ({
       answeredQuestions: {},
     });
   }
+
   // Add this questionId to answeredQuestions for this quiz
   const answered = userProgress.answeredQuestions.get(quizId.toString()) || [];
   answered.push(questionId);
   userProgress.answeredQuestions.set(quizId.toString(), answered);
-  // --- Mark quiz as completed if all questions are answered ---
-  const quizComplete = await Quiz.findById(quizId);
-  if (quizComplete && answered.length === quizComplete.questions.length) {
-    if (
-      !userProgress.completedQuizzes
-        .map((id) => id.toString())
-        .includes(quizId.toString())
-    ) {
-      userProgress.completedQuizzes.push(quizId);
-    }
-  }
+
   // Add XP for this question
   userProgress.courseXP.set(
     courseId,
     (userProgress.courseXP.get(courseId) ?? 0) + xp
   );
   userProgress.totalCourseXP += xp;
+
   await userProgress.save();
-  return { success: true };
+
+  // Check if quiz is now complete (all questions answered)
+  const quiz = await Quiz.findById(quizId);
+  const isQuizComplete = quiz && answered.length === quiz.questions.length;
+
+  // Mark quiz as completed if all questions are answered
+  if (
+    isQuizComplete &&
+    !userProgress.completedQuizzes
+      .map((id) => id.toString())
+      .includes(quizId.toString())
+  ) {
+    userProgress.completedQuizzes.push(quizId);
+    await userProgress.save();
+  }
+
+  return {
+    success: true,
+    quizComplete: isQuizComplete,
+    totalAnswered: answered.length,
+    totalQuestions: quiz ? quiz.questions.length : 0,
+  };
 };
 
 // Get Current Authenticated User's Progress
