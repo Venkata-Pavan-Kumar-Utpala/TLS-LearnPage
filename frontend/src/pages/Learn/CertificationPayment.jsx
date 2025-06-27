@@ -28,6 +28,7 @@ const CertificationPayment = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('upi');
   const [userXP, setUserXP] = useState(0);
+  const [showPaymentDetails, setShowPaymentDetails] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -101,7 +102,7 @@ const CertificationPayment = () => {
     });
   };
 
-  const handleSubmit = async () => {
+  const handleInitiatePayment = () => {
     if (!isAuthenticated) {
       openLogin();
       return;
@@ -117,6 +118,11 @@ const CertificationPayment = () => {
       return;
     }
 
+    // Show payment details (QR code and UPI ID)
+    setShowPaymentDetails(true);
+  };
+
+  const handleSubmit = async () => {
     if (selectedPaymentMethod === 'upi' && !formData.transactionId) {
       alert('Please enter the transaction ID after completing the payment.');
       return;
@@ -344,16 +350,16 @@ const CertificationPayment = () => {
                   </div>
                 </div>
               </div>
-              {/* UPI Payment Method Details */}
-              {selectedPaymentMethod === 'upi' && (
+              {/* Payment Details - Only show after user clicks "Proceed to Pay" */}
+              {showPaymentDetails && selectedPaymentMethod === 'upi' && (
                 <div className="mb-8">
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">UPI Payment Method</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Complete Your Payment</h3>
                   <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-6 border border-gray-200 dark:border-gray-600">
                     <div className="text-center mb-6">
                       <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
                         <Smartphone className="w-8 h-8 text-white" />
                       </div>
-                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">UPI</h4>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">UPI Payment</h4>
                       <p className="text-gray-600 dark:text-gray-400 text-sm">Google Pay, PhonePe, Paytm, BHIM</p>
                     </div>
                     <div className="text-center mb-6">
@@ -362,6 +368,9 @@ const CertificationPayment = () => {
                       </div>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         Scan QR code or pay to UPI ID: <strong className="text-gray-900 dark:text-white">9676663136@axl</strong>
+                      </p>
+                      <p className="text-lg font-bold text-blue-600 dark:text-blue-400 mt-2">
+                        Amount: ₹{certification?.price?.toLocaleString()}
                       </p>
                     </div>
 
@@ -421,23 +430,34 @@ const CertificationPayment = () => {
               )}
 
               {/* Submit Button */}
-              <button
-                onClick={handleSubmit}
-                disabled={isProcessing || (selectedPaymentMethod === 'xp' && userXP < 1000)}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
-              >
-                {isProcessing ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <CreditCard className="w-5 h-5" />
-                    {selectedPaymentMethod === 'upi' ? 'Complete Payment' : 'Redeem with XP'}
-                  </>
-                )}
-              </button>
+              {!showPaymentDetails ? (
+                <button
+                  onClick={handleInitiatePayment}
+                  disabled={selectedPaymentMethod === 'xp' && userXP < 1000}
+                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
+                  <CreditCard className="w-5 h-5" />
+                  {selectedPaymentMethod === 'upi' ? 'Proceed to Pay' : 'Redeem with XP'}
+                </button>
+              ) : (
+                <button
+                  onClick={handleSubmit}
+                  disabled={isProcessing || (selectedPaymentMethod === 'upi' && !formData.transactionId)}
+                  className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
+                  {isProcessing ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="w-5 h-5" />
+                      Confirm Payment
+                    </>
+                  )}
+                </button>
+              )}
             </div>
           </motion.div>
 
