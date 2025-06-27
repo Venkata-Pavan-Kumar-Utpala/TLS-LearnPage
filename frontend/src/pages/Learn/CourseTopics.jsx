@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   BookOpen, Code2, Trophy, PanelLeft, Play, CheckCircle,
   Clock, ArrowRight, FileText, Lightbulb, ChevronLeft, ChevronRight,
-  Menu, X
+  Menu, X, AlertCircle
 } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
 import useInViewport from "../../hooks/useInViewport";
@@ -30,6 +30,13 @@ const CourseTopics = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userProgress, setUserProgress] = useState(null);
+
+  // Modal state for quiz already attempted
+  const [quizAlreadyAttempted, setQuizAlreadyAttempted] = useState({
+    show: false,
+    title: '',
+    isCompleted: false
+  });
 
   // Fetch course data from backend to get real topic IDs
   useEffect(() => {
@@ -402,11 +409,11 @@ print(df.describe())    # Statistical summary`,
       });
 
       if (isFullyCompleted || hasAnsweredQuestions) {
-        if (isFullyCompleted) {
-          alert(`You have already completed the quiz for "${topicTitle}". Each quiz can only be attempted once.`);
-        } else {
-          alert(`You have already started the quiz for "${topicTitle}". Each quiz can only be attempted once.`);
-        }
+        setQuizAlreadyAttempted({
+          show: true,
+          title: topicTitle,
+          isCompleted: isFullyCompleted
+        });
         return;
       }
     }
@@ -815,6 +822,63 @@ print(df.describe())    # Statistical summary`,
           </div>
         </div>
       </div>
+
+      {/* Quiz Already Attempted Modal */}
+      <AnimatePresence>
+        {quizAlreadyAttempted.show && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            onClick={() => setQuizAlreadyAttempted({ show: false, title: '', isCompleted: false })}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/20 dark:border-gray-700/20 max-w-md w-full mx-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setQuizAlreadyAttempted({ show: false, title: '', isCompleted: false })}
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+              </button>
+
+              {/* Icon */}
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 mx-auto mb-4 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center">
+                  <AlertCircle className="w-8 h-8 text-orange-600 dark:text-orange-400" />
+                </div>
+
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                  Quiz Already {quizAlreadyAttempted.isCompleted ? 'Completed' : 'Started'}
+                </h3>
+
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  You have already {quizAlreadyAttempted.isCompleted ? 'completed' : 'started'} the quiz for{' '}
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    "{quizAlreadyAttempted.title}"
+                  </span>
+                  . Each quiz can only be attempted once to maintain the integrity of your progress.
+                </p>
+              </div>
+
+              {/* Action button */}
+              <button
+                onClick={() => setQuizAlreadyAttempted({ show: false, title: '', isCompleted: false })}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors duration-200"
+              >
+                Got it
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
