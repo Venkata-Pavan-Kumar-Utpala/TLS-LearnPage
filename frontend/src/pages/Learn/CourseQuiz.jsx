@@ -465,6 +465,7 @@ const QuizQuestion = ({
         );
 
         console.log('Backend response:', response);
+        console.log('XP received from quiz:', response.receivedXP);
         setAnswerResult(response);
         setAnswerSubmitted(true);
         setShowFeedback(true);
@@ -472,6 +473,16 @@ const QuizQuestion = ({
         // Update parent component with the result
         if (onAnswerResult) {
           onAnswerResult(currentQuestionIndex, response);
+        }
+
+        // Trigger XP refresh in navbar by dispatching a custom event
+        if (response.receivedXP > 0) {
+          console.log('Dispatching xpUpdated event with XP:', response.receivedXP);
+          window.dispatchEvent(new CustomEvent('xpUpdated', {
+            detail: { xp: response.receivedXP }
+          }));
+        } else {
+          console.log('No XP received, not dispatching xpUpdated event');
         }
       } catch (error) {
         console.error('Error submitting answer:', error);

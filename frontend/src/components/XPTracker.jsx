@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Star, Target, Zap } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { progressAPI } from '../services/api';
 
 const XPTracker = ({ className = '', showDetailed = true }) => {
   const { user, isAuthenticated } = useAuth();
@@ -13,48 +14,45 @@ const XPTracker = ({ className = '', showDetailed = true }) => {
   });
   const [loading, setLoading] = useState(true);
 
+  const fetchProgress = async () => {
+    if (!isAuthenticated) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      console.log('XPTracker: Fetching progress using progressAPI...');
+      const data = await progressAPI.getUserProgress();
+      console.log('XPTracker: Received data:', data);
+      setProgress(data);
+    } catch (error) {
+      console.error('XPTracker: Error fetching user progress:', error);
+      // Default values on error
+      setProgress({
+        totalCourseXP: 0,
+        totalExerciseXP: 0,
+        courseXP: {},
+        exerciseXP: {}
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchProgress = async () => {
-      if (!isAuthenticated) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await fetch(`/api/user-progress`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setProgress(data);
-        } else {
-          // If no progress found, use default values
-          setProgress({
-            totalCourseXP: 0,
-            totalExerciseXP: 0,
-            courseXP: {},
-            exerciseXP: {}
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching user progress:', error);
-        // Default values on error
-        setProgress({
-          totalCourseXP: 0,
-          totalExerciseXP: 0,
-          courseXP: {},
-          exerciseXP: {}
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProgress();
   }, [isAuthenticated, user]);
+
+  // Listen for XP updates from quiz completions
+  useEffect(() => {
+    const handleXPUpdate = () => {
+      console.log('XP updated, refreshing tracker...');
+      fetchProgress();
+    };
+
+    window.addEventListener('xpUpdated', handleXPUpdate);
+    return () => window.removeEventListener('xpUpdated', handleXPUpdate);
+  }, [isAuthenticated]);
 
   const totalXP = (progress.totalCourseXP || 0) + (progress.totalExerciseXP || 0);
   const level = Math.floor(totalXP / 100) + 1;

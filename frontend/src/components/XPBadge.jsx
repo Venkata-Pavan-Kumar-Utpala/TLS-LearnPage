@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Trophy, Star, Target, Zap, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
+import { progressAPI } from '../services/api';
 
 const XPBadge = () => {
   const { user, isAuthenticated } = useAuth();
@@ -33,50 +34,49 @@ const XPBadge = () => {
     };
   }, [isDropdownOpen]);
 
+  const fetchXP = async () => {
+    if (!isAuthenticated) {
+      console.log('XPBadge: User not authenticated, skipping XP fetch');
+      setLoading(false);
+      return;
+    }
+
+    console.log('XPBadge: Fetching XP data using progressAPI...');
+    try {
+      const data = await progressAPI.getUserProgress();
+      console.log('XPBadge: Received data:', data);
+      const total = (data.totalCourseXP || 0) + (data.totalExerciseXP || 0);
+      console.log('XPBadge: Calculated total XP:', total);
+      setTotalXP(total);
+      setProgress(data);
+    } catch (error) {
+      console.error('XPBadge: Error fetching XP:', error);
+      setTotalXP(0);
+      setProgress({
+        totalCourseXP: 0,
+        totalExerciseXP: 0,
+        courseXP: {},
+        exerciseXP: {}
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchXP = async () => {
-      if (!isAuthenticated) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await fetch(`/api/user-progress`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          const total = (data.totalCourseXP || 0) + (data.totalExerciseXP || 0);
-          setTotalXP(total);
-          setProgress(data);
-        } else {
-          setTotalXP(0);
-          setProgress({
-            totalCourseXP: 0,
-            totalExerciseXP: 0,
-            courseXP: {},
-            exerciseXP: {}
-          });
-        }
-      } catch (error) {
-        console.error('XPBadge: Error fetching XP:', error);
-        setTotalXP(0);
-        setProgress({
-          totalCourseXP: 0,
-          totalExerciseXP: 0,
-          courseXP: {},
-          exerciseXP: {}
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchXP();
   }, [isAuthenticated, user]);
+
+  // Listen for XP updates from quiz completions
+  useEffect(() => {
+    const handleXPUpdate = () => {
+      console.log('XP updated, refreshing badge...');
+      fetchXP();
+    };
+
+    window.addEventListener('xpUpdated', handleXPUpdate);
+    return () => window.removeEventListener('xpUpdated', handleXPUpdate);
+  }, [isAuthenticated]);
 
   const getXPLevel = () => {
     if (totalXP >= 1000) return {
