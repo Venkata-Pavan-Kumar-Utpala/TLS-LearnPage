@@ -1,28 +1,80 @@
 import UserProgress from "../models/UserProgress.js";
+import Quiz from "../models/Quiz.js";
+import Course from "../models/Course.js";
+import Exercise from "../models/Exercise.js";
 
-// Check Quiz Attempts and Award XP
-export const checkQuizAttempts = async ({ userId, quizId, courseId, xp }) => {
+// Check if a question has already been answered (no mutation)
+export const checkIfQuestionAnswered = async ({
+  userId,
+  quizId,
+  questionId,
+}) => {
   let userProgress = await UserProgress.findOne({ userId });
+  if (!userProgress) return { answered: false };
 
-  if (!userProgress) {
-    userProgress = new UserProgress({ userId });
+  // Check if this specific question has already been answered
+  const answered = userProgress.answeredQuestions.get(quizId.toString()) || [];
+  if (answered.map((id) => id.toString()).includes(questionId.toString())) {
+    return { error: "You have already answered this question." };
   }
 
+  return { answered: false };
+};
+
+// Update progress and XP for any answer attempt (correct or incorrect)
+export const recordQuizAttempt = async ({
+  userId,
+  quizId,
+  courseId,
+  questionId,
+  xp,
+}) => {
+  let userProgress = await UserProgress.findOne({ userId });
+  if (!userProgress) {
+    userProgress = new UserProgress({
+      userId,
+      completedQuizzes: [],
+      courseXP: {},
+      totalCourseXP: 0,
+      answeredQuestions: {},
+    });
+  }
+
+  // Add this questionId to answeredQuestions for this quiz
+  const answered = userProgress.answeredQuestions.get(quizId.toString()) || [];
+  answered.push(questionId);
+  userProgress.answeredQuestions.set(quizId.toString(), answered);
+
+  // Add XP for this question
+  userProgress.courseXP.set(
+    courseId,
+    (userProgress.courseXP.get(courseId) ?? 0) + xp
+  );
+  // Note: totalCourseXP will be calculated in getUserProgress for consistency
+
+  await userProgress.save();
+
+  // Check if quiz is now complete (all questions answered)
+  const quiz = await Quiz.findById(quizId);
+  const isQuizComplete = quiz && answered.length === quiz.questions.length;
+
+  // Mark quiz as completed if all questions are answered
   if (
-    userProgress.completedQuizzes
+    isQuizComplete &&
+    !userProgress.completedQuizzes
       .map((id) => id.toString())
       .includes(quizId.toString())
   ) {
-    return { error: "Quiz can be submitted only once" };
+    userProgress.completedQuizzes.push(quizId);
+    await userProgress.save();
   }
 
-  userProgress.completedQuizzes.push(quizId);
-  const existingXP = userProgress.courseXP.get(courseId) || 0;
-  userProgress.courseXP.set(courseId, existingXP + xp);
-  userProgress.totalCourseXP += xp;
-
-  await userProgress.save();
-  return { success: true };
+  return {
+    success: true,
+    quizComplete: isQuizComplete,
+    totalAnswered: answered.length,
+    totalQuestions: quiz ? quiz.questions.length : 0,
+  };
 };
 
 // Get Current Authenticated User's Progress
@@ -43,7 +95,31 @@ export const getUserProgress = async (req, res) => {
       });
     }
 
-    return res.status(200).json(userProgress);
+    // Recalculate totals to ensure consistency
+    let recalculatedTotalCourseXP = 0;
+    let recalculatedTotalExerciseXP = 0;
+
+    // Convert Maps to plain objects for JSON response
+    const courseXPObject = {};
+    const exerciseXPObject = {};
+
+    for (const [courseId, xp] of userProgress.courseXP) {
+      courseXPObject[courseId] = xp;
+      recalculatedTotalCourseXP += xp;
+    }
+
+    for (const [courseId, xp] of userProgress.exerciseXP) {
+      exerciseXPObject[courseId] = xp;
+      recalculatedTotalExerciseXP += xp;
+    }
+
+    return res.status(200).json({
+      _id: userProgress._id,
+      courseXP: courseXPObject,
+      exerciseXP: exerciseXPObject,
+      totalCourseXP: recalculatedTotalCourseXP,
+      totalExerciseXP: recalculatedTotalExerciseXP,
+    });
   } catch (err) {
     console.error("User Progress Fetch Error:", err.message);
     return res.status(500).json({ message: "Failed to fetch user progress" });

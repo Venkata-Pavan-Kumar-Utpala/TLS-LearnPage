@@ -31,6 +31,9 @@ const quizSchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
+        explanation: {
+          type: String,
+        },
       },
     ],
   },
