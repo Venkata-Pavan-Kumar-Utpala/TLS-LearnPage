@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import useInViewport from "../hooks/useInViewport";
-import { CoursesModel, ChallengesModel, CertificationModel } from "./3DModels";
+import VideoPreview from "./VideoPreview";
 
 const SectionCard = ({ section, index }) => {
   const navigate = useNavigate();
@@ -214,12 +214,8 @@ const SectionCard = ({ section, index }) => {
             }}
           >
             <div className="w-full h-full flex items-center justify-center relative">
-              {/* 3D Model Container */}
-              <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 transform-style-preserve-3d">
-                {section.id === 'courses' && <CoursesModel />}
-                {section.id === 'exercises' && <ChallengesModel />}
-                {section.id === 'certification' && <CertificationModel />}
-              </div>
+              {/* Video Preview Container */}
+              <VideoPreview section={section} />
             </div>
           </motion.div>
         </div>
