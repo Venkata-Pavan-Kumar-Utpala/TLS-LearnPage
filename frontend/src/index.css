@@ -247,23 +247,32 @@
     will-change: transform;
   }
 
-  /* Custom scrollbar for webkit browsers */
+  /* Custom scrollbar - darker blue and comfortable size */
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 16px !important;
   }
 
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background: #f1f5f9 !important;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(90deg, #007bff 0%, #0600a6 50%, #b5a3f0 100%);
-    border-radius: 4px;
+    background: #1e3a8a !important;
+    border-radius: 8px !important;
+    border: 3px solid #f1f5f9 !important;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(90deg, #0056b3 0%, #040074 50%, #9c8ae6 100%);
+    background: #1d4ed8 !important;
   }
+
+  /* For Firefox */
+  html {
+    scrollbar-width: auto;
+    scrollbar-color: #1e3a8a #f1f5f9;
+  }
+
+
 
 /* High specificity gradient text class - outside of Tailwind layers */
 .hover-gradient-text {
