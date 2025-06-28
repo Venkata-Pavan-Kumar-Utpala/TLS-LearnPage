@@ -228,14 +228,24 @@ const CourseDetails = () => {
                 )}
               </div>
 
-              <button
+              <motion.button
                 onClick={handleStartCourse}
-                className="w-full h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-xl transition-all duration-300 hover:shadow-lg flex items-center justify-center gap-3 group mb-6"
+                whileHover={{
+                  x: 2,
+                  transition: { duration: 0.2, ease: "easeOut" }
+                }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full h-14 bg-emerald-600 hover:bg-emerald-500 text-white border-none rounded-lg cursor-pointer inline-flex items-center justify-center gap-2 transition-all duration-300 font-sans mb-6"
               >
                 <Play className="w-5 h-5" />
                 <span>Start Learning</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-              </button>
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </motion.div>
+              </motion.button>
 
               <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
                 <div className="flex items-center gap-3">

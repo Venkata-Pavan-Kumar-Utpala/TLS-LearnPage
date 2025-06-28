@@ -177,27 +177,24 @@ const SectionCard = ({ section, index }) => {
               className="transform-gpu"
             >
               <motion.div
-                whileHover={{ scale: 1.1, y: -8 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ duration: 0.4 }}
+                whileHover={{
+                  x: 2,
+                  transition: { duration: 0.2, ease: "easeOut" }
+                }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.2 }}
               >
                 <button
                   onClick={handleNavigation}
-                  className="h-12 sm:h-14 lg:h-16 px-6 sm:px-8 lg:px-10 font-bold text-base sm:text-lg text-white bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 hover:shadow-2xl transition-all duration-700 rounded-2xl sm:rounded-3xl group relative overflow-hidden backdrop-blur-sm border border-emerald-500/20"
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white border-none px-4 py-2 text-base rounded-lg cursor-pointer inline-flex items-center gap-2 transition-all duration-300 font-sans"
                 >
+                  <span>{section.cta}</span>
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12"
-                    initial={{ x: "-120%" }}
-                    whileHover={{
-                      x: "120%",
-                      transition: { duration: 1.2 }
-                    }}
-                  />
-
-                  <span className="flex items-center gap-4 relative z-10">
-                    {section.cta}
-                    <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-500" />
-                  </span>
+                    whileHover={{ x: 4 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.div>
                 </button>
               </motion.div>
             </motion.div>

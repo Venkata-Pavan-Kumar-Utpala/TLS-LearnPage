@@ -276,13 +276,21 @@ const Courses = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{
+                  x: 2,
+                  transition: { duration: 0.2, ease: "easeOut" }
+                }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => navigate('/learn/courses/all')}
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-xl transition-all duration-300 hover:shadow-lg flex items-center gap-3"
+                className="bg-emerald-600 hover:bg-emerald-500 text-white border-none px-4 py-2 text-base rounded-lg cursor-pointer inline-flex items-center gap-2 transition-all duration-300 font-sans"
               >
                 <span>View All Courses</span>
-                <ArrowRight className="w-5 h-5" />
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </motion.div>
               </motion.button>
             </div>
           </motion.div>

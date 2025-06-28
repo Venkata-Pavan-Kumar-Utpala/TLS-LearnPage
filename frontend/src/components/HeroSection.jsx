@@ -139,7 +139,7 @@ const HeroSection = () => {
             >
               <motion.div
                 whileHover={{
-                  scale: 1.02,
+                  x: 2,
                   transition: { duration: 0.2, ease: "easeOut" }
                 }}
                 whileTap={{
@@ -148,15 +148,14 @@ const HeroSection = () => {
                 }}
               >
                 <button
-                  className="h-14 px-8 font-semibold text-white bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-xl hover:from-emerald-500 hover:to-emerald-600 transition-all duration-300"
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white border-none px-4 py-2 text-base rounded-lg cursor-pointer inline-flex items-center gap-2 transition-all duration-300 font-sans h-14"
                   onClick={() => navigate("/learn/courses")}
                 >
-                  <span className="flex items-center gap-3 font-poppins">
+                  <span className="flex items-center gap-2 font-poppins">
                     View All Courses
                     <motion.div
-                      initial={{ x: 0 }}
-                      whileHover={{ x: 2 }}
-                      transition={{ duration: 0.2 }}
+                      whileHover={{ x: 4 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
                     >
                       <ArrowRight className="w-5 h-5" />
                     </motion.div>
