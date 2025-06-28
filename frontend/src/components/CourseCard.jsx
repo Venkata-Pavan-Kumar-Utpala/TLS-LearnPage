@@ -39,8 +39,8 @@ const CourseCard = ({ course, index, onClick }) => {
                   transition={{
                     duration: 3 + i * 0.2,
                     repeat: Infinity,
-                    delay: i * 0.3, 
-                    
+                    delay: i * 0.3,
+
                   }}
                   style={{
                     left: `${(i % 4) * 25}%`,
@@ -49,25 +49,46 @@ const CourseCard = ({ course, index, onClick }) => {
                 />
               ))}
             </div>
-            
+
+            {/* Course Logo Image */}
             <motion.div
-              className="text-6xl relative z-10"
-              animate={{ 
-                scale: [1, 1.1, 1],
-                rotate: [0, 5, -5, 0]
+              className="relative z-10 flex items-center justify-center"
+              animate={{
+                scale: [1, 1.05, 1],
+                y: [0, -5, 0]
               }}
               transition={{
                 duration: 4,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              whileHover={{ 
-                scale: 1.2,
-                rotate: 10,
+              whileHover={{
+                scale: 1.1,
+                y: -8,
                 transition: { duration: 0.2 }
               }}
             >
-              {course.icon}
+              {course.image ? (
+                <img
+                  src={course.image}
+                  alt={`${course.title} logo`}
+                  className="w-20 h-20 object-contain filter drop-shadow-lg"
+                  style={{
+                    filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3)) brightness(1.1) contrast(1.2)'
+                  }}
+                  onError={(e) => {
+                    // Fallback to emoji icon if image fails to load
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'block';
+                  }}
+                />
+              ) : null}
+              <div
+                className="text-6xl hidden"
+                style={{ display: course.image ? 'none' : 'block' }}
+              >
+                {course.icon}
+              </div>
             </motion.div>
 
             {/* Hover overlay */}

@@ -55,31 +55,35 @@ const Courses = () => {
   const mockCoursesData = [
     {
       id: "python",
-      title: "Python",
+      title: "Python Programming",
       description: "Learn Python programming from basics to advanced concepts",
-      gradient: "from-yellow-400 via-orange-400 to-blue-500",
-      icon: "🐍"
+      gradient: "from-blue-400 via-green-400 to-yellow-400",
+      icon: "🐍",
+      image: "/python.png"
     },
     {
-      id: "data-science",
-      title: "Data Science",
-      description: "Master data analysis, visualization, and machine learning",
-      gradient: "from-purple-500 via-pink-500 to-purple-600",
-      icon: "📊"
+      id: "javascript",
+      title: "JavaScript Programming",
+      description: "Master JavaScript and build dynamic web applications",
+      gradient: "from-yellow-400 via-orange-400 to-red-400",
+      icon: "⚡",
+      image: "/js.png"
     },
     {
-      id: "machine-learning",
-      title: "Machine Learning",
-      description: "Build intelligent systems with ML algorithms",
-      gradient: "from-green-400 via-teal-500 to-green-600",
-      icon: "🤖"
+      id: "c-programming",
+      title: "C Programming",
+      description: "Learn programming fundamentals with C language",
+      gradient: "from-gray-400 via-blue-400 to-slate-500",
+      icon: "🔧",
+      image: "/c.png"
     },
     {
-      id: "web-development",
-      title: "Web Development",
-      description: "Create modern web applications with latest technologies",
-      gradient: "from-blue-500 via-blue-600 to-blue-700",
-      icon: "🌐"
+      id: "cpp-programming",
+      title: "C++ Programming",
+      description: "Master object-oriented programming with C++",
+      gradient: "from-blue-500 via-purple-500 to-indigo-500",
+      icon: "⚙️",
+      image: "/c.png"
     }
   ];
 

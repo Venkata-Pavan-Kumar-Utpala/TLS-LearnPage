@@ -248,21 +248,51 @@ export const exerciseAPI = {
 export const dataAdapters = {
   // Adapt course data from backend to frontend format
   adaptCourse: (backendCourse) => {
-    // Default gradients and icons for different course types
+    // Default gradients, icons, and images for different course types
     const getDefaultVisuals = (title) => {
       const titleLower = title.toLowerCase();
       if (titleLower.includes('javascript')) {
-        return { gradient: 'from-yellow-400 via-orange-400 to-red-500', icon: '⚡' };
+        return {
+          gradient: 'from-yellow-400 via-orange-400 to-red-400',
+          icon: '⚡',
+          image: '/js.png'
+        };
       } else if (titleLower.includes('python')) {
-        return { gradient: 'from-blue-400 via-green-400 to-yellow-500', icon: '🐍' };
-      } else if (titleLower.includes('java')) {
-        return { gradient: 'from-red-500 via-orange-500 to-yellow-500', icon: '☕' };
+        return {
+          gradient: 'from-blue-400 via-green-400 to-yellow-400',
+          icon: '🐍',
+          image: '/python.png'
+        };
+      } else if (titleLower.includes('java') && !titleLower.includes('javascript')) {
+        return {
+          gradient: 'from-red-400 via-orange-400 to-yellow-400',
+          icon: '☕',
+          image: '/java.png'
+        };
       } else if (titleLower.includes('c++')) {
-        return { gradient: 'from-blue-600 via-purple-600 to-blue-800', icon: '⚙️' };
-      } else if (titleLower.includes('c ')) {
-        return { gradient: 'from-gray-500 via-blue-500 to-gray-700', icon: '🔧' };
+        return {
+          gradient: 'from-blue-500 via-purple-500 to-indigo-500',
+          icon: '⚙️',
+          image: '/c.png'
+        };
+      } else if (titleLower.includes('c ') || titleLower.includes('c programming')) {
+        return {
+          gradient: 'from-gray-400 via-blue-400 to-slate-500',
+          icon: '🔧',
+          image: '/c.png'
+        };
+      } else if (titleLower.includes('html') || titleLower.includes('css')) {
+        return {
+          gradient: 'from-orange-400 via-red-400 to-pink-400',
+          icon: '🌐',
+          image: '/html.png'
+        };
       } else {
-        return { gradient: 'from-purple-500 via-pink-500 to-purple-600', icon: '📚' };
+        return {
+          gradient: 'from-purple-400 via-pink-400 to-purple-500',
+          icon: '📚',
+          image: '/python.png' // Default fallback
+        };
       }
     };
 
@@ -275,6 +305,7 @@ export const dataAdapters = {
       level: backendCourse.level,
       gradient: visuals.gradient,
       icon: visuals.icon,
+      image: visuals.image,
       price: "Free", // Default to free for now since backend doesn't have pricing
       difficulty: backendCourse.level, // Add difficulty alias for filtering
       topics: backendCourse.topics?.map(topic => ({
