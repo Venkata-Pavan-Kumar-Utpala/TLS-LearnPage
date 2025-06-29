@@ -133,71 +133,289 @@ const SectionCard = ({ section, index }) => {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Content Side - Always on left */}
           <div className="relative z-10 space-y-8">
-            {/* Marquee-style titles */}
-            <div className="space-y-4">
-              <h2
-                ref={titleRef}
-                className={`Marquee-title ${isTitleInViewport ? 'in-viewport' : ''}`}
-              >
-                {section.title}
-              </h2>
-              <h3 className="font-sans text-2xl lg:text-3xl font-bold text-gray-600 dark:text-gray-400">
-                {section.subtitle}
-              </h3>
-            </div>
-
-            {/* Static description */}
-            <div className="space-y-6">
-              <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed max-w-xl">
-                {section.description}
-              </p>
-
-              {/* Static features list */}
-              <ul className="space-y-3">
-                {section.features.map((feature, idx) => (
-                  <li
-                    key={idx}
-                    className="flex items-center gap-4 text-lg text-gray-600 dark:text-gray-400"
+            {/* Special layout for Interactive Courses section */}
+            {section.id === 'courses' ? (
+              <>
+                {/* "code BOOK" heading */}
+                <div className="space-y-4 overflow-visible">
+                  <motion.h2
+                    ref={titleRef}
+                    className="font-poppins text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight leading-[1.1] overflow-visible"
+                    initial={{ opacity: 0, y: 40, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                   >
-                    <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-blue-600" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
+                    <span
+                      className={`brand-heading-primary hover-gradient-text italic pr-2 ${isTitleInViewport ? 'in-viewport' : ''}`}
+                      style={{ display: 'inline-block' }}
+                    >
+                      code
+                    </span>
+                    <br />
+                    <span className={`brand-heading-secondary hover-gradient-text ${isTitleInViewport ? 'in-viewport' : ''}`}>BOOK</span>
+                  </motion.h2>
+                </div>
 
-            {/* CTA Button with slower scroll-triggered animation */}
-            <motion.div
-              style={{
-                y: buttonY,
-                opacity: buttonOpacity,
-                scale: buttonScale,
-                rotateZ: buttonRotate
-              }}
-              className="transform-gpu"
-            >
-              <motion.div
-                whileHover={{
-                  x: 2,
-                  transition: { duration: 0.2, ease: "easeOut" }
-                }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ duration: 0.2 }}
-              >
-                <button
-                  onClick={handleNavigation}
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white border-none px-4 py-2 text-base rounded-lg cursor-pointer inline-flex items-center gap-2 transition-all duration-300 font-sans"
+                {/* Subtitle */}
+                <motion.p
+                  className="font-poppins text-lg md:text-xl text-gray-700 dark:text-gray-300"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                  <span>{section.cta}</span>
+                  Fundamentals First. Brilliance Next.
+                </motion.p>
+
+                {/* Description */}
+                <motion.p
+                  className="text-base md:text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                >
+                  {section.description}
+                </motion.p>
+
+                {/* Features list */}
+                <motion.ul
+                  className="space-y-3"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                >
+                  {section.features.map((feature, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-center gap-3 text-base text-gray-600 dark:text-gray-400"
+                    >
+                      <div className="w-2 h-2 rounded-full bg-blue-500" />
+                      {feature}
+                    </li>
+                  ))}
+                </motion.ul>
+
+                {/* CTA Button with previous styling */}
+                <motion.div
+                  style={{
+                    y: buttonY,
+                    opacity: buttonOpacity,
+                    scale: buttonScale,
+                    rotateZ: buttonRotate
+                  }}
+                  className="transform-gpu"
+                >
                   <motion.div
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    whileHover={{
+                      x: 2,
+                      transition: { duration: 0.2, ease: "easeOut" }
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    <ArrowRight className="w-5 h-5" />
+                    <button
+                      onClick={handleNavigation}
+                      className="bg-emerald-600 hover:bg-emerald-500 text-white border-none px-4 py-2 text-base rounded-lg cursor-pointer inline-flex items-center gap-2 transition-all duration-300 font-sans"
+                    >
+                      <span>{section.cta}</span>
+                      <motion.div
+                        whileHover={{ x: 4 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                      >
+                        <ArrowRight className="w-5 h-5" />
+                      </motion.div>
+                    </button>
                   </motion.div>
-                </button>
-              </motion.div>
-            </motion.div>
+                </motion.div>
+              </>
+            ) : section.id === 'exercises' ? (
+              <>
+                {/* Special layout for Coding Challenges section */}
+                {/* "code WORKOUT" heading */}
+                <div className="space-y-4 overflow-visible">
+                  <motion.h2
+                    ref={titleRef}
+                    className="font-poppins text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight leading-[1.1] overflow-visible"
+                    initial={{ opacity: 0, y: 40, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
+                    <span
+                      className={`brand-heading-primary hover-gradient-text italic pr-2 ${isTitleInViewport ? 'in-viewport' : ''}`}
+                      style={{ display: 'inline-block' }}
+                    >
+                      code
+                    </span>
+                    <br />
+                    <span className={`brand-heading-secondary hover-gradient-text ${isTitleInViewport ? 'in-viewport' : ''}`}>WORKOUT</span>
+                  </motion.h2>
+                </div>
+
+                {/* Subtitle */}
+                <motion.p
+                  className="font-poppins text-lg md:text-xl text-gray-700 dark:text-gray-300"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  Turn syntax into muscle memory — minus the sweat.
+                </motion.p>
+
+                {/* Description */}
+                <motion.p
+                  className="text-base md:text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                >
+                  {section.description}
+                </motion.p>
+
+                {/* Features list */}
+                <motion.ul
+                  className="space-y-3"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                >
+                  {section.features.map((feature, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-center gap-3 text-base text-gray-600 dark:text-gray-400"
+                    >
+                      <div className="w-2 h-2 rounded-full bg-blue-500" />
+                      {feature}
+                    </li>
+                  ))}
+                </motion.ul>
+
+                {/* CTA Button with previous styling */}
+                <motion.div
+                  style={{
+                    y: buttonY,
+                    opacity: buttonOpacity,
+                    scale: buttonScale,
+                    rotateZ: buttonRotate
+                  }}
+                  className="transform-gpu"
+                >
+                  <motion.div
+                    whileHover={{
+                      x: 2,
+                      transition: { duration: 0.2, ease: "easeOut" }
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <button
+                      onClick={handleNavigation}
+                      className="bg-emerald-600 hover:bg-emerald-500 text-white border-none px-4 py-2 text-base rounded-lg cursor-pointer inline-flex items-center gap-2 transition-all duration-300 font-sans"
+                    >
+                      <span>{section.cta}</span>
+                      <motion.div
+                        whileHover={{ x: 4 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                      >
+                        <ArrowRight className="w-5 h-5" />
+                      </motion.div>
+                    </button>
+                  </motion.div>
+                </motion.div>
+              </>
+            ) : (
+              <>
+                {/* Special layout for Professional Certification section */}
+                {/* "code MASTER" heading */}
+                <div className="space-y-4 overflow-visible">
+                  <motion.h2
+                    ref={titleRef}
+                    className="font-poppins text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight leading-[1.1] overflow-visible"
+                    initial={{ opacity: 0, y: 40, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
+                    <span
+                      className={`brand-heading-primary hover-gradient-text italic pr-2 ${isTitleInViewport ? 'in-viewport' : ''}`}
+                      style={{ display: 'inline-block' }}
+                    >
+                      code
+                    </span>
+                    <br />
+                    <span className={`brand-heading-secondary hover-gradient-text ${isTitleInViewport ? 'in-viewport' : ''}`}>MASTER</span>
+                  </motion.h2>
+                </div>
+
+                {/* Subtitle */}
+                <motion.p
+                  className="font-poppins text-lg md:text-xl text-gray-700 dark:text-gray-300"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  Prove Your Expertise
+                </motion.p>
+
+                {/* Description */}
+                <motion.p
+                  className="text-base md:text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                >
+                  {section.description}
+                </motion.p>
+
+                {/* Features list */}
+                <motion.ul
+                  className="space-y-3"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                >
+                  {section.features.map((feature, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-center gap-3 text-base text-gray-600 dark:text-gray-400"
+                    >
+                      <div className="w-2 h-2 rounded-full bg-blue-500" />
+                      {feature}
+                    </li>
+                  ))}
+                </motion.ul>
+
+                {/* CTA Button with previous styling */}
+                <motion.div
+                  style={{
+                    y: buttonY,
+                    opacity: buttonOpacity,
+                    scale: buttonScale,
+                    rotateZ: buttonRotate
+                  }}
+                  className="transform-gpu"
+                >
+                  <motion.div
+                    whileHover={{
+                      x: 2,
+                      transition: { duration: 0.2, ease: "easeOut" }
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <button
+                      onClick={handleNavigation}
+                      className="bg-emerald-600 hover:bg-emerald-500 text-white border-none px-4 py-2 text-base rounded-lg cursor-pointer inline-flex items-center gap-2 transition-all duration-300 font-sans"
+                    >
+                      <span>{section.cta}</span>
+                      <motion.div
+                        whileHover={{ x: 4 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                      >
+                        <ArrowRight className="w-5 h-5" />
+                      </motion.div>
+                    </button>
+                  </motion.div>
+                </motion.div>
+              </>
+            )}
           </div>
 
           {/* Visual Side - Always on right */}
@@ -211,8 +429,67 @@ const SectionCard = ({ section, index }) => {
             }}
           >
             <div className="w-full h-full flex items-center justify-center relative">
-              {/* Video Preview Container */}
-              <VideoPreview section={section} />
+              {section.id === 'courses' ? (
+                /* Placeholder for Interactive Courses */
+                <motion.div
+                  className="w-full max-w-md h-80 bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-2xl border border-white/30 dark:border-gray-700/30 flex items-center justify-center"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                >
+                  <div className="text-center p-8">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-blue-500/20 rounded-full flex items-center justify-center">
+                      <span className="text-2xl">📚</span>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 font-medium">
+                      Interactive Content
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+                      Coming soon...
+                    </p>
+                  </div>
+                </motion.div>
+              ) : section.id === 'exercises' ? (
+                /* Placeholder for Coding Challenges */
+                <motion.div
+                  className="w-full max-w-md h-80 bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-2xl border border-white/30 dark:border-gray-700/30 flex items-center justify-center"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                >
+                  <div className="text-center p-8">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-purple-500/20 rounded-full flex items-center justify-center">
+                      <span className="text-2xl">💪</span>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 font-medium">
+                      Challenge Arena
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+                      Coming soon...
+                    </p>
+                  </div>
+                </motion.div>
+              ) : (
+                /* Placeholder for Professional Certification */
+                <motion.div
+                  className="w-full max-w-md h-80 bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-2xl border border-white/30 dark:border-gray-700/30 flex items-center justify-center"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                >
+                  <div className="text-center p-8">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-emerald-500/20 rounded-full flex items-center justify-center">
+                      <span className="text-2xl">🏆</span>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 font-medium">
+                      Certification Portal
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+                      Coming soon...
+                    </p>
+                  </div>
+                </motion.div>
+              )}
             </div>
           </motion.div>
         </div>

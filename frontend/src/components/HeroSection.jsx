@@ -17,13 +17,13 @@ const HeroSection = () => {
       transition={{ duration: 1.2, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
       <motion.div
-        className="container px-4 py-12 mx-auto max-w-6xl relative"
+        className="container px-4 py-12 mx-auto max-w-7xl relative"
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 1.0, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[480px]">
-          {/* Left Content */}
+        <div className="grid lg:grid-cols-[2fr_1fr] gap-12 items-center min-h-[480px]">
+          {/* Left Content - Wider to accommodate warning text */}
           <motion.div
             initial={{ opacity: 0, x: -60, scale: 0.95 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -32,7 +32,7 @@ const HeroSection = () => {
           >
             {/* Main headline with Poppins font */}
             <motion.h1
-              className="font-poppins text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight mb-8 leading-[1.1] overflow-visible"
+              className="font-poppins text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-medium tracking-tight mb-6 leading-[1.1] overflow-visible"
               initial={{ opacity: 0, y: 40, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -53,110 +53,32 @@ const HeroSection = () => {
               </span>
             </motion.h1>
 
-            {/* Descriptive Text Content */}
-            <motion.div
-              className="mb-12"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            {/* Warning Text - Right Below Heading in Left Column */}
+            <motion.p
+              ref={descriptionRef}
+              className={`font-poppins text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 hover-gradient-text whitespace-nowrap ${isDescriptionInViewport ? 'in-viewport' : ''}`}
+              initial={{ opacity: 0, y: 30, filter: "blur(4px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <motion.p
-                ref={descriptionRef}
-                className={`font-poppins text-lg md:text-xl lg:text-2xl text-gray-700 dark:text-gray-300 leading-relaxed mb-6 max-w-3xl mx-auto hover-gradient-text ${isDescriptionInViewport ? 'in-viewport' : ''}`}
-                initial={{ opacity: 0, y: 30, filter: "blur(4px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-              >
-                Warning: Coding skills may cause sudden job offers and inflated Git pushes.
-              </motion.p>
-            </motion.div>
-
-
+              Warning: Coding skills may cause sudden job offers and inflated Git pushes.
+            </motion.p>
           </motion.div>
 
-          {/* Right Side - 3D Book Illustration */}
+          {/* Right Side - Empty for now */}
           <motion.div
             initial={{ opacity: 0, x: 60, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             transition={{ duration: 1.0, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="relative flex items-center justify-center lg:justify-end"
           >
-            <motion.div
-              className="relative"
-              whileHover={{
-                rotateY: 15,
-                rotateX: 5,
-                scale: 1.05,
-                transition: { duration: 0.3, ease: "easeOut" }
-              }}
-              style={{ perspective: "1000px" }}
-            >
-              {/* 3D Book Stack */}
-              <div className="relative transform-gpu" style={{ transformStyle: "preserve-3d" }}>
-                {/* Back Book */}
-                <motion.div
-                  className="absolute w-48 h-64 md:w-56 md:h-72 bg-gradient-to-br from-blue-800 to-blue-900 rounded-lg shadow-2xl"
-                  style={{
-                    transform: "translateZ(-20px) rotateY(-5deg)",
-                    transformOrigin: "center"
-                  }}
-                  initial={{ rotateY: -15, opacity: 0.7 }}
-                  animate={{ rotateY: -5, opacity: 0.8 }}
-                  transition={{ duration: 1.2, delay: 0.6 }}
-                >
-                  <div className="absolute inset-4 border-2 border-blue-300/30 rounded"></div>
-                </motion.div>
-
-                {/* Middle Book */}
-                <motion.div
-                  className="absolute w-48 h-64 md:w-56 md:h-72 bg-gradient-to-br from-blue-700 to-blue-800 rounded-lg shadow-2xl"
-                  style={{
-                    transform: "translateZ(-10px) rotateY(-2deg)",
-                    transformOrigin: "center"
-                  }}
-                  initial={{ rotateY: -10, opacity: 0.8 }}
-                  animate={{ rotateY: -2, opacity: 0.9 }}
-                  transition={{ duration: 1.2, delay: 0.7 }}
-                >
-                  <div className="absolute inset-4 border-2 border-blue-300/40 rounded"></div>
-                </motion.div>
-
-                {/* Front Book */}
-                <motion.div
-                  className="relative w-48 h-64 md:w-56 md:h-72 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg shadow-2xl"
-                  style={{
-                    transform: "translateZ(0px)",
-                    transformOrigin: "center"
-                  }}
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 1.2, delay: 0.8 }}
-                >
-                  <div className="absolute inset-4 border-2 border-blue-300/50 rounded"></div>
-
-                  {/* Book Content Lines */}
-                  <div className="absolute top-8 left-6 right-6 space-y-2">
-                    <div className="h-1 bg-blue-300/60 rounded w-3/4"></div>
-                    <div className="h-1 bg-blue-300/40 rounded w-full"></div>
-                    <div className="h-1 bg-blue-300/40 rounded w-5/6"></div>
-                    <div className="h-1 bg-blue-300/40 rounded w-2/3"></div>
-                  </div>
-
-                  {/* Book Icon/Symbol */}
-                  <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-                    <div className="w-12 h-12 bg-blue-300/30 rounded-full flex items-center justify-center">
-                      <span className="text-blue-100 text-xl font-bold">📚</span>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
+            {/* Space reserved for future content */}
           </motion.div>
         </div>
 
         {/* Technology Icons - Bottom Center */}
         <motion.div
-          className="flex justify-center items-center gap-6 md:gap-8 lg:gap-12 mt-12 pb-6"
+          className="flex justify-center items-center gap-10 md:gap-16 lg:gap-20 xl:gap-24 2xl:gap-28 mt-12 pb-6 flex-wrap"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}

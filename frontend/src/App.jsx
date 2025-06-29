@@ -54,8 +54,7 @@ import CertificationPayment from './pages/Learn/CertificationPayment'
 // Import Compiler component
 import OnlineCompiler from './pages/Learn/OnlineCompiler'
 
-// Import Book Demo component
-import BookDemo from './pages/BookDemo'
+
 
 // Auth components are now handled by modals in AuthModalProvider
 // Login and Register pages are deprecated
@@ -85,7 +84,7 @@ function App() {
                 <Route path="/learn/certification" element={<Certification />} />
                 <Route path="/learn/certification/payment" element={<CertificationPayment />} />
                 <Route path="/learn/compiler" element={<OnlineCompiler />} />
-                <Route path="/book-demo" element={<BookDemo />} />
+
                 <Route path="/build" element={<BuildPage />} />
                 <Route path="/careers" element={<CareersPage />} />
                 {/* Login and Register routes removed - now handled by modals */}
