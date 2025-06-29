@@ -17,38 +17,39 @@ const HeroSection = () => {
       transition={{ duration: 1.2, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
       <motion.div
-        className="container px-4 py-16 mx-auto max-w-6xl relative"
+        className="container px-4 py-12 mx-auto max-w-6xl relative"
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 1.0, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        <div className="flex items-center justify-center min-h-[600px]">
-          {/* Centered Content */}
+        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[480px]">
+          {/* Left Content */}
           <motion.div
-            initial={{ opacity: 0, y: 60, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            initial={{ opacity: 0, x: -60, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
             transition={{ duration: 1.0, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="relative z-10 text-center max-w-4xl"
+            className="relative z-10 text-left lg:text-left"
           >
             {/* Main headline with Poppins font */}
             <motion.h1
-              className="font-poppins text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight mb-8 leading-[1.1]"
+              className="font-poppins text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight mb-8 leading-[1.1] overflow-visible"
               initial={{ opacity: 0, y: 40, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <span
                 ref={titleRef}
-                className={`brand-heading-primary hover-gradient-text ${isTitleInViewport ? 'in-viewport' : ''}`}
+                className={`brand-heading-primary hover-gradient-text italic pr-2 ${isTitleInViewport ? 'in-viewport' : ''}`}
+                style={{ display: 'inline-block' }}
               >
-                Still struggling to code?
+                tech
               </span>
               <br />
               <span
                 ref={subtitleRef}
                 className={`brand-heading-secondary hover-gradient-text ${isSubtitleInViewport ? 'in-viewport' : ''}`}
               >
-                Don't worry we got you
+                LEARN
               </span>
             </motion.h1>
 
@@ -61,110 +62,189 @@ const HeroSection = () => {
             >
               <motion.p
                 ref={descriptionRef}
-                className={`font-poppins text-lg md:text-xl lg:text-2xl text-gray-700 dark:text-gray-300 leading-relaxed mb-6 max-w-3xl mx-auto ${isDescriptionInViewport ? 'in-viewport' : ''}`}
+                className={`font-poppins text-lg md:text-xl lg:text-2xl text-gray-700 dark:text-gray-300 leading-relaxed mb-6 max-w-3xl mx-auto hover-gradient-text ${isDescriptionInViewport ? 'in-viewport' : ''}`}
                 initial={{ opacity: 0, y: 30, filter: "blur(4px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
-                Master programming with our comprehensive learning platform featuring
-                <span className="font-semibold hover-gradient-text"> interactive courses</span>,
-                <span className="font-semibold hover-gradient-text"> hands-on exercises</span>, and
-                <span className="font-semibold hover-gradient-text"> industry-recognized certifications</span>.
+                Warning: Coding skills may cause sudden job offers and inflated Git pushes.
               </motion.p>
-
-              <motion.div
-                className="flex flex-wrap justify-center gap-6 text-sm md:text-base lg:text-lg text-gray-600 dark:text-gray-400"
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-              >
-                <motion.div
-                  className="flex items-center gap-2"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-                >
-                  <motion.div
-                    className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.4, delay: 0.9, ease: "easeOut" }}
-                  ></motion.div>
-                  <span className="font-medium">Expert-Led Courses</span>
-                </motion.div>
-                <motion.div
-                  className="flex items-center gap-2"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
-                >
-                  <motion.div
-                    className="w-2 h-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.4, delay: 1.0, ease: "easeOut" }}
-                  ></motion.div>
-                  <span className="font-medium">Live Coding Practice</span>
-                </motion.div>
-                <motion.div
-                  className="flex items-center gap-2"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 1.0, ease: [0.25, 0.46, 0.45, 0.94] }}
-                >
-                  <motion.div
-                    className="w-2 h-2 bg-gradient-to-r from-orange-500 to-red-500 rounded-full"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.4, delay: 1.1, ease: "easeOut" }}
-                  ></motion.div>
-                  <span className="font-medium">Career Certification</span>
-                </motion.div>
-              </motion.div>
             </motion.div>
 
-            {/* CTA Button - Green theme */}
+
+          </motion.div>
+
+          {/* Right Side - 3D Book Illustration */}
+          <motion.div
+            initial={{ opacity: 0, x: 60, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ duration: 1.0, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="relative flex items-center justify-center lg:justify-end"
+          >
             <motion.div
-              className="flex justify-center mb-8"
-              initial={{ opacity: 0, y: 50, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{
-                duration: 0.8,
-                delay: 0.8,
-                ease: [0.25, 0.46, 0.45, 0.94],
-                type: "spring",
-                stiffness: 100,
-                damping: 15
+              className="relative"
+              whileHover={{
+                rotateY: 15,
+                rotateX: 5,
+                scale: 1.05,
+                transition: { duration: 0.3, ease: "easeOut" }
               }}
+              style={{ perspective: "1000px" }}
             >
-              <motion.div
-                whileHover={{
-                  x: 2,
-                  transition: { duration: 0.2, ease: "easeOut" }
-                }}
-                whileTap={{
-                  scale: 0.98,
-                  transition: { duration: 0.1 }
-                }}
-              >
-                <button
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white border-none px-4 py-2 text-base rounded-lg cursor-pointer inline-flex items-center gap-2 transition-all duration-300 font-sans h-14"
-                  onClick={() => navigate("/learn/courses")}
+              {/* 3D Book Stack */}
+              <div className="relative transform-gpu" style={{ transformStyle: "preserve-3d" }}>
+                {/* Back Book */}
+                <motion.div
+                  className="absolute w-48 h-64 md:w-56 md:h-72 bg-gradient-to-br from-blue-800 to-blue-900 rounded-lg shadow-2xl"
+                  style={{
+                    transform: "translateZ(-20px) rotateY(-5deg)",
+                    transformOrigin: "center"
+                  }}
+                  initial={{ rotateY: -15, opacity: 0.7 }}
+                  animate={{ rotateY: -5, opacity: 0.8 }}
+                  transition={{ duration: 1.2, delay: 0.6 }}
                 >
-                  <span className="flex items-center gap-2 font-poppins">
-                    View All Courses
-                    <motion.div
-                      whileHover={{ x: 4 }}
-                      transition={{ duration: 0.3, ease: "easeOut" }}
-                    >
-                      <ArrowRight className="w-5 h-5" />
-                    </motion.div>
-                  </span>
-                </button>
-              </motion.div>
+                  <div className="absolute inset-4 border-2 border-blue-300/30 rounded"></div>
+                </motion.div>
+
+                {/* Middle Book */}
+                <motion.div
+                  className="absolute w-48 h-64 md:w-56 md:h-72 bg-gradient-to-br from-blue-700 to-blue-800 rounded-lg shadow-2xl"
+                  style={{
+                    transform: "translateZ(-10px) rotateY(-2deg)",
+                    transformOrigin: "center"
+                  }}
+                  initial={{ rotateY: -10, opacity: 0.8 }}
+                  animate={{ rotateY: -2, opacity: 0.9 }}
+                  transition={{ duration: 1.2, delay: 0.7 }}
+                >
+                  <div className="absolute inset-4 border-2 border-blue-300/40 rounded"></div>
+                </motion.div>
+
+                {/* Front Book */}
+                <motion.div
+                  className="relative w-48 h-64 md:w-56 md:h-72 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg shadow-2xl"
+                  style={{
+                    transform: "translateZ(0px)",
+                    transformOrigin: "center"
+                  }}
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 1.2, delay: 0.8 }}
+                >
+                  <div className="absolute inset-4 border-2 border-blue-300/50 rounded"></div>
+
+                  {/* Book Content Lines */}
+                  <div className="absolute top-8 left-6 right-6 space-y-2">
+                    <div className="h-1 bg-blue-300/60 rounded w-3/4"></div>
+                    <div className="h-1 bg-blue-300/40 rounded w-full"></div>
+                    <div className="h-1 bg-blue-300/40 rounded w-5/6"></div>
+                    <div className="h-1 bg-blue-300/40 rounded w-2/3"></div>
+                  </div>
+
+                  {/* Book Icon/Symbol */}
+                  <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+                    <div className="w-12 h-12 bg-blue-300/30 rounded-full flex items-center justify-center">
+                      <span className="text-blue-100 text-xl font-bold">📚</span>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
             </motion.div>
           </motion.div>
         </div>
+
+        {/* Technology Icons - Bottom Center */}
+        <motion.div
+          className="flex justify-center items-center gap-6 md:gap-8 lg:gap-12 mt-12 pb-6"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+          {/* HTML5 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            whileHover={{ scale: 1.1, y: -5 }}
+          >
+            <img
+              src="/html.png"
+              alt="HTML5"
+              className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
+            />
+          </motion.div>
+
+          {/* CSS3 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
+            whileHover={{ scale: 1.1, y: -5 }}
+          >
+            <img
+              src="/css.png"
+              alt="CSS3"
+              className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
+            />
+          </motion.div>
+
+          {/* JavaScript */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.0, ease: [0.25, 0.46, 0.45, 0.94] }}
+            whileHover={{ scale: 1.1, y: -5 }}
+          >
+            <img
+              src="/js.png"
+              alt="JavaScript"
+              className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
+            />
+          </motion.div>
+
+          {/* Python */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+            whileHover={{ scale: 1.1, y: -5 }}
+          >
+            <img
+              src="/python.png"
+              alt="Python"
+              className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
+            />
+          </motion.div>
+
+          {/* Java */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            whileHover={{ scale: 1.1, y: -5 }}
+          >
+            <img
+              src="/java.png"
+              alt="Java"
+              className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
+            />
+          </motion.div>
+
+          {/* C */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            whileHover={{ scale: 1.1, y: -5 }}
+          >
+            <img
+              src="/c.png"
+              alt="C Programming"
+              className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
+            />
+          </motion.div>
+        </motion.div>
       </motion.div>
     </motion.div>
   );
