@@ -19,7 +19,7 @@ export const getAllCourses = async (req, res) => {
 export const getCourseById = async (req, res) => {
   const { courseId } = req.params;
   try {
-    const course = await Course.findById(courseId);
+    const course = await Course.findById(courseId).populate("topics.quizId");
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
@@ -27,7 +27,7 @@ export const getCourseById = async (req, res) => {
     const topics = course.topics.map((topic) => ({
       topicId: topic._id,
       title: topic.title,
-      quizId: topic.quizId,
+      quizId: topic.quizId ? topic.quizId._id : null, // Ensure quizId is populated
     }));
     res.status(200).json({
       ...course.toObject(),

@@ -8,6 +8,11 @@ import userRoutes from "./routes/userRoutes.js";
 import userProgressRouter from "./routes/userProgressRoutes.js";
 import paymentRouter from "./routes/paymentRoutes.js";
 import certificationRoutes from "./routes/certificationRoutes.js";
+import { insertMarkdownContent } from "./importMarkdownContent.js";
+import Notes from "./models/Notes.js";
+import Quiz from "./models/Quiz.js";
+import Course from "./models/Course.js";
+import { seedCoreJavaCourse } from "./config/seedCoreJava.js";
 
 dotenv.config();
 const app = express();
@@ -31,8 +36,22 @@ app.use(express.json());
   try {
     await connectDB();
 
-    await seedCourses();
-    await seedQuizzes();
+    // await seedCourses();
+    // await seedQuizzes();
+
+    // Delete existing courses
+    await Course.deleteMany({});
+    console.log("Deleted all existing courses from the database.");
+    // Delete existing notes
+    await Notes.deleteMany({});
+    console.log("Deleted all existing notes from the database.");
+    // Delete existing quizzes
+    await Quiz.deleteMany({});
+    console.log("Deleted all existing quizzes from the database.");
+
+    // Insert course specific into the database
+    await seedCoreJavaCourse();
+    await insertMarkdownContent();
 
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => console.log(`Server running`));
