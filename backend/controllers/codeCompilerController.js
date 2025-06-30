@@ -32,8 +32,8 @@ export const compileCode = async (req, res) => {
 
     const { stdout, stderr, compile_output, status } = response.data;
     return res.json({ stdout, stderr, compile_output, status });
-  } catch (err) {
-    console.error("Compilation error:", err);
-    return res.status(500).json({ error: "Compilation failed" });
-  }
+  }  catch (err) {
+  console.error("Compilation error:", err.response?.data || err.message || err);
+  return res.status(500).json({ error: "Compilation failed" });
+}
 };
