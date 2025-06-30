@@ -90,99 +90,63 @@ const Courses = () => {
   // Live Batches data
   const liveBatches = [
     {
-      id: "beginner-python",
-      title: "Beginner Python",
-      instructor: "Michael Chen",
-      duration: "6 weeks",
-      schedule: "Tue, Thu",
-      time: "8:00 PM - 10:00 PM IST",
-      startDate: "20/01/2024",
-      price: "₹5000",
-      description: "Kickstart your coding journey with Python. No prior experience needed—join live interactive classes.",
-      level: "Beginner"
-    },
-    {
-      id: "data-science-essentials",
-      title: "Data Science Essentials",
-      instructor: "Sarah Johnson",
-      duration: "8 weeks",
-      schedule: "Mon, Wed",
-      time: "7:00 PM - 9:00 PM IST",
-      startDate: "25/01/2024",
-      price: "₹7000",
-      description: "Master essential data skills: analysis, visualization, machine learning. Practical, project-led, and live.",
-      level: "Intermediate"
-    },
-    {
-      id: "machine-learning-bootcamp",
-      title: "Machine Learning Bootcamp",
-      instructor: "Dr. Alex Rodriguez",
-      duration: "10 weeks",
-      schedule: "Sat, Sun",
-      time: "10:00 AM - 12:00 PM IST",
-      startDate: "27/01/2024",
-      price: "₹9500",
-      description: "Deep dive into ML algorithms, neural networks, and AI. Build real-world projects with industry datasets.",
-      level: "Advanced"
-    },
-    {
-      id: "web-development-starter",
-      title: "Web Development Starter",
-      instructor: "Lisa Park",
-      duration: "5 weeks",
-      schedule: "Tue, Thu",
-      time: "6:00 PM - 8:00 PM IST",
-      startDate: "22/01/2024",
+      id: "python-programming",
+      title: "Python Programming",
+      instructor: "Prashanti Vasi",
+      duration: "2 weeks",
+      schedule: "Mon-Sat",
+      time: "11:30 AM - 12:30 PM",
+      startDate: "In Progress",
       price: "₹4000",
-      description: "Learn HTML, CSS, JavaScript from scratch. Build responsive websites and modern web applications.",
+      description: "Master Python fundamentals with live interactive classes. Learn programming concepts and build practical skills.",
       level: "Beginner"
     },
     {
-      id: "react-mastery",
-      title: "React Mastery",
-      instructor: "David Kim",
-      duration: "7 weeks",
-      schedule: "Mon, Wed, Fri",
-      time: "8:30 PM - 10:00 PM IST",
-      startDate: "29/01/2024",
-      price: "₹6500",
-      description: "Master React.js, hooks, state management, and modern frontend development patterns.",
+      id: "dsa-with-java",
+      title: "DSA with Java",
+      instructor: "Prashanti Vasi",
+      duration: "3 weeks",
+      schedule: "Mon-Sat",
+      time: "10:00 AM - 11:00 AM",
+      startDate: "In Progress",
+      price: "₹6000",
+      description: "Deep dive into Data Structures and Algorithms using Java. Build problem-solving skills with real-world projects.",
       level: "Intermediate"
     },
     {
-      id: "nodejs-backend",
-      title: "Node.js Backend Development",
-      instructor: "Emily Watson",
-      duration: "9 weeks",
-      schedule: "Tue, Thu",
-      time: "9:00 PM - 11:00 PM IST",
-      startDate: "01/02/2024",
-      price: "₹8000",
-      description: "Build scalable backend APIs with Node.js, Express, MongoDB, and modern deployment strategies.",
-      level: "Advanced"
+      id: "dsa-with-python",
+      title: "DSA with Python",
+      instructor: "Prashanti Vasi",
+      duration: "3 weeks",
+      schedule: "Mon-Sat",
+      time: "10:00 AM - 11:00 AM",
+      startDate: "In Progress",
+      price: "₹6000",
+      description: "Master Data Structures and Algorithms with Python. Learn efficient coding patterns and optimization techniques.",
+      level: "Intermediate"
     },
     {
-      id: "fullstack-mern",
-      title: "Full Stack MERN",
-      instructor: "Michael Chen",
-      duration: "12 weeks",
-      schedule: "Sat, Sun",
-      time: "2:00 PM - 5:00 PM IST",
-      startDate: "03/02/2024",
-      price: "₹12000",
-      description: "Complete MERN stack development: MongoDB, Express, React, Node.js. Build production-ready applications.",
-      level: "Advanced"
+      id: "web-development",
+      title: "Web Development",
+      instructor: "Jyotsna",
+      duration: "3 weeks",
+      schedule: "Mon-Sat",
+      time: "6:00 PM - 7:00 PM",
+      startDate: "In Progress",
+      price: "₹4000",
+      description: "Learn modern web development from scratch. Build responsive websites and web applications.",
+      level: "Beginner"
     },
     {
-      id: "devops-essentials",
-      title: "DevOps Essentials",
-      instructor: "James Wilson",
-      duration: "6 weeks",
-      schedule: "Wed, Fri",
-      time: "7:30 PM - 9:30 PM IST",
-      startDate: "05/02/2024",
-      price: "₹7500",
-      description: "Learn Docker, Kubernetes, CI/CD pipelines, and cloud deployment for modern development workflows.",
+      id: "java-core",
+      title: "Java (Core)",
+      instructor: "Prashanti Vasi",
+      duration: "TBD",
+      schedule: "Mon-Sat",
+      time: "(Not listed)",
+      startDate: "In Progress",
+      price: "₹6000",
+      description: "Master Java programming fundamentals. Learn object-oriented programming and build robust applications.",
       level: "Intermediate"
     }
   ];
@@ -193,7 +157,7 @@ const Courses = () => {
 
   const handleWhatsAppClick = (courseTitle) => {
     const message = `Hi! I'm interested in the ${courseTitle} course. Can you provide more details?`;
-    const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/919676663136?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 

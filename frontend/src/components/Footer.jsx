@@ -12,7 +12,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="https://youtube.com"
+                  href="https://www.youtube.com/@techlearnsolutions8014"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-white text-base transition-colors duration-300"
@@ -22,7 +22,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="https://whatsapp.com"
+                  href="https://wa.me/919676663136?text=Hi%20there!%20I%20want%20to%20know%20more%20about%20your%20courses"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-white text-base transition-colors duration-300"
@@ -32,7 +32,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/techlearn_in/?hl=en"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-white text-base transition-colors duration-300"
