@@ -31,19 +31,30 @@ const CourseDetails = () => {
         const backendCourse = await courseAPI.getCourse(courseId);
         console.log('Course details from backend:', backendCourse);
 
+        // Get course-specific duration
+        const getCourseDuration = (title) => {
+          switch (title) {
+            case 'Java Programming': return '4 weeks';
+            case 'Python Programming': return '6 weeks';
+            case 'Data Structures & Algorithms': return '8 weeks';
+            case 'MySQL Database': return '3 weeks';
+            default: return '6 weeks';
+          }
+        };
+
         // Create enhanced course object with default values for missing fields
         const enhancedCourse = {
           ...backendCourse,
           id: backendCourse._id,
           longDescription: backendCourse.description || 'Learn programming concepts and build practical skills with this comprehensive course.',
           difficulty: backendCourse.level || 'Beginner',
-          duration: '8 weeks', // Default values since backend doesn't have these
+          duration: getCourseDuration(backendCourse.title),
           lessons: backendCourse.topics?.length || 0,
           students: 1250, // Default value
           rating: 4.8, // Default value
           price: 'Free', // Default value
           instructor: {
-            name: 'Expert Instructor',
+            name: 'Prashanti Vasi',
             bio: 'Experienced developer and educator with years of industry experience',
             avatar: '/api/placeholder/100/100'
           },
@@ -172,12 +183,6 @@ const CourseDetails = () => {
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyColor(course.difficulty)}`}>
                     {course.difficulty}
                   </span>
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {course.rating} ({course.students} students)
-                    </span>
-                  </div>
                 </div>
 
                 <h1
@@ -221,11 +226,6 @@ const CourseDetails = () => {
                 <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                   {course.price}
                 </div>
-                {course.price === "Free" && (
-                  <p className="text-green-600 dark:text-green-400 font-medium">
-                    Limited time offer
-                  </p>
-                )}
               </div>
 
               <motion.button
@@ -251,10 +251,6 @@ const CourseDetails = () => {
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-4 h-4 text-green-500" />
                   <span>Lifetime access</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span>Certificate of completion</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-4 h-4 text-green-500" />
