@@ -182,6 +182,54 @@ export const quizQuestions = {
   ],
   "OOP in Python": [
     {
+      question: "Which keyword is used to create a class in Python?",
+      options: ["class", "def", "function", "object"],
+      correctAnswer: 0,
+      explanation: "The 'class' keyword is used to create a class in Python.",
+      xp: 10,
+    },
+    {
+      question: "What is the purpose of the __init__ method in Python?",
+      options: ["To delete an object", "To initialize an object", "To copy an object", "To print an object"],
+      correctAnswer: 1,
+      explanation: "The __init__ method is used to initialize an object when it's created.",
+      xp: 10,
+    },
+  ],
+  "Dictionaries": [
+    {
+      question: "How do you create an empty dictionary in Python?",
+      options: ["{}", "[]", "()", "dict()"],
+      correctAnswer: 0,
+      explanation: "An empty dictionary is created using {} or dict().",
+      xp: 10,
+    },
+    {
+      question: "Which method is used to get all keys from a dictionary?",
+      options: ["keys()", "values()", "items()", "get()"],
+      correctAnswer: 0,
+      explanation: "The keys() method returns all keys from a dictionary.",
+      xp: 10,
+    },
+  ],
+  "Functions": [
+    {
+      question: "Which keyword is used to define a function in Python?",
+      options: ["function", "def", "func", "define"],
+      correctAnswer: 1,
+      explanation: "The 'def' keyword is used to define a function in Python.",
+      xp: 10,
+    },
+    {
+      question: "What does the return statement do in a function?",
+      options: ["Ends the function", "Returns a value", "Both A and B", "None of the above"],
+      correctAnswer: 2,
+      explanation: "The return statement both ends the function and returns a value.",
+      xp: 10,
+    },
+  ],
+  "OOP in Python": [
+    {
       question: "Which method is called when an object is created in Python?",
       options: ["__init__", "__new__", "__create__", "__start__"],
       correctAnswer: 0,

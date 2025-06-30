@@ -104,6 +104,10 @@ const CourseQuiz = () => {
         const quizData = await courseAPI.getQuiz(courseId, topicId);
         console.log('Quiz data from backend:', quizData);
 
+        // Since backend doesn't return quizId, we need to find it by querying the quiz directly
+        // The backend finds quiz using courseId and topicId, so we can use the same approach
+        // We'll modify the submitQuizAnswer API call to handle this
+
         // Transform backend data to match frontend format
         // Handle both 'topic' and 'topicTitle' from backend response
         const topicTitle = quizData.topicTitle || quizData.topic || topic?.title || 'Quiz';

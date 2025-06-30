@@ -4,9 +4,11 @@ import { useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import useInViewport from "../hooks/useInViewport";
 import VideoPreview from "./VideoPreview";
+import { useTheme } from "../context/ThemeContext";
 
 const SectionCard = ({ section, index }) => {
   const navigate = useNavigate();
+  const { theme } = useTheme();
   const [titleRef, isTitleInViewport] = useInViewport();
   const sectionRef = useRef(null);
 
@@ -527,65 +529,39 @@ const SectionCard = ({ section, index }) => {
           >
             <div className="w-full h-full flex items-center justify-center relative">
               {section.id === 'courses' ? (
-                /* Placeholder for Interactive Courses */
-                <motion.div
-                  className="w-full max-w-md h-80 bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-2xl border border-white/30 dark:border-gray-700/30 flex items-center justify-center"
+                /* Interactive Courses with Theme-Aware Videos */
+                <motion.video
+                  src={theme === 'dark' ? '/videos/book-dark.mp4' : '/videos/book-light.mp4'}
+                  alt="Interactive Courses"
+                  className="w-full h-auto object-contain"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.6 }}
-                >
-                  <div className="text-center p-8">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-blue-500/20 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">📚</span>
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-400 font-medium">
-                      Interactive Content
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-                      Coming soon...
-                    </p>
-                  </div>
-                </motion.div>
+                />
               ) : section.id === 'exercises' ? (
-                /* Placeholder for Coding Challenges */
-                <motion.div
-                  className="w-full max-w-md h-80 bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-2xl border border-white/30 dark:border-gray-700/30 flex items-center justify-center"
+                /* Coding Challenges with Theme-Aware Images */
+                <motion.img
+                  src={theme === 'dark' ? '/workout-dark.png' : '/workout-light.png'}
+                  alt="Coding Challenges"
+                  className="w-full h-auto object-contain"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.6 }}
-                >
-                  <div className="text-center p-8">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-purple-500/20 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">💪</span>
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-400 font-medium">
-                      Challenge Arena
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-                      Coming soon...
-                    </p>
-                  </div>
-                </motion.div>
+                />
               ) : section.id === 'compiler' ? (
-                /* Placeholder for Online Compiler */
-                <motion.div
-                  className="w-full max-w-md h-80 bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-2xl border border-white/30 dark:border-gray-700/30 flex items-center justify-center"
+                /* Online Compiler with Theme-Aware Images */
+                <motion.img
+                  src={theme === 'dark' ? '/compiler-dark.png' : '/compiler-light.png'}
+                  alt="Code Compiler"
+                  className="w-full h-auto object-contain"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.6 }}
-                >
-                  <div className="text-center p-8">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-orange-500/20 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">💻</span>
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-400 font-medium">
-                      Code Compiler
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-                      Ready to use!
-                    </p>
-                  </div>
-                </motion.div>
+                />
               ) : (
                 /* Placeholder for Professional Certification */
                 <motion.div

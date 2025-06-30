@@ -131,11 +131,13 @@ export const courseAPI = {
       if (!actualQuizId) {
         console.log('Quiz ID not provided, fetching from course data...');
         const courseData = await courseAPI.getCourse(courseId);
-        const topic = courseData.topics?.find(t => t._id === topicId);
+        const topic = courseData.topics?.find(t => t._id === topicId || t.topicId === topicId);
         actualQuizId = topic?.quizId;
 
         if (!actualQuizId) {
-          throw new Error('Quiz ID not found for this topic');
+          console.error('Quiz ID not found in course data. Course topics:', courseData.topics);
+          console.error('Looking for topicId:', topicId);
+          throw new Error('Quiz ID not found for this topic. Please ensure the quiz data is properly seeded.');
         }
       }
 
