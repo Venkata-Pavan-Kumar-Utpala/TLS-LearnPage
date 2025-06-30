@@ -251,11 +251,11 @@ export const dataAdapters = {
     // Default gradients, icons, and images for different course types
     const getDefaultVisuals = (title) => {
       const titleLower = title.toLowerCase();
-      if (titleLower.includes('javascript')) {
+      if (titleLower.includes('java') && !titleLower.includes('javascript')) {
         return {
-          gradient: 'from-yellow-400 via-orange-400 to-red-400',
-          icon: '⚡',
-          image: '/js.png'
+          gradient: 'from-orange-400 via-red-400 to-pink-400',
+          icon: '☕',
+          image: '/java.png'
         };
       } else if (titleLower.includes('python')) {
         return {
@@ -263,11 +263,23 @@ export const dataAdapters = {
           icon: '🐍',
           image: '/python.png'
         };
-      } else if (titleLower.includes('java') && !titleLower.includes('javascript')) {
+      } else if (titleLower.includes('dsa') || titleLower.includes('data structures') || titleLower.includes('algorithms')) {
         return {
-          gradient: 'from-red-400 via-orange-400 to-yellow-400',
-          icon: '☕',
-          image: '/java.png'
+          gradient: 'from-purple-400 via-pink-400 to-red-400',
+          icon: '🧠',
+          image: '/dsa.png'
+        };
+      } else if (titleLower.includes('mysql') || titleLower.includes('database')) {
+        return {
+          gradient: 'from-blue-500 via-cyan-400 to-teal-400',
+          icon: '🗄️',
+          image: '/mysql.png'
+        };
+      } else if (titleLower.includes('javascript')) {
+        return {
+          gradient: 'from-yellow-400 via-orange-400 to-red-400',
+          icon: '⚡',
+          image: '/js.png'
         };
       } else if (titleLower.includes('c++')) {
         return {

@@ -2,14 +2,14 @@
 
 export const sampleCourses = [
   {
-    title: "JavaScript Programming",
-    level: "Beginner",
+    title: "Java Programming",
+    level: "Intermediate",
     topics: [
-      { title: "Variables and Data Types", quizId: null },
-      { title: "Functions and Scope", quizId: null },
-      { title: "DOM Manipulation", quizId: null },
-      { title: "Arrays", quizId: null },
-      { title: "Objects", quizId: null },
+      { title: "OOP Concepts", quizId: null },
+      { title: "Collections Framework", quizId: null },
+      { title: "Exception Handling", quizId: null },
+      { title: "Threads", quizId: null },
+      { title: "File I/O", quizId: null },
     ],
   },
   {
@@ -24,300 +24,32 @@ export const sampleCourses = [
     ],
   },
   {
-    title: "C Programming",
-    level: "Beginner",
-    topics: [
-      { title: "Control Flow", quizId: null },
-      { title: "Pointers", quizId: null },
-      { title: "Structures", quizId: null },
-      { title: "Arrays", quizId: null },
-      { title: "Functions", quizId: null },
-    ],
-  },
-  {
-    title: "Java Programming",
-    level: "Intermediate",
-    topics: [
-      { title: "OOP Concepts", quizId: null },
-      { title: "Collections Framework", quizId: null },
-      { title: "Exception Handling", quizId: null },
-      { title: "Threads", quizId: null },
-      { title: "File I/O", quizId: null },
-    ],
-  },
-  {
-    title: "C++ Programming",
+    title: "Data Structures & Algorithms",
     level: "Advanced",
     topics: [
-      { title: "Classes and Objects", quizId: null },
-      { title: "Inheritance and Polymorphism", quizId: null },
-      { title: "STL (Standard Template Library)", quizId: null },
-      { title: "Templates", quizId: null },
-      { title: "Exception Handling", quizId: null },
+      { title: "Arrays and Strings", quizId: null },
+      { title: "Linked Lists", quizId: null },
+      { title: "Stacks and Queues", quizId: null },
+      { title: "Trees and Graphs", quizId: null },
+      { title: "Sorting and Searching", quizId: null },
+    ],
+  },
+  {
+    title: "MySQL Database",
+    level: "Beginner",
+    topics: [
+      { title: "Database Basics", quizId: null },
+      { title: "SQL Queries", quizId: null },
+      { title: "Joins and Relationships", quizId: null },
+      { title: "Indexes and Optimization", quizId: null },
+      { title: "Stored Procedures", quizId: null },
     ],
   },
 ];
 
-// Quiz questions for each topic (example for a few topics, you should expand for all 75 topics)
+// Quiz questions for each topic (example for a few topics, you should expand for all topics)
 export const quizQuestions = {
-  "Variables and Data Types": [
-    {
-      question: "Which of the following is NOT a JavaScript data type?",
-      options: ["String", "Boolean", "Float", "Undefined"],
-      correctAnswer: 2,
-      explanation:
-        "Float is not a JavaScript data type; the correct type is Number.",
-      xp: 10,
-    },
-    {
-      question: "What is the output of typeof null in JavaScript?",
-      options: ["object", "null", "undefined", "number"],
-      correctAnswer: 0,
-      explanation:
-        "typeof null returns 'object' due to a historical bug in JavaScript.",
-      xp: 10,
-    },
-  ],
-  "Functions and Scope": [
-    {
-      question: "How do you define a function in JavaScript?",
-      options: [
-        "function myFunc() {}",
-        "def myFunc() {}",
-        "func myFunc() {}",
-        "function:myFunc() {}",
-      ],
-      correctAnswer: 0,
-      explanation:
-        "JavaScript uses the 'function' keyword to define functions.",
-      xp: 10,
-    },
-    {
-      question:
-        "What is the scope of a variable declared with 'let' inside a function?",
-      options: ["Global", "Function", "Block", "Module"],
-      correctAnswer: 2,
-      explanation: "'let' variables are block scoped.",
-      xp: 10,
-    },
-  ],
-  "DOM Manipulation": [
-    {
-      question: "Which method is used to select an element by its ID?",
-      options: [
-        "getElementById",
-        "querySelectorAll",
-        "getElementsByClassName",
-        "getElementByTagName",
-      ],
-      correctAnswer: 0,
-      explanation: "getElementById is used to select an element by its ID.",
-      xp: 10,
-    },
-    {
-      question:
-        "Which property is used to change the content of an HTML element in JavaScript?",
-      options: ["innerHTML", "content", "value", "textContent"],
-      correctAnswer: 0,
-      explanation:
-        "innerHTML is commonly used to change the content of an element.",
-      xp: 10,
-    },
-  ],
-  Arrays: [
-    {
-      question: "How do you create an array in JavaScript?",
-      options: ["var arr = []", "var arr = {}", "var arr = ()", "var arr = <>"],
-      correctAnswer: 0,
-      explanation: "Square brackets are used to create arrays in JavaScript.",
-      xp: 10,
-    },
-    {
-      question: "Which method adds an element to the end of an array?",
-      options: ["push()", "pop()", "shift()", "unshift()"],
-      correctAnswer: 0,
-      explanation: "push() adds an element to the end of an array.",
-      xp: 10,
-    },
-  ],
-  Objects: [
-    {
-      question: "How do you define an object in JavaScript?",
-      options: ["var obj = {}", "var obj = []", "var obj = ()", "var obj = <>"],
-      correctAnswer: 0,
-      explanation: "Curly braces are used to define objects in JavaScript.",
-      xp: 10,
-    },
-    {
-      question: "How do you access a property of an object?",
-      options: [
-        "obj.property",
-        "obj[property]",
-        "Both A and B",
-        "obj->property",
-      ],
-      correctAnswer: 2,
-      explanation:
-        "Both dot and bracket notation can be used to access object properties.",
-      xp: 10,
-    },
-  ],
-  "Lists and Tuples": [
-    {
-      question: "Which of these is mutable in Python?",
-      options: ["List", "Tuple", "Both", "None"],
-      correctAnswer: 0,
-      explanation: "Lists are mutable, tuples are immutable in Python.",
-      xp: 10,
-    },
-    {
-      question: "How do you create a tuple in Python?",
-      options: ["(1, 2, 3)", "[1, 2, 3]", "{1, 2, 3}", "tuple[1,2,3]"],
-      correctAnswer: 0,
-      explanation: "Parentheses are used to create tuples.",
-      xp: 10,
-    },
-  ],
-  "File Handling": [
-    {
-      question: "Which function is used to open a file in Python?",
-      options: ["open()", "file()", "read()", "with()"],
-      correctAnswer: 0,
-      explanation: "open() is used to open files in Python.",
-      xp: 10,
-    },
-    {
-      question: "What does 'with open('file.txt') as f:' do?",
-      options: [
-        "Opens file and closes automatically",
-        "Opens file only",
-        "Closes file only",
-        "Deletes file",
-      ],
-      correctAnswer: 0,
-      explanation:
-        "'with' context manager opens and closes the file automatically.",
-      xp: 10,
-    },
-  ],
-  "OOP in Python": [
-    {
-      question: "How do you define a class in Python?",
-      options: [
-        "class MyClass:",
-        "def MyClass:",
-        "MyClass = class()",
-        "class: MyClass",
-      ],
-      correctAnswer: 0,
-      explanation: "The 'class' keyword is used to define a class in Python.",
-      xp: 10,
-    },
-    {
-      question: "What is 'self' in Python classes?",
-      options: [
-        "A reference to the instance",
-        "A reference to the class",
-        "A global variable",
-        "A decorator",
-      ],
-      correctAnswer: 0,
-      explanation: "'self' refers to the instance of the class.",
-      xp: 10,
-    },
-  ],
-  Dictionaries: [
-    {
-      question: "How do you define a dictionary in Python?",
-      options: ["{'a': 1}", "[1, 2, 3]", "(1, 2, 3)", "dict(1,2,3)"],
-      correctAnswer: 0,
-      explanation: "Curly braces with key-value pairs define a dictionary.",
-      xp: 10,
-    },
-    {
-      question: "How do you access a value in a dictionary?",
-      options: ["dict['key']", "dict.key", "dict->key", "dict['value']"],
-      correctAnswer: 0,
-      explanation: "Use square brackets with the key to access a value.",
-      xp: 10,
-    },
-  ],
-  Functions: [
-    {
-      question: "How do you define a function in Python?",
-      options: [
-        "def my_func():",
-        "function my_func()",
-        "func my_func()",
-        "def: my_func()",
-      ],
-      correctAnswer: 0,
-      explanation: "The 'def' keyword is used to define functions in Python.",
-      xp: 10,
-    },
-    {
-      question:
-        "What is the default return value of a function that doesn't return anything?",
-      options: ["None", "0", "False", "Empty string"],
-      correctAnswer: 0,
-      explanation:
-        "Python functions return None by default if no return statement is present.",
-      xp: 10,
-    },
-  ],
-  "Control Flow": [
-    {
-      question: "Which statement is used for decision making in C?",
-      options: ["if", "for", "while", "switch"],
-      correctAnswer: 0,
-      explanation: "'if' is used for decision making in C.",
-      xp: 10,
-    },
-    {
-      question: "Which loop is used to repeat a block of code in C?",
-      options: ["for", "if", "switch", "goto"],
-      correctAnswer: 0,
-      explanation: "'for' loop is commonly used for repetition.",
-      xp: 10,
-    },
-  ],
-  Pointers: [
-    {
-      question: "What does a pointer store?",
-      options: ["Value", "Address", "Function", "None"],
-      correctAnswer: 1,
-      explanation: "Pointers store memory addresses.",
-      xp: 10,
-    },
-    {
-      question: "How do you declare a pointer in C?",
-      options: ["int *p;", "int p*;", "int &p;", "pointer int p;"],
-      correctAnswer: 0,
-      explanation: "Use * to declare a pointer.",
-      xp: 10,
-    },
-  ],
-  Structures: [
-    {
-      question: "Which keyword is used to define a structure in C?",
-      options: ["struct", "structure", "class", "define"],
-      correctAnswer: 0,
-      explanation: "'struct' is used to define structures.",
-      xp: 10,
-    },
-    {
-      question: "How do you access a member of a structure?",
-      options: [
-        "struct.member",
-        "struct->member",
-        "struct:member",
-        "struct.member()",
-      ],
-      correctAnswer: 0,
-      explanation: "Use dot operator to access structure members.",
-      xp: 10,
-    },
-  ],
+  // Java Programming Topics
   "OOP Concepts": [
     {
       question: "Which is not a pillar of OOP?",
@@ -342,162 +74,356 @@ export const quizQuestions = {
   ],
   "Collections Framework": [
     {
-      question: "Which interface is not part of Java Collections Framework?",
-      options: ["List", "Set", "Map", "Array"],
-      correctAnswer: 3,
-      explanation: "Array is not an interface in Java Collections Framework.",
+      question: "Which interface is implemented by ArrayList in Java?",
+      options: ["Set", "List", "Map", "Queue"],
+      correctAnswer: 1,
+      explanation: "ArrayList implements the List interface.",
       xp: 10,
     },
     {
-      question: "Which class implements List interface?",
-      options: ["ArrayList", "HashMap", "HashSet", "TreeMap"],
-      correctAnswer: 0,
-      explanation: "ArrayList implements the List interface.",
+      question: "What is the default capacity of ArrayList in Java?",
+      options: ["5", "10", "15", "20"],
+      correctAnswer: 1,
+      explanation: "The default capacity of ArrayList is 10.",
       xp: 10,
     },
   ],
   "Exception Handling": [
     {
       question: "Which keyword is used to handle exceptions in Java?",
-      options: ["try", "catch", "throw", "All of the above"],
+      options: ["try", "catch", "finally", "All of the above"],
       correctAnswer: 3,
-      explanation: "All these keywords are used in exception handling.",
+      explanation: "All three keywords are used in exception handling.",
       xp: 10,
     },
     {
-      question: "What is the superclass of all exceptions in Java?",
-      options: ["Throwable", "Exception", "Error", "RuntimeException"],
-      correctAnswer: 0,
-      explanation: "Throwable is the superclass of all exceptions.",
-      xp: 10,
-    },
-  ],
-  Threads: [
-    {
-      question: "Which method starts a thread in Java?",
-      options: ["start()", "run()", "init()", "execute()"],
-      correctAnswer: 0,
-      explanation: "start() is used to begin thread execution.",
-      xp: 10,
-    },
-    {
-      question: "Which interface must be implemented to create a thread?",
-      options: ["Runnable", "Threadable", "Callable", "Executor"],
-      correctAnswer: 0,
-      explanation: "Runnable interface must be implemented.",
+      question: "What is the parent class of all exceptions in Java?",
+      options: ["Exception", "Throwable", "Error", "RuntimeException"],
+      correctAnswer: 1,
+      explanation: "Throwable is the parent class of all exceptions.",
       xp: 10,
     },
   ],
-  "Classes and Objects": [
+  "Threads": [
     {
-      question: "What is an object in C++?",
-      options: ["Instance of a class", "A function", "A variable", "A pointer"],
-      correctAnswer: 0,
-      explanation: "An object is an instance of a class.",
+      question: "Which method is used to start a thread in Java?",
+      options: ["run()", "start()", "execute()", "begin()"],
+      correctAnswer: 1,
+      explanation: "start() method is used to start a thread.",
       xp: 10,
     },
     {
-      question: "How do you define a class in C++?",
+      question: "What is synchronization in Java?",
       options: [
-        "class MyClass {}",
-        "MyClass = class()",
-        "def MyClass()",
-        "class: MyClass",
+        "Running threads simultaneously",
+        "Controlling access to shared resources",
+        "Creating multiple threads",
+        "Stopping threads",
       ],
-      correctAnswer: 0,
-      explanation: "Use 'class' keyword to define a class in C++.",
-      xp: 10,
-    },
-  ],
-  "Inheritance and Polymorphism": [
-    {
-      question: "Which type of inheritance is not supported in C++?",
-      options: ["Multiple", "Multilevel", "Hierarchical", "Hybrid"],
-      correctAnswer: 0,
-      explanation:
-        "C++ supports all types of inheritance, but some languages do not support multiple inheritance.",
-      xp: 10,
-    },
-    {
-      question: "What is polymorphism?",
-      options: [
-        "Ability to take many forms",
-        "Data hiding",
-        "Inheritance",
-        "Encapsulation",
-      ],
-      correctAnswer: 0,
-      explanation: "Polymorphism means the ability to take many forms.",
-      xp: 10,
-    },
-  ],
-  "STL (Standard Template Library)": [
-    {
-      question: "Which STL component is used for algorithms?",
-      options: ["vector", "map", "algorithm", "set"],
-      correctAnswer: 2,
-      explanation: "'algorithm' is the STL component for algorithms.",
-      xp: 10,
-    },
-    {
-      question: "Which container is not part of STL?",
-      options: ["vector", "list", "array", "stack"],
-      correctAnswer: 2,
-      explanation: "'array' is not a standard STL container in C++98.",
-      xp: 10,
-    },
-  ],
-  Templates: [
-    {
-      question: "What is a template in C++?",
-      options: [
-        "Blueprint for functions/classes",
-        "A data type",
-        "A variable",
-        "A pointer",
-      ],
-      correctAnswer: 0,
-      explanation:
-        "Templates are blueprints for creating generic classes or functions.",
-      xp: 10,
-    },
-    {
-      question: "Which keyword is used to define a template?",
-      options: ["template", "define", "class", "typename"],
-      correctAnswer: 0,
-      explanation: "'template' keyword is used to define templates.",
-      xp: 10,
-    },
-  ],
-  "Exception Handling": [
-    {
-      question: "Which keyword is used to handle exceptions in C++?",
-      options: ["try", "catch", "throw", "All of the above"],
-      correctAnswer: 3,
-      explanation: "All these keywords are used in exception handling in C++.",
-      xp: 10,
-    },
-    {
-      question: "What is the base class for all exceptions in C++?",
-      options: ["exception", "error", "throwable", "runtime_error"],
-      correctAnswer: 0,
-      explanation: "'exception' is the base class for all exceptions in C++.",
+      correctAnswer: 1,
+      explanation: "Synchronization controls access to shared resources.",
       xp: 10,
     },
   ],
   "File I/O": [
     {
-      question: "Which function is used to open a file in C?",
-      options: ["fopen()", "open()", "file()", "read()"],
-      correctAnswer: 0,
-      explanation: "fopen() is used to open files in C.",
+      question: "Which class is used to read files in Java?",
+      options: ["FileReader", "BufferedReader", "Scanner", "All of the above"],
+      correctAnswer: 3,
+      explanation: "All these classes can be used to read files.",
       xp: 10,
     },
     {
-      question: "Which mode is used to open a file for writing in C?",
-      options: ["r", "w", "a", "rw"],
+      question: "What does the flush() method do?",
+      options: [
+        "Closes the file",
+        "Forces buffered output to be written",
+        "Reads the file",
+        "Deletes the file",
+      ],
+      correctAnswer: 1,
+      explanation: "flush() forces buffered output to be written.",
+      xp: 10,
+    },
+  ],
+
+  // Python Programming Topics
+  "Lists and Tuples": [
+    {
+      question: "Which of the following is mutable in Python?",
+      options: ["List", "Tuple", "String", "Integer"],
+      correctAnswer: 0,
+      explanation: "Lists are mutable in Python, while tuples are immutable.",
+      xp: 10,
+    },
+    {
+      question: "How do you create a tuple with one element in Python?",
+      options: ["(1)", "(1,)", "[1]", "{1}"],
+      correctAnswer: 1,
+      explanation: "A comma is needed to create a single-element tuple.",
+      xp: 10,
+    },
+  ],
+  "File Handling": [
+    {
+      question: "Which function is used to open a file in Python?",
+      options: ["open()", "file()", "read()", "load()"],
+      correctAnswer: 0,
+      explanation: "open() function is used to open files in Python.",
+      xp: 10,
+    },
+    {
+      question: "What mode is used to open a file for writing in Python?",
+      options: ["'r'", "'w'", "'a'", "'x'"],
       correctAnswer: 1,
       explanation: "'w' mode opens a file for writing.",
+      xp: 10,
+    },
+  ],
+  "OOP in Python": [
+    {
+      question: "Which method is called when an object is created in Python?",
+      options: ["__init__", "__new__", "__create__", "__start__"],
+      correctAnswer: 0,
+      explanation: "__init__ is the constructor method in Python.",
+      xp: 10,
+    },
+    {
+      question: "What is self in Python?",
+      options: [
+        "A keyword",
+        "A reference to the current instance",
+        "A built-in function",
+        "A data type",
+      ],
+      correctAnswer: 1,
+      explanation: "self refers to the current instance of the class.",
+      xp: 10,
+    },
+  ],
+  "Dictionaries": [
+    {
+      question: "How do you create an empty dictionary in Python?",
+      options: ["{}", "[]", "()", "dict()"],
+      correctAnswer: 0,
+      explanation: "Empty curly braces {} create an empty dictionary.",
+      xp: 10,
+    },
+    {
+      question: "Which method is used to get all keys from a dictionary?",
+      options: ["keys()", "values()", "items()", "get()"],
+      correctAnswer: 0,
+      explanation: "keys() method returns all keys from a dictionary.",
+      xp: 10,
+    },
+  ],
+  "Functions": [
+    {
+      question: "How do you define a function in Python?",
+      options: ["def func():", "function func():", "func():", "define func():"],
+      correctAnswer: 0,
+      explanation: "def keyword is used to define functions in Python.",
+      xp: 10,
+    },
+    {
+      question: "What is a lambda function in Python?",
+      options: [
+        "A named function",
+        "An anonymous function",
+        "A built-in function",
+        "A class method",
+      ],
+      correctAnswer: 1,
+      explanation: "Lambda functions are anonymous functions in Python.",
+      xp: 10,
+    },
+  ],
+
+  // Data Structures & Algorithms Topics
+  "Arrays and Strings": [
+    {
+      question: "What is the time complexity of accessing an element in an array?",
+      options: ["O(1)", "O(n)", "O(log n)", "O(n²)"],
+      correctAnswer: 0,
+      explanation: "Array access by index is constant time O(1).",
+      xp: 10,
+    },
+    {
+      question: "Which algorithm is used to reverse a string in-place?",
+      options: ["Two pointers", "Binary search", "Merge sort", "DFS"],
+      correctAnswer: 0,
+      explanation: "Two pointers technique is commonly used to reverse strings.",
+      xp: 10,
+    },
+  ],
+  "Linked Lists": [
+    {
+      question: "What is the time complexity of inserting at the beginning of a linked list?",
+      options: ["O(1)", "O(n)", "O(log n)", "O(n²)"],
+      correctAnswer: 0,
+      explanation: "Insertion at the beginning of a linked list is O(1).",
+      xp: 10,
+    },
+    {
+      question: "What is a circular linked list?",
+      options: [
+        "A list where last node points to first node",
+        "A list with no nodes",
+        "A list with one node",
+        "A list with duplicate values",
+      ],
+      correctAnswer: 0,
+      explanation: "In circular linked list, the last node points to the first node.",
+      xp: 10,
+    },
+  ],
+  "Stacks and Queues": [
+    {
+      question: "What principle does a stack follow?",
+      options: ["LIFO", "FIFO", "Random", "Priority"],
+      correctAnswer: 0,
+      explanation: "Stack follows Last In First Out (LIFO) principle.",
+      xp: 10,
+    },
+    {
+      question: "What principle does a queue follow?",
+      options: ["LIFO", "FIFO", "Random", "Priority"],
+      correctAnswer: 1,
+      explanation: "Queue follows First In First Out (FIFO) principle.",
+      xp: 10,
+    },
+  ],
+  "Trees and Graphs": [
+    {
+      question: "What is the maximum number of children a binary tree node can have?",
+      options: ["1", "2", "3", "Unlimited"],
+      correctAnswer: 1,
+      explanation: "A binary tree node can have at most 2 children.",
+      xp: 10,
+    },
+    {
+      question: "Which traversal visits the root node first?",
+      options: ["Inorder", "Preorder", "Postorder", "Level order"],
+      correctAnswer: 1,
+      explanation: "Preorder traversal visits the root node first.",
+      xp: 10,
+    },
+  ],
+  "Sorting and Searching": [
+    {
+      question: "What is the time complexity of binary search?",
+      options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+      correctAnswer: 1,
+      explanation: "Binary search has O(log n) time complexity.",
+      xp: 10,
+    },
+    {
+      question: "Which sorting algorithm has the best average case time complexity?",
+      options: ["Bubble sort", "Quick sort", "Selection sort", "Insertion sort"],
+      correctAnswer: 1,
+      explanation: "Quick sort has O(n log n) average case time complexity.",
+      xp: 10,
+    },
+  ],
+
+  // MySQL Database Topics
+  "Database Basics": [
+    {
+      question: "What does SQL stand for?",
+      options: [
+        "Structured Query Language",
+        "Simple Query Language",
+        "Standard Query Language",
+        "System Query Language",
+      ],
+      correctAnswer: 0,
+      explanation: "SQL stands for Structured Query Language.",
+      xp: 10,
+    },
+    {
+      question: "Which command is used to create a new database?",
+      options: ["CREATE DATABASE", "NEW DATABASE", "MAKE DATABASE", "ADD DATABASE"],
+      correctAnswer: 0,
+      explanation: "CREATE DATABASE command is used to create a new database.",
+      xp: 10,
+    },
+  ],
+  "SQL Queries": [
+    {
+      question: "Which command is used to retrieve data from a database?",
+      options: ["SELECT", "GET", "FETCH", "RETRIEVE"],
+      correctAnswer: 0,
+      explanation: "SELECT command is used to retrieve data from a database.",
+      xp: 10,
+    },
+    {
+      question: "Which clause is used to filter records in SQL?",
+      options: ["WHERE", "FILTER", "HAVING", "CONDITION"],
+      correctAnswer: 0,
+      explanation: "WHERE clause is used to filter records in SQL.",
+      xp: 10,
+    },
+  ],
+  "Joins and Relationships": [
+    {
+      question: "Which join returns all records from both tables?",
+      options: ["INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "FULL OUTER JOIN"],
+      correctAnswer: 3,
+      explanation: "FULL OUTER JOIN returns all records from both tables.",
+      xp: 10,
+    },
+    {
+      question: "What is a foreign key?",
+      options: [
+        "A key from another table",
+        "A primary key",
+        "An index",
+        "A constraint",
+      ],
+      correctAnswer: 0,
+      explanation: "A foreign key is a key that references the primary key of another table.",
+      xp: 10,
+    },
+  ],
+  "Indexes and Optimization": [
+    {
+      question: "What is the purpose of an index in a database?",
+      options: [
+        "To speed up queries",
+        "To store data",
+        "To create tables",
+        "To delete records",
+      ],
+      correctAnswer: 0,
+      explanation: "Indexes are used to speed up database queries.",
+      xp: 10,
+    },
+    {
+      question: "Which command is used to create an index?",
+      options: ["CREATE INDEX", "ADD INDEX", "NEW INDEX", "MAKE INDEX"],
+      correctAnswer: 0,
+      explanation: "CREATE INDEX command is used to create an index.",
+      xp: 10,
+    },
+  ],
+  "Stored Procedures": [
+    {
+      question: "What is a stored procedure?",
+      options: [
+        "A precompiled SQL code",
+        "A table",
+        "An index",
+        "A database",
+      ],
+      correctAnswer: 0,
+      explanation: "A stored procedure is precompiled SQL code stored in the database.",
+      xp: 10,
+    },
+    {
+      question: "Which command is used to execute a stored procedure?",
+      options: ["CALL", "EXECUTE", "RUN", "START"],
+      correctAnswer: 0,
+      explanation: "CALL command is used to execute a stored procedure.",
       xp: 10,
     },
   ],

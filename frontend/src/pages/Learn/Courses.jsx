@@ -54,6 +54,14 @@ const Courses = () => {
   // Fallback mock data (in case backend is not available)
   const mockCoursesData = [
     {
+      id: "java",
+      title: "Java Programming",
+      description: "Master Java programming and object-oriented concepts",
+      gradient: "from-orange-400 via-red-400 to-pink-400",
+      icon: "☕",
+      image: "/java.png"
+    },
+    {
       id: "python",
       title: "Python Programming",
       description: "Learn Python programming from basics to advanced concepts",
@@ -62,28 +70,20 @@ const Courses = () => {
       image: "/python.png"
     },
     {
-      id: "javascript",
-      title: "JavaScript Programming",
-      description: "Master JavaScript and build dynamic web applications",
-      gradient: "from-yellow-400 via-orange-400 to-red-400",
-      icon: "⚡",
-      image: "/js.png"
+      id: "dsa",
+      title: "Data Structures & Algorithms",
+      description: "Master DSA concepts for coding interviews and problem solving",
+      gradient: "from-purple-400 via-pink-400 to-red-400",
+      icon: "🧠",
+      image: "/dsa.png"
     },
     {
-      id: "c-programming",
-      title: "C Programming",
-      description: "Learn programming fundamentals with C language",
-      gradient: "from-gray-400 via-blue-400 to-slate-500",
-      icon: "🔧",
-      image: "/c.png"
-    },
-    {
-      id: "cpp-programming",
-      title: "C++ Programming",
-      description: "Master object-oriented programming with C++",
-      gradient: "from-blue-500 via-purple-500 to-indigo-500",
-      icon: "⚙️",
-      image: "/c.png"
+      id: "mysql",
+      title: "MySQL Database",
+      description: "Learn database design, queries, and management with MySQL",
+      gradient: "from-blue-500 via-cyan-400 to-teal-400",
+      icon: "🗄️",
+      image: "/mysql.png"
     }
   ];
 
@@ -235,7 +235,8 @@ const Courses = () => {
             {loading && (
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 animate-pulse">
+                  <div key={i} className="bg-white/90 dark:bg-gray-800/90 rounded-2xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-600/50 animate-pulse">
+                    <div className="h-48 bg-gray-300 dark:bg-gray-600 rounded-xl mb-4"></div>
                     <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded mb-4"></div>
                     <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded mb-2"></div>
                     <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
@@ -383,7 +384,7 @@ const LiveBatchCard = ({ batch, index, onWhatsAppClick, onGetStarted }) => {
         type: "spring",
         stiffness: 100
       }}
-      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 cursor-pointer h-full flex flex-col"
+      className="bg-white/80 dark:bg-gray-800/80 rounded-2xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer h-full flex flex-col"
     >
       {/* Header - Fixed height section */}
       <div className="mb-6">
