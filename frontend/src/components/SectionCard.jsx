@@ -106,6 +106,9 @@ const SectionCard = ({ section, index }) => {
       case 'exercises':
         navigate('/learn/exercises');
         break;
+      case 'compiler':
+        navigate('/learn/compiler');
+        break;
       case 'certification':
         navigate('/learn/certification');
         break;
@@ -321,6 +324,100 @@ const SectionCard = ({ section, index }) => {
                   </motion.div>
                 </motion.div>
               </>
+            ) : section.id === 'compiler' ? (
+              <>
+                {/* Special layout for Online Compiler section */}
+                {/* "code LAB" heading */}
+                <div className="space-y-4 overflow-visible">
+                  <motion.h2
+                    ref={titleRef}
+                    className="font-poppins text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight leading-[1.1] overflow-visible"
+                    initial={{ opacity: 0, y: 40, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
+                    <span
+                      className={`brand-heading-primary hover-gradient-text italic pr-2 ${isTitleInViewport ? 'in-viewport' : ''}`}
+                      style={{ display: 'inline-block' }}
+                    >
+                      code
+                    </span>
+                    <br />
+                    <span className={`brand-heading-secondary hover-gradient-text ${isTitleInViewport ? 'in-viewport' : ''}`}>LAB</span>
+                  </motion.h2>
+                </div>
+
+                {/* Subtitle */}
+                <motion.p
+                  className="font-poppins text-lg md:text-xl text-gray-700 dark:text-gray-300"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  Your browser is your IDE now.
+                </motion.p>
+
+                {/* Description */}
+                <motion.p
+                  className="text-base md:text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                >
+                  {section.description}
+                </motion.p>
+
+                {/* Features list */}
+                <motion.ul
+                  className="space-y-3"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                >
+                  {section.features.map((feature, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-center gap-3 text-base text-gray-600 dark:text-gray-400"
+                    >
+                      <div className="w-2 h-2 rounded-full bg-blue-500" />
+                      {feature}
+                    </li>
+                  ))}
+                </motion.ul>
+
+                {/* CTA Button with previous styling */}
+                <motion.div
+                  style={{
+                    y: buttonY,
+                    opacity: buttonOpacity,
+                    scale: buttonScale,
+                    rotateZ: buttonRotate
+                  }}
+                  className="transform-gpu"
+                >
+                  <motion.div
+                    whileHover={{
+                      x: 2,
+                      transition: { duration: 0.2, ease: "easeOut" }
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <button
+                      onClick={handleNavigation}
+                      className="bg-emerald-600 hover:bg-emerald-500 text-white border-none px-4 py-2 text-base rounded-lg cursor-pointer inline-flex items-center gap-2 transition-all duration-300 font-sans"
+                    >
+                      <span>{section.cta}</span>
+                      <motion.div
+                        whileHover={{ x: 4 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                      >
+                        <ArrowRight className="w-5 h-5" />
+                      </motion.div>
+                    </button>
+                  </motion.div>
+                </motion.div>
+              </>
             ) : (
               <>
                 {/* Special layout for Professional Certification section */}
@@ -466,6 +563,26 @@ const SectionCard = ({ section, index }) => {
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
                       Coming soon...
+                    </p>
+                  </div>
+                </motion.div>
+              ) : section.id === 'compiler' ? (
+                /* Placeholder for Online Compiler */
+                <motion.div
+                  className="w-full max-w-md h-80 bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-2xl border border-white/30 dark:border-gray-700/30 flex items-center justify-center"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                >
+                  <div className="text-center p-8">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-orange-500/20 rounded-full flex items-center justify-center">
+                      <span className="text-2xl">💻</span>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 font-medium">
+                      Code Compiler
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+                      Ready to use!
                     </p>
                   </div>
                 </motion.div>

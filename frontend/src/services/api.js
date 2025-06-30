@@ -242,6 +242,29 @@ export const exerciseAPI = {
     });
     return handleResponse(response);
   },
+
+  // Submit code for execution (exercise-specific)
+  submitCode: async (courseId, exerciseId, codeData) => {
+    const response = await fetch(`${API_BASE}/exercises/${courseId}/${exerciseId}/submit-code`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(codeData),
+    });
+    return handleResponse(response);
+  },
+};
+
+// Compiler API
+export const compilerAPI = {
+  // Compile and execute code
+  compileCode: async (codeData) => {
+    const response = await fetch(`${API_BASE}/compiler/compile`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(codeData),
+    });
+    return handleResponse(response);
+  },
 };
 
 // Data Adapters - Transform backend data to frontend format
@@ -405,6 +428,7 @@ export default {
   progressAPI,
   exerciseAPI,
   paymentAPI,
+  compilerAPI,
   dataAdapters,
   apiStatus,
   API_ERRORS,

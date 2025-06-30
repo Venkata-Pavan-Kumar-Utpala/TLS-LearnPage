@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import Editor from '@monaco-editor/react';
 import { useTheme } from '../../context/ThemeContext';
+import { compilerAPI } from '../../services/api';
+import { useAuth } from '../../hooks/useAuth';
 import Navbar from '../../components/Navbar';
 import ScrollProgress from '../../components/ScrollProgress';
 
@@ -198,10 +200,12 @@ h1 {
 
 const OnlineCompiler = () => {
   const { theme } = useTheme();
+  const { user } = useAuth();
   const [selectedLanguage, setSelectedLanguage] = useState('python');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [code, setCode] = useState(LANGUAGES.python.defaultCode);
+  const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [isRunning, setIsRunning] = useState(false);
   const [editorTheme, setEditorTheme] = useState(theme === 'dark' ? 'vs-dark' : 'light');
@@ -214,6 +218,7 @@ const OnlineCompiler = () => {
   // Update code when language changes
   useEffect(() => {
     setCode(LANGUAGES[selectedLanguage].defaultCode);
+    setInput('');
     setOutput('');
   }, [selectedLanguage]);
 
@@ -227,20 +232,64 @@ const OnlineCompiler = () => {
   };
 
   const handleRunCode = async () => {
+    // Check if user is logged in for Python and Java
+    if ((selectedLanguage === 'python' || selectedLanguage === 'java') && !user) {
+      setOutput('❌ Please log in to run Python and Java code.');
+      return;
+    }
+
     setIsRunning(true);
     setOutput('Running code...\n');
-    
-    // Simulate code execution (replace with actual API call)
-    setTimeout(() => {
+
+    try {
       if (selectedLanguage === 'html') {
         setOutput('HTML code is rendered in the preview panel →');
+        setIsRunning(false);
+        return;
       } else if (selectedLanguage === 'css') {
         setOutput('CSS styles are applied in the preview panel →');
-      } else {
-        setOutput(`Output for ${LANGUAGES[selectedLanguage].name}:\n\nHello, World!\nThe sum of 10 and 20 is 30\nOriginal: [1, 2, 3, 4, 5]\nSquared: [1, 4, 9, 16, 25]\n\n✅ Code executed successfully!`);
+        setIsRunning(false);
+        return;
       }
+
+      // For Python and Java, use the backend compiler API
+      const result = await compilerAPI.compileCode({
+        language: selectedLanguage,
+        source_code: code,
+        stdin: input
+      });
+
+      // Format the output
+      let outputText = '';
+
+      if (result.stdout) {
+        outputText += result.stdout;
+      }
+
+      if (result.stderr) {
+        outputText += '\n❌ Error:\n' + result.stderr;
+      }
+
+      if (result.compile_output) {
+        outputText += '\n📝 Compilation Output:\n' + result.compile_output;
+      }
+
+      if (result.status) {
+        outputText += `\n\n📊 Status: ${result.status.description || 'Unknown'}`;
+      }
+
+      if (!outputText.trim()) {
+        outputText = '✅ Code executed successfully (no output)';
+      }
+
+      setOutput(outputText);
+
+    } catch (error) {
+      console.error('Code execution error:', error);
+      setOutput(`❌ Execution failed: ${error.message || 'Unknown error occurred'}`);
+    } finally {
       setIsRunning(false);
-    }, 2000);
+    }
   };
 
   const handleStopExecution = () => {
@@ -250,6 +299,7 @@ const OnlineCompiler = () => {
 
   const handleResetCode = () => {
     setCode(LANGUAGES[selectedLanguage].defaultCode);
+    setInput('');
     setOutput('');
   };
 
@@ -469,6 +519,27 @@ const OnlineCompiler = () => {
                   </button>
                 </div>
               </div>
+
+              {/* Input Field for Python/Java */}
+              {(selectedLanguage === 'python' || selectedLanguage === 'java') && (
+                <div className="mb-4">
+                  <div className="bg-white/20 dark:bg-gray-900/40 backdrop-blur-xl rounded-xl border border-white/20 dark:border-gray-700/20 overflow-hidden">
+                    <div className="p-3 border-b border-white/10 dark:border-gray-700/20 bg-white/10 dark:bg-gray-800/20">
+                      <h3 className="font-medium text-gray-900 dark:text-white">
+                        Input (stdin)
+                      </h3>
+                    </div>
+                    <div className="p-4">
+                      <textarea
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Enter input for your program (optional)..."
+                        className="w-full h-20 bg-transparent border border-white/20 dark:border-gray-700/20 rounded-lg p-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Editor and Output Panels */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-[calc(100%-5rem)]">

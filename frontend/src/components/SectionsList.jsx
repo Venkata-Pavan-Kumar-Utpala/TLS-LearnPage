@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { GraduationCap, BookOpen, Award } from "lucide-react";
+import { GraduationCap, BookOpen, Award, Code } from "lucide-react";
 import SectionCard from "./SectionCard";
 
 const SectionsList = () => {
@@ -40,6 +40,19 @@ const SectionsList = () => {
       glowColor: "group-hover:shadow-purple-500/25",
       popular: false,
       features: ["50+ Challenges", "Multiple Difficulty Levels", "Solution Explanations"]
+    },
+    {
+      id: "compiler",
+      title: "Online Compiler",
+      subtitle: "Code Anywhere, Anytime",
+      description: "Write, compile, and run Python and Java code directly in your browser. No setup required, just pure coding experience.",
+      price: "Free",
+      cta: "Start Coding",
+      icon: Code,
+      gradient: "from-orange-500 to-red-500",
+      glowColor: "group-hover:shadow-orange-500/25",
+      popular: false,
+      features: ["Python & Java Support", "Real-time Execution", "No Installation Required"]
     },
     {
       id: "certification",
