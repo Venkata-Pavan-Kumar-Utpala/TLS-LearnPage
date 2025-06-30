@@ -41,27 +41,6 @@ print(f"Original: {numbers}")
 print(f"Squared: {squared}")`,
     monacoLanguage: 'python'
   },
-  javascript: {
-    id: 'javascript',
-    name: 'JavaScript',
-    icon: '🟨',
-    extension: '.js',
-    defaultCode: `// Welcome to JavaScript Online Compiler
-console.log("Hello, World!");
-
-// Try some basic operations
-const x = 10;
-const y = 20;
-const result = x + y;
-console.log(\`The sum of \${x} and \${y} is \${result}\`);
-
-// Array operations
-const numbers = [1, 2, 3, 4, 5];
-const squared = numbers.map(n => n * n);
-console.log("Original:", numbers);
-console.log("Squared:", squared);`,
-    monacoLanguage: 'javascript'
-  },
   java: {
     id: 'java',
     name: 'Java',
@@ -71,13 +50,13 @@ console.log("Squared:", squared);`,
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
-        
+
         // Try some basic operations
         int x = 10;
         int y = 20;
         int result = x + y;
         System.out.println("The sum of " + x + " and " + y + " is " + result);
-        
+
         // Array operations
         int[] numbers = {1, 2, 3, 4, 5};
         System.out.print("Original: ");
@@ -88,113 +67,6 @@ public class Main {
     }
 }`,
     monacoLanguage: 'java'
-  },
-  html: {
-    id: 'html',
-    name: 'HTML',
-    icon: '🌐',
-    extension: '.html',
-    defaultCode: `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML Online Editor</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-        }
-        h1 { color: #fff; text-align: center; }
-        .highlight { background: rgba(255, 255, 255, 0.2); padding: 10px; border-radius: 5px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Welcome to HTML Online Editor!</h1>
-        <p>This is a sample HTML page. You can edit the code and see the live preview.</p>
-        <div class="highlight">
-            <h3>Features:</h3>
-            <ul>
-                <li>Live HTML preview</li>
-                <li>CSS styling support</li>
-                <li>Responsive design</li>
-                <li>Modern UI elements</li>
-            </ul>
-        </div>
-    </div>
-</body>
-</html>`,
-    monacoLanguage: 'html'
-  },
-  css: {
-    id: 'css',
-    name: 'CSS',
-    icon: '🎨',
-    extension: '.css',
-    defaultCode: `/* Welcome to CSS Online Editor */
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.container {
-    max-width: 600px;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-h1 {
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 2.5em;
-    background: linear-gradient(45deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.card {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px 0;
-    border-left: 4px solid #667eea;
-}
-
-.button {
-    background: linear-gradient(45deg, #667eea, #764ba2);
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: transform 0.3s ease;
-}
-
-.button:hover {
-    transform: translateY(-2px);
-}`,
-    monacoLanguage: 'css'
   }
 };
 
@@ -205,7 +77,6 @@ const OnlineCompiler = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [code, setCode] = useState(LANGUAGES.python.defaultCode);
-  const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [isRunning, setIsRunning] = useState(false);
   const [editorTheme, setEditorTheme] = useState(theme === 'dark' ? 'vs-dark' : 'light');
@@ -218,7 +89,6 @@ const OnlineCompiler = () => {
   // Update code when language changes
   useEffect(() => {
     setCode(LANGUAGES[selectedLanguage].defaultCode);
-    setInput('');
     setOutput('');
   }, [selectedLanguage]);
 
@@ -242,21 +112,11 @@ const OnlineCompiler = () => {
     setOutput('Running code...\n');
 
     try {
-      if (selectedLanguage === 'html') {
-        setOutput('HTML code is rendered in the preview panel →');
-        setIsRunning(false);
-        return;
-      } else if (selectedLanguage === 'css') {
-        setOutput('CSS styles are applied in the preview panel →');
-        setIsRunning(false);
-        return;
-      }
-
       // For Python and Java, use the backend compiler API
       const result = await compilerAPI.compileCode({
         language: selectedLanguage,
         source_code: code,
-        stdin: input
+        stdin: ''
       });
 
       // Format the output
@@ -299,7 +159,6 @@ const OnlineCompiler = () => {
 
   const handleResetCode = () => {
     setCode(LANGUAGES[selectedLanguage].defaultCode);
-    setInput('');
     setOutput('');
   };
 
@@ -520,26 +379,7 @@ const OnlineCompiler = () => {
                 </div>
               </div>
 
-              {/* Input Field for Python/Java */}
-              {(selectedLanguage === 'python' || selectedLanguage === 'java') && (
-                <div className="mb-4">
-                  <div className="bg-white/20 dark:bg-gray-900/40 backdrop-blur-xl rounded-xl border border-white/20 dark:border-gray-700/20 overflow-hidden">
-                    <div className="p-3 border-b border-white/10 dark:border-gray-700/20 bg-white/10 dark:bg-gray-800/20">
-                      <h3 className="font-medium text-gray-900 dark:text-white">
-                        Input (stdin)
-                      </h3>
-                    </div>
-                    <div className="p-4">
-                      <textarea
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        placeholder="Enter input for your program (optional)..."
-                        className="w-full h-20 bg-transparent border border-white/20 dark:border-gray-700/20 rounded-lg p-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
+
 
               {/* Editor and Output Panels */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-[calc(100%-5rem)]">
@@ -587,32 +427,13 @@ const OnlineCompiler = () => {
                 <div className="bg-white/20 dark:bg-gray-900/40 backdrop-blur-xl rounded-xl border border-white/20 dark:border-gray-700/20 overflow-hidden">
                   <div className="p-3 border-b border-white/10 dark:border-gray-700/20 bg-white/10 dark:bg-gray-800/20">
                     <h3 className="font-medium text-gray-900 dark:text-white">
-                      {selectedLanguage === 'html' || selectedLanguage === 'css' ? 'Live Preview' : 'Output'}
+                      Output
                     </h3>
                   </div>
                   <div className="h-[calc(100%-3.5rem)] p-4 overflow-auto">
-                    {selectedLanguage === 'html' ? (
-                      <iframe
-                        srcDoc={code}
-                        className="w-full h-full border-0 bg-white rounded-lg"
-                        title="HTML Preview"
-                      />
-                    ) : selectedLanguage === 'css' ? (
-                      <div className="w-full h-full bg-white rounded-lg p-4">
-                        <style>{code}</style>
-                        <div className="container">
-                          <h1>CSS Preview</h1>
-                          <div className="card">
-                            <p>This is a preview of your CSS styles.</p>
-                            <button className="button">Sample Button</button>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <pre className="text-sm text-gray-900 dark:text-gray-100 font-mono whitespace-pre-wrap">
-                        {output || 'Click "Run" to execute your code...'}
-                      </pre>
-                    )}
+                    <pre className="text-sm text-gray-900 dark:text-gray-100 font-mono whitespace-pre-wrap">
+                      {output || 'Click "Run" to execute your code...'}
+                    </pre>
                   </div>
                 </div>
               </div>
