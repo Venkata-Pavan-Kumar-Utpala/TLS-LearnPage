@@ -13,6 +13,11 @@ import compilerRoutes from "./routes/compilerRoutes.js";
 dotenv.config();
 const app = express();
 
+// rapid api check
+if (!process.env.RAPIDAPI_KEY) {
+  console.error("RAPIDAPI_KEY is missing. Check your .env file.");
+}
+
 // CORS Configuration
 const corsOptions = {
   origin:
