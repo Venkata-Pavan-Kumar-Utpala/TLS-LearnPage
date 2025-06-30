@@ -60,10 +60,20 @@ module.exports = {
           '0%': { transform: 'translateY(-100px) rotate(0deg)', opacity: '1' },
           '70%': { opacity: '0.9' },
           '100%': { transform: 'translateY(1000px) rotate(360deg)', opacity: '0' }
+        },
+        scrollUp: {
+          '0%': { transform: 'translateY(0%)' },
+          '100%': { transform: 'translateY(-50%)' }
+        },
+        scrollDown: {
+          '0%': { transform: 'translateY(-50%)' },
+          '100%': { transform: 'translateY(0%)' }
         }
       },
       animation: {
         fall: 'fall 5s linear infinite',
+        'scroll-up': 'scrollUp 20s linear infinite',
+        'scroll-down': 'scrollDown 20s linear infinite',
       }
     },
   },
