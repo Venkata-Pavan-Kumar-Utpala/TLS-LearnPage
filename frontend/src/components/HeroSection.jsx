@@ -81,96 +81,158 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* Technology Icons - Bottom Center */}
+        {/* Technology Icons Marquee - Bottom Center */}
         <motion.div
-          className="flex justify-center items-center gap-10 md:gap-16 lg:gap-20 xl:gap-24 2xl:gap-28 mt-12 pb-6 flex-wrap"
+          className="w-full overflow-hidden mt-12 pb-6"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          {/* HTML5 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-            whileHover={{ scale: 1.1, y: -5 }}
-          >
-            <img
-              src="/html.png"
-              alt="HTML5"
-              className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
-            />
-          </motion.div>
+          <div className="relative">
+            {/* Marquee container */}
+            <motion.div
+              className="flex space-x-16 md:space-x-20 lg:space-x-24"
+              animate={{
+                x: [0, -100 * 6] // 6 technologies * 100px movement
+              }}
+              transition={{
+                x: {
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  duration: 20,
+                  ease: "linear",
+                },
+              }}
+              style={{
+                width: `${18 * 120}px` // 3 sets of 6 technologies
+              }}
+            >
+              {/* First set */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+                whileHover={{ scale: 1.1, y: -5 }}
+                className="flex-shrink-0"
+              >
+                <img
+                  src="/html.png"
+                  alt="HTML5"
+                  className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
+                />
+              </motion.div>
 
-          {/* CSS3 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
-            whileHover={{ scale: 1.1, y: -5 }}
-          >
-            <img
-              src="/css.png"
-              alt="CSS3"
-              className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
-            />
-          </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
+                whileHover={{ scale: 1.1, y: -5 }}
+                className="flex-shrink-0"
+              >
+                <img
+                  src="/css.png"
+                  alt="CSS3"
+                  className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
+                />
+              </motion.div>
 
-          {/* JavaScript */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.0, ease: [0.25, 0.46, 0.45, 0.94] }}
-            whileHover={{ scale: 1.1, y: -5 }}
-          >
-            <img
-              src="/js.png"
-              alt="JavaScript"
-              className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
-            />
-          </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.0, ease: [0.25, 0.46, 0.45, 0.94] }}
+                whileHover={{ scale: 1.1, y: -5 }}
+                className="flex-shrink-0"
+              >
+                <img
+                  src="/js.png"
+                  alt="JavaScript"
+                  className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
+                />
+              </motion.div>
 
-          {/* Python */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-            whileHover={{ scale: 1.1, y: -5 }}
-          >
-            <img
-              src="/python.png"
-              alt="Python"
-              className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
-            />
-          </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+                whileHover={{ scale: 1.1, y: -5 }}
+                className="flex-shrink-0"
+              >
+                <img
+                  src="/python.png"
+                  alt="Python"
+                  className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
+                />
+              </motion.div>
 
-          {/* Java */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-            whileHover={{ scale: 1.1, y: -5 }}
-          >
-            <img
-              src="/java.png"
-              alt="Java"
-              className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
-            />
-          </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                whileHover={{ scale: 1.1, y: -5 }}
+                className="flex-shrink-0"
+              >
+                <img
+                  src="/java.png"
+                  alt="Java"
+                  className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
+                />
+              </motion.div>
 
-          {/* C */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-            whileHover={{ scale: 1.1, y: -5 }}
-          >
-            <img
-              src="/c.png"
-              alt="C Programming"
-              className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
-            />
-          </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                whileHover={{ scale: 1.1, y: -5 }}
+                className="flex-shrink-0"
+              >
+                <img
+                  src="/c.png"
+                  alt="C Programming"
+                  className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg"
+                />
+              </motion.div>
+
+              {/* Second set (duplicate for seamless loop) */}
+              <motion.div whileHover={{ scale: 1.1, y: -5 }} className="flex-shrink-0">
+                <img src="/html.png" alt="HTML5" className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg" />
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.1, y: -5 }} className="flex-shrink-0">
+                <img src="/css.png" alt="CSS3" className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg" />
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.1, y: -5 }} className="flex-shrink-0">
+                <img src="/js.png" alt="JavaScript" className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg" />
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.1, y: -5 }} className="flex-shrink-0">
+                <img src="/python.png" alt="Python" className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg" />
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.1, y: -5 }} className="flex-shrink-0">
+                <img src="/java.png" alt="Java" className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg" />
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.1, y: -5 }} className="flex-shrink-0">
+                <img src="/c.png" alt="C Programming" className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg" />
+              </motion.div>
+
+              {/* Third set (duplicate for seamless loop) */}
+              <motion.div whileHover={{ scale: 1.1, y: -5 }} className="flex-shrink-0">
+                <img src="/html.png" alt="HTML5" className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg" />
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.1, y: -5 }} className="flex-shrink-0">
+                <img src="/css.png" alt="CSS3" className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg" />
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.1, y: -5 }} className="flex-shrink-0">
+                <img src="/js.png" alt="JavaScript" className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg" />
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.1, y: -5 }} className="flex-shrink-0">
+                <img src="/python.png" alt="Python" className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg" />
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.1, y: -5 }} className="flex-shrink-0">
+                <img src="/java.png" alt="Java" className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg" />
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.1, y: -5 }} className="flex-shrink-0">
+                <img src="/c.png" alt="C Programming" className="w-12 h-12 md:w-16 md:h-16 object-contain filter drop-shadow-lg" />
+              </motion.div>
+            </motion.div>
+          </div>
         </motion.div>
       </motion.div>
     </motion.div>

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Clock, Calendar, MessageCircle, Dot, ArrowRight } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
 import CourseCard from "../../components/CourseCard";
+import CourseLogosMarquee from "../../components/CourseLogosMarquee";
 import useInViewport from "../../hooks/useInViewport";
 import { courseAPI, dataAdapters, apiStatus } from "../../services/api";
 import {
