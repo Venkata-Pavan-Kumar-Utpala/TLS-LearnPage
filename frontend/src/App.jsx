@@ -6,12 +6,164 @@ import { ThemeProvider } from './context/ThemeContext'
 import { AuthProvider } from './context/AuthContext'
 import { AuthModalProvider } from './context/AuthModalContext'
 
-// Temporary components for testing
-const HomePage = () => (
-  <div className="min-h-screen pt-24 pb-16 bg-transparent dark:bg-transparent">
-    {/* Empty homepage - ready for content */}
-  </div>
-)
+// Import motion for animations and useInViewport hook
+import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
+import useInViewport from './hooks/useInViewport'
+
+// Homepage component
+const HomePage = () => {
+  const navigate = useNavigate()
+  const [headingRef, isHeadingInViewport] = useInViewport()
+  const [bottomTextRef, isBottomTextInViewport] = useInViewport()
+
+  return (
+    <div className="bg-transparent dark:bg-transparent">
+      {/* Top Section - Header, Subtitle, Button */}
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 relative">
+        {/* Main Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="text-center mb-12 z-10"
+        >
+          <h1
+            ref={headingRef}
+            className={`Marquee-title-no-border text-6xl md:text-7xl lg:text-8xl xl:text-9xl tracking-[0.15em] mb-6 ${isHeadingInViewport ? 'in-viewport' : ''}`}
+            style={{
+              letterSpacing: '0.15em'
+            }}
+          >
+            TECHLEARN
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 font-medium mb-8">
+            The platform loved by student coders.
+          </p>
+
+          {/* Start for Free Button */}
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            onClick={() => navigate('/learn')}
+            className="bg-white hover:bg-gray-50 text-gray-900 px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          >
+            Start for Free
+          </motion.button>
+        </motion.div>
+
+        {/* Placeholder spanning from bottom 30% of first page */}
+        <div className="absolute bottom-0 left-0 right-0 flex justify-center z-0">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="h-[30vh] w-full max-w-4xl mx-6"
+          >
+            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-t-3xl shadow-xl border border-white/20 dark:border-gray-700/20 h-full w-full">
+              {/* Empty placeholder content - top part */}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Second Page - Placeholder continues here (70%) */}
+      <div className="min-h-screen relative flex justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="h-[70vh] w-full max-w-4xl mx-6"
+        >
+          <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-b-3xl shadow-xl border border-white/20 dark:border-gray-700/20 h-full w-full">
+            {/* Empty placeholder content - bottom part */}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Heading Section - Right after placeholder */}
+      <div className="pt-4 pb-8 flex justify-center px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="text-center"
+        >
+          <h2
+            ref={bottomTextRef}
+            className={`Marquee-title-no-border ${isBottomTextInViewport ? 'in-viewport' : ''} max-w-6xl mx-auto`}
+          >
+            We turn curious students into confident, real-world coders.
+          </h2>
+        </motion.div>
+      </div>
+
+      {/* Three Cards Section - LEARN, BUILD, GROW */}
+      <div className="py-16 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* LEARN Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="relative"
+            >
+              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/20 h-80 w-full">
+                {/* Empty placeholder content */}
+              </div>
+              <div className="text-center mt-6">
+                <h3 className="text-2xl md:text-3xl font-bold text-blue-900 dark:text-blue-100 italic">
+                  LEARN
+                </h3>
+              </div>
+            </motion.div>
+
+            {/* BUILD Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="relative"
+            >
+              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/20 h-80 w-full">
+                {/* Empty placeholder content */}
+              </div>
+              <div className="text-center mt-6">
+                <h3 className="text-2xl md:text-3xl font-bold text-blue-900 dark:text-blue-100 italic">
+                  BUILD
+                </h3>
+              </div>
+            </motion.div>
+
+            {/* GROW Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="relative"
+            >
+              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/20 h-80 w-full">
+                {/* Empty placeholder content */}
+              </div>
+              <div className="text-center mt-6">
+                <h3 className="text-2xl md:text-3xl font-bold text-blue-900 dark:text-blue-100 italic">
+                  GROW
+                </h3>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Text Section - Empty for now */}
+      <div className="min-h-screen flex items-center justify-center px-6">
+        {/* Additional content can go here */}
+      </div>
+    </div>
+  )
+}
 
 const BuildPage = () => (
   <div className="min-h-screen pt-24 pb-16 flex items-center justify-center bg-transparent dark:bg-transparent">
