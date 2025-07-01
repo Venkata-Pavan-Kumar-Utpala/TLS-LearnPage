@@ -30,21 +30,22 @@ app.use(express.json());
 app.use(
   "/CoreJava_Images",
   express.static("backend/markdown-content/CoreJava/CoreJava_Images")
-)(
-  // Connect to DB
-  async () => {
-    try {
-      await connectDB();
-      await seedCoreJavaCourse();
-      await insertMarkdownContent();
+);
+// Static files for markdown content
 
-      const PORT = process.env.PORT || 3000;
-      app.listen(PORT, () => console.log(`Server running`));
-    } catch (error) {
-      console.error("MongoDB connection failed:", error.message);
-    }
+// Connect to DB
+(async () => {
+  try {
+    await connectDB();
+    await seedCoreJavaCourse();
+    await insertMarkdownContent();
+
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`Server running`));
+  } catch (error) {
+    console.error("MongoDB connection failed:", error.message);
   }
-)();
+})();
 
 // Routes
 app.use("/api/exercises", exerciseRoutes);
