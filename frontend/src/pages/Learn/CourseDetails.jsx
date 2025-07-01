@@ -31,19 +31,43 @@ const CourseDetails = () => {
         const backendCourse = await courseAPI.getCourse(courseId);
         console.log('Course details from backend:', backendCourse);
 
+        // Get course-specific duration
+        const getCourseDuration = (title) => {
+          switch (title) {
+            case 'Java Programming': return '4 weeks';
+            case 'Python Programming': return '6 weeks';
+            case 'Data Structures & Algorithms': return '8 weeks';
+            case 'MySQL Database': return '3 weeks';
+            default: return '6 weeks';
+          }
+        };
+
+        // Determine course status and pricing based on title
+        const getCourseStatus = (title) => {
+          const titleLower = title.toLowerCase();
+          if (titleLower.includes('java') || titleLower.includes('python')) {
+            return { status: 'available', price: 'Free' };
+          } else {
+            return { status: 'coming_soon', price: 'Coming Soon' };
+          }
+        };
+
+        const courseStatus = getCourseStatus(backendCourse.title);
+
         // Create enhanced course object with default values for missing fields
         const enhancedCourse = {
           ...backendCourse,
           id: backendCourse._id,
           longDescription: backendCourse.description || 'Learn programming concepts and build practical skills with this comprehensive course.',
           difficulty: backendCourse.level || 'Beginner',
-          duration: '8 weeks', // Default values since backend doesn't have these
+          duration: getCourseDuration(backendCourse.title),
           lessons: backendCourse.topics?.length || 0,
           students: 1250, // Default value
           rating: 4.8, // Default value
-          price: 'Free', // Default value
+          status: courseStatus.status,
+          price: courseStatus.price,
           instructor: {
-            name: 'Expert Instructor',
+            name: 'Prashanti Vasi',
             bio: 'Experienced developer and educator with years of industry experience',
             avatar: '/api/placeholder/100/100'
           },
@@ -172,12 +196,6 @@ const CourseDetails = () => {
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyColor(course.difficulty)}`}>
                     {course.difficulty}
                   </span>
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {course.rating} ({course.students} students)
-                    </span>
-                  </div>
                 </div>
 
                 <h1
@@ -221,30 +239,41 @@ const CourseDetails = () => {
                 <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                   {course.price}
                 </div>
-                {course.price === "Free" && (
-                  <p className="text-green-600 dark:text-green-400 font-medium">
-                    Limited time offer
-                  </p>
-                )}
               </div>
 
-              <button
-                onClick={handleStartCourse}
-                className="w-full h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-xl transition-all duration-300 hover:shadow-lg flex items-center justify-center gap-3 group mb-6"
-              >
-                <Play className="w-5 h-5" />
-                <span>Start Learning</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-              </button>
+              {course.status === 'coming_soon' ? (
+                <motion.button
+                  disabled
+                  className="w-full h-14 bg-gray-400 text-white border-none rounded-lg cursor-not-allowed inline-flex items-center justify-center gap-2 transition-all duration-300 font-sans mb-6 opacity-60"
+                >
+                  <Clock className="w-5 h-5" />
+                  <span>Coming Soon</span>
+                </motion.button>
+              ) : (
+                <motion.button
+                  onClick={handleStartCourse}
+                  whileHover={{
+                    x: 2,
+                    transition: { duration: 0.2, ease: "easeOut" }
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full h-14 bg-emerald-600 hover:bg-emerald-500 text-white border-none rounded-lg cursor-pointer inline-flex items-center justify-center gap-2 transition-all duration-300 font-sans mb-6"
+                >
+                  <Play className="w-5 h-5" />
+                  <span>Start Learning</span>
+                  <motion.div
+                    whileHover={{ x: 4 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.div>
+                </motion.button>
+              )}
 
               <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-4 h-4 text-green-500" />
                   <span>Lifetime access</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span>Certificate of completion</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-4 h-4 text-green-500" />

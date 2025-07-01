@@ -102,7 +102,7 @@ const ExercisesList = () => {
 
   return (
     <div className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Back Button */}
         <motion.button
           initial={{ opacity: 0, x: -20 }}
@@ -120,35 +120,35 @@ const ExercisesList = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20 mb-8"
+          className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-4 sm:p-6 lg:p-8 shadow-lg border border-white/20 dark:border-gray-700/20 mb-6 sm:mb-8"
         >
-          <div className="flex items-start justify-between mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 mb-4 sm:mb-6">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2 break-words">
                 {course?.title || 'Course Exercises'}
               </h1>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4">
                 {course?.description || 'Practice your coding skills with these exercises'}
               </p>
-              <div className="flex items-center gap-4">
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyColor(course?.level)}`}>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+                <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getDifficultyColor(course?.level)}`}>
                   {course?.level}
                 </span>
                 <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
-                  <Code className="w-4 h-4" />
-                  <span>{exercises.length} Exercises</span>
+                  <Code className="w-3 sm:w-4 h-3 sm:h-4" />
+                  <span className="text-xs sm:text-sm">{exercises.length} Exercises</span>
                 </div>
                 <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
-                  <Trophy className="w-4 h-4" />
-                  <span>{exercises.reduce((sum, ex) => sum + ex.xp, 0)} Total XP</span>
+                  <Trophy className="w-3 sm:w-4 h-3 sm:h-4" />
+                  <span className="text-xs sm:text-sm">{exercises.reduce((sum, ex) => sum + ex.xp, 0)} Total XP</span>
                 </div>
               </div>
             </div>
-            <div className="text-right">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="text-center sm:text-right flex-shrink-0">
+              <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                 {getProgressPercentage()}%
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Complete</div>
+              <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Complete</div>
             </div>
           </div>
 
@@ -174,40 +174,40 @@ const ExercisesList = () => {
               onClick={() => handleExerciseClick(exercise)}
               className={`group cursor-pointer ${exercise.locked && (!isAuthenticated || !user?.isClubMember) ? 'opacity-60' : ''}`}
             >
-              <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-                <div className="flex items-center justify-between">
+              <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-xl p-4 sm:p-6 shadow-lg border border-white/20 dark:border-gray-700/20 hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                   {/* Exercise Info */}
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                     <div className="flex-shrink-0">
                       {exercise.completed ? (
-                        <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
-                          <CheckCircle className="w-6 h-6 text-white" />
+                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-green-500 rounded-xl flex items-center justify-center">
+                          <CheckCircle className="w-5 sm:w-6 h-5 sm:h-6 text-white" />
                         </div>
                       ) : exercise.locked && (!isAuthenticated || !user?.isClubMember) ? (
-                        <div className="w-12 h-12 bg-gray-400 rounded-xl flex items-center justify-center">
-                          <Lock className="w-6 h-6 text-white" />
+                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gray-400 rounded-xl flex items-center justify-center">
+                          <Lock className="w-5 sm:w-6 h-5 sm:h-6 text-white" />
                         </div>
                       ) : (
-                        <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
-                          <Play className="w-6 h-6 text-white" />
+                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+                          <Play className="w-5 sm:w-6 h-5 sm:h-6 text-white" />
                         </div>
                       )}
                     </div>
 
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 truncate">
                         {exercise.title}
                       </h3>
-                      <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                         <span className={`px-2 py-1 rounded-full ${getDifficultyColor(exercise.difficulty)}`}>
                           {exercise.difficulty}
                         </span>
                         <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
+                          <Clock className="w-3 sm:w-4 h-3 sm:h-4" />
                           <span>{exercise.estimatedTime}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Trophy className="w-4 h-4" />
+                          <Trophy className="w-3 sm:w-4 h-3 sm:h-4" />
                           <span>{exercise.xp} XP</span>
                         </div>
                       </div>
@@ -215,10 +215,10 @@ const ExercisesList = () => {
                   </div>
 
                   {/* Status & Action */}
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-end gap-2 sm:gap-4 flex-shrink-0">
                     {exercise.locked && (!isAuthenticated || !user?.isClubMember) && (
                       <div className="text-right">
-                        <div className="text-sm font-medium text-orange-600 dark:text-orange-400">
+                        <div className="text-xs sm:text-sm font-medium text-orange-600 dark:text-orange-400">
                           {!isAuthenticated ? 'Login Required' : 'Club Member Only'}
                         </div>
                         <div className="text-xs text-gray-500">
@@ -226,11 +226,11 @@ const ExercisesList = () => {
                         </div>
                       </div>
                     )}
-                    
+
                     {exercise.completed && (
                       <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
-                        <Star className="w-4 h-4 fill-current" />
-                        <span className="text-sm font-medium">Completed</span>
+                        <Star className="w-3 sm:w-4 h-3 sm:h-4 fill-current" />
+                        <span className="text-xs sm:text-sm font-medium">Completed</span>
                       </div>
                     )}
                   </div>

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Clock, Calendar, MessageCircle, Dot, ArrowRight } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
 import CourseCard from "../../components/CourseCard";
+import CourseLogosMarquee from "../../components/CourseLogosMarquee";
 import useInViewport from "../../hooks/useInViewport";
 import { courseAPI, dataAdapters, apiStatus } from "../../services/api";
 import {
@@ -54,142 +55,119 @@ const Courses = () => {
   // Fallback mock data (in case backend is not available)
   const mockCoursesData = [
     {
+      id: "java",
+      title: "Java Programming",
+      description: "Master Java programming and object-oriented concepts",
+      gradient: "from-blue-500 via-cyan-400 to-teal-400",
+      icon: "☕",
+      image: "/java.png",
+      status: "available",
+      price: "Free"
+    },
+    {
       id: "python",
-      title: "Python",
+      title: "Python Programming",
       description: "Learn Python programming from basics to advanced concepts",
-      gradient: "from-yellow-400 via-orange-400 to-blue-500",
-      icon: "🐍"
+      gradient: "from-blue-500 via-cyan-400 to-teal-400",
+      icon: "🐍",
+      image: "/python.png",
+      status: "available",
+      price: "Free"
     },
     {
-      id: "data-science",
-      title: "Data Science",
-      description: "Master data analysis, visualization, and machine learning",
-      gradient: "from-purple-500 via-pink-500 to-purple-600",
-      icon: "📊"
+      id: "dsa",
+      title: "Data Structures & Algorithms",
+      description: "Master DSA concepts for coding interviews and problem solving",
+      gradient: "from-blue-500 via-cyan-400 to-teal-400",
+      icon: "🧠",
+      image: "/dsa.png",
+      status: "coming_soon",
+      price: "Coming Soon"
     },
     {
-      id: "machine-learning",
-      title: "Machine Learning",
-      description: "Build intelligent systems with ML algorithms",
-      gradient: "from-green-400 via-teal-500 to-green-600",
-      icon: "🤖"
-    },
-    {
-      id: "web-development",
-      title: "Web Development",
-      description: "Create modern web applications with latest technologies",
-      gradient: "from-blue-500 via-blue-600 to-blue-700",
-      icon: "🌐"
+      id: "mysql",
+      title: "MySQL Database",
+      description: "Learn database design, queries, and management with MySQL",
+      gradient: "from-blue-500 via-cyan-400 to-teal-400",
+      icon: "🗄️",
+      image: "/mysql.png",
+      status: "coming_soon",
+      price: "Coming Soon"
     }
   ];
 
   // Live Batches data
   const liveBatches = [
     {
-      id: "beginner-python",
-      title: "Beginner Python",
-      instructor: "Michael Chen",
-      duration: "6 weeks",
-      schedule: "Tue, Thu",
-      time: "8:00 PM - 10:00 PM IST",
-      startDate: "20/01/2024",
-      price: "₹5000",
-      description: "Kickstart your coding journey with Python. No prior experience needed—join live interactive classes.",
-      level: "Beginner"
-    },
-    {
-      id: "data-science-essentials",
-      title: "Data Science Essentials",
-      instructor: "Sarah Johnson",
-      duration: "8 weeks",
-      schedule: "Mon, Wed",
-      time: "7:00 PM - 9:00 PM IST",
-      startDate: "25/01/2024",
-      price: "₹7000",
-      description: "Master essential data skills: analysis, visualization, machine learning. Practical, project-led, and live.",
-      level: "Intermediate"
-    },
-    {
-      id: "machine-learning-bootcamp",
-      title: "Machine Learning Bootcamp",
-      instructor: "Dr. Alex Rodriguez",
-      duration: "10 weeks",
-      schedule: "Sat, Sun",
-      time: "10:00 AM - 12:00 PM IST",
-      startDate: "27/01/2024",
-      price: "₹9500",
-      description: "Deep dive into ML algorithms, neural networks, and AI. Build real-world projects with industry datasets.",
-      level: "Advanced"
-    },
-    {
-      id: "web-development-starter",
-      title: "Web Development Starter",
-      instructor: "Lisa Park",
-      duration: "5 weeks",
-      schedule: "Tue, Thu",
-      time: "6:00 PM - 8:00 PM IST",
-      startDate: "22/01/2024",
+      id: "python-programming",
+      title: "Python Programming",
+      instructor: "Prashanti Vasi",
+      duration: "2 weeks",
+      schedule: "Mon-Sat",
+      time: "11:30 AM - 12:30 PM",
+      startDate: "In Progress",
       price: "₹4000",
-      description: "Learn HTML, CSS, JavaScript from scratch. Build responsive websites and modern web applications.",
+      description: "Master Python fundamentals with live interactive classes. Learn programming concepts and build practical skills.",
       level: "Beginner"
     },
     {
-      id: "react-mastery",
-      title: "React Mastery",
-      instructor: "David Kim",
-      duration: "7 weeks",
-      schedule: "Mon, Wed, Fri",
-      time: "8:30 PM - 10:00 PM IST",
-      startDate: "29/01/2024",
-      price: "₹6500",
-      description: "Master React.js, hooks, state management, and modern frontend development patterns.",
+      id: "dsa-with-java",
+      title: "DSA with Java",
+      instructor: "Prashanti Vasi",
+      duration: "3 weeks",
+      schedule: "Mon-Sat",
+      time: "10:00 AM - 11:00 AM",
+      startDate: "In Progress",
+      price: "₹6000",
+      description: "Deep dive into Data Structures and Algorithms using Java. Build problem-solving skills with real-world projects.",
       level: "Intermediate"
     },
     {
-      id: "nodejs-backend",
-      title: "Node.js Backend Development",
-      instructor: "Emily Watson",
-      duration: "9 weeks",
-      schedule: "Tue, Thu",
-      time: "9:00 PM - 11:00 PM IST",
-      startDate: "01/02/2024",
-      price: "₹8000",
-      description: "Build scalable backend APIs with Node.js, Express, MongoDB, and modern deployment strategies.",
-      level: "Advanced"
+      id: "dsa-with-python",
+      title: "DSA with Python",
+      instructor: "Prashanti Vasi",
+      duration: "3 weeks",
+      schedule: "Mon-Sat",
+      time: "10:00 AM - 11:00 AM",
+      startDate: "In Progress",
+      price: "₹6000",
+      description: "Master Data Structures and Algorithms with Python. Learn efficient coding patterns and optimization techniques.",
+      level: "Intermediate"
     },
     {
-      id: "fullstack-mern",
-      title: "Full Stack MERN",
-      instructor: "Michael Chen",
-      duration: "12 weeks",
-      schedule: "Sat, Sun",
-      time: "2:00 PM - 5:00 PM IST",
-      startDate: "03/02/2024",
-      price: "₹12000",
-      description: "Complete MERN stack development: MongoDB, Express, React, Node.js. Build production-ready applications.",
-      level: "Advanced"
+      id: "web-development",
+      title: "Web Development",
+      instructor: "Jyotsna",
+      duration: "3 weeks",
+      schedule: "Mon-Sat",
+      time: "6:00 PM - 7:00 PM",
+      startDate: "In Progress",
+      price: "₹4000",
+      description: "Learn modern web development from scratch. Build responsive websites and web applications.",
+      level: "Beginner"
     },
     {
-      id: "devops-essentials",
-      title: "DevOps Essentials",
-      instructor: "James Wilson",
-      duration: "6 weeks",
-      schedule: "Wed, Fri",
-      time: "7:30 PM - 9:30 PM IST",
-      startDate: "05/02/2024",
-      price: "₹7500",
-      description: "Learn Docker, Kubernetes, CI/CD pipelines, and cloud deployment for modern development workflows.",
+      id: "java-core",
+      title: "Java (Core)",
+      instructor: "Prashanti Vasi",
+      duration: "TBD",
+      schedule: "Mon-Sat",
+      time: "(Not listed)",
+      startDate: "In Progress",
+      price: "₹6000",
+      description: "Master Java programming fundamentals. Learn object-oriented programming and build robust applications.",
       level: "Intermediate"
     }
   ];
 
   const handleCourseClick = (courseId) => {
+    // Allow navigation to all course details pages
     navigate(`/learn/courses/${courseId}`);
   };
 
   const handleWhatsAppClick = (courseTitle) => {
     const message = `Hi! I'm interested in the ${courseTitle} course. Can you provide more details?`;
-    const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/919676663136?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -231,7 +209,8 @@ const Courses = () => {
             {loading && (
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 animate-pulse">
+                  <div key={i} className="bg-white/90 dark:bg-gray-800/90 rounded-2xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-600/50 animate-pulse">
+                    <div className="h-48 bg-gray-300 dark:bg-gray-600 rounded-xl mb-4"></div>
                     <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded mb-4"></div>
                     <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded mb-2"></div>
                     <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
@@ -272,13 +251,21 @@ const Courses = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{
+                  x: 2,
+                  transition: { duration: 0.2, ease: "easeOut" }
+                }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => navigate('/learn/courses/all')}
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-xl transition-all duration-300 hover:shadow-lg flex items-center gap-3"
+                className="bg-emerald-600 hover:bg-emerald-500 text-white border-none px-4 py-2 text-base rounded-lg cursor-pointer inline-flex items-center gap-2 transition-all duration-300 font-sans"
               >
                 <span>View All Courses</span>
-                <ArrowRight className="w-5 h-5" />
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </motion.div>
               </motion.button>
             </div>
           </motion.div>
@@ -371,7 +358,7 @@ const LiveBatchCard = ({ batch, index, onWhatsAppClick, onGetStarted }) => {
         type: "spring",
         stiffness: 100
       }}
-      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-white/20 dark:border-gray-700/20 cursor-pointer h-full flex flex-col"
+      className="bg-white/80 dark:bg-gray-800/80 rounded-2xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer h-full flex flex-col"
     >
       {/* Header - Fixed height section */}
       <div className="mb-6">

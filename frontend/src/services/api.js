@@ -131,11 +131,13 @@ export const courseAPI = {
       if (!actualQuizId) {
         console.log('Quiz ID not provided, fetching from course data...');
         const courseData = await courseAPI.getCourse(courseId);
-        const topic = courseData.topics?.find(t => t._id === topicId);
+        const topic = courseData.topics?.find(t => t._id === topicId || t.topicId === topicId);
         actualQuizId = topic?.quizId;
 
         if (!actualQuizId) {
-          throw new Error('Quiz ID not found for this topic');
+          console.error('Quiz ID not found in course data. Course topics:', courseData.topics);
+          console.error('Looking for topicId:', topicId);
+          throw new Error('Quiz ID not found for this topic. Please ensure the quiz data is properly seeded.');
         }
       }
 
@@ -167,7 +169,8 @@ export const progressAPI = {
     const response = await fetch(`${API_BASE}/user-progress`, {
       headers: getAuthHeaders(),
     });
-    return handleResponse(response);
+    const data = await handleResponse(response);
+    return dataAdapters.adaptUserProgress(data);
   },
 };
 
@@ -241,31 +244,108 @@ export const exerciseAPI = {
     });
     return handleResponse(response);
   },
+
+  // Submit code for execution (exercise-specific)
+  submitCode: async (courseId, exerciseId, codeData) => {
+    const response = await fetch(`${API_BASE}/exercises/${courseId}/${exerciseId}/submit-code`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(codeData),
+    });
+    return handleResponse(response);
+  },
+};
+
+// Compiler API
+export const compilerAPI = {
+  // Compile and execute code
+  compileCode: async (codeData) => {
+    const response = await fetch(`${API_BASE}/compiler/compile`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(codeData),
+    });
+    return handleResponse(response);
+  },
 };
 
 // Data Adapters - Transform backend data to frontend format
 export const dataAdapters = {
   // Adapt course data from backend to frontend format
   adaptCourse: (backendCourse) => {
-    // Default gradients and icons for different course types
+    // Default gradients, icons, and images for different course types
     const getDefaultVisuals = (title) => {
       const titleLower = title.toLowerCase();
-      if (titleLower.includes('javascript')) {
-        return { gradient: 'from-yellow-400 via-orange-400 to-red-500', icon: '⚡' };
+      if (titleLower.includes('java') && !titleLower.includes('javascript')) {
+        return {
+          gradient: 'from-blue-500 via-cyan-400 to-teal-400',
+          icon: '☕',
+          image: '/java.png'
+        };
       } else if (titleLower.includes('python')) {
-        return { gradient: 'from-blue-400 via-green-400 to-yellow-500', icon: '🐍' };
-      } else if (titleLower.includes('java')) {
-        return { gradient: 'from-red-500 via-orange-500 to-yellow-500', icon: '☕' };
+        return {
+          gradient: 'from-blue-500 via-cyan-400 to-teal-400',
+          icon: '🐍',
+          image: '/python.png'
+        };
+      } else if (titleLower.includes('dsa') || titleLower.includes('data structures') || titleLower.includes('algorithms')) {
+        return {
+          gradient: 'from-blue-500 via-cyan-400 to-teal-400',
+          icon: '🧠',
+          image: '/dsa.png'
+        };
+      } else if (titleLower.includes('mysql') || titleLower.includes('database')) {
+        return {
+          gradient: 'from-blue-500 via-cyan-400 to-teal-400',
+          icon: '🗄️',
+          image: '/mysql.png'
+        };
+      } else if (titleLower.includes('javascript')) {
+        return {
+          gradient: 'from-blue-500 via-cyan-400 to-teal-400',
+          icon: '⚡',
+          image: '/js.png'
+        };
       } else if (titleLower.includes('c++')) {
-        return { gradient: 'from-blue-600 via-purple-600 to-blue-800', icon: '⚙️' };
-      } else if (titleLower.includes('c ')) {
-        return { gradient: 'from-gray-500 via-blue-500 to-gray-700', icon: '🔧' };
+        return {
+          gradient: 'from-blue-500 via-cyan-400 to-teal-400',
+          icon: '⚙️',
+          image: '/c.png'
+        };
+      } else if (titleLower.includes('c ') || titleLower.includes('c programming')) {
+        return {
+          gradient: 'from-blue-500 via-cyan-400 to-teal-400',
+          icon: '🔧',
+          image: '/c.png'
+        };
+      } else if (titleLower.includes('html') || titleLower.includes('css')) {
+        return {
+          gradient: 'from-blue-500 via-cyan-400 to-teal-400',
+          icon: '🌐',
+          image: '/html.png'
+        };
       } else {
-        return { gradient: 'from-purple-500 via-pink-500 to-purple-600', icon: '📚' };
+        return {
+          gradient: 'from-blue-500 via-cyan-400 to-teal-400',
+          icon: '📚',
+          image: '/python.png' // Default fallback
+        };
       }
     };
 
     const visuals = getDefaultVisuals(backendCourse.title);
+
+    // Determine course status and pricing based on title
+    const getCourseStatus = (title) => {
+      const titleLower = title.toLowerCase();
+      if (titleLower.includes('java') || titleLower.includes('python')) {
+        return { status: 'available', price: 'Free' };
+      } else {
+        return { status: 'coming_soon', price: 'Coming Soon' };
+      }
+    };
+
+    const courseStatus = getCourseStatus(backendCourse.title);
 
     return {
       id: backendCourse._id,
@@ -274,7 +354,9 @@ export const dataAdapters = {
       level: backendCourse.level,
       gradient: visuals.gradient,
       icon: visuals.icon,
-      price: "Free", // Default to free for now since backend doesn't have pricing
+      image: visuals.image,
+      status: courseStatus.status,
+      price: courseStatus.price,
       difficulty: backendCourse.level, // Add difficulty alias for filtering
       topics: backendCourse.topics?.map(topic => ({
         id: topic.topicId || topic._id,
@@ -303,12 +385,15 @@ export const dataAdapters = {
   // Adapt user progress data
   adaptUserProgress: (backendProgress) => ({
     userId: backendProgress.userId,
-    courseXP: Object.fromEntries(backendProgress.courseXP || new Map()),
-    exerciseXP: Object.fromEntries(backendProgress.exerciseXP || new Map()),
+    courseXP: backendProgress.courseXP || {},
+    exerciseXP: backendProgress.exerciseXP || {},
     totalCourseXP: backendProgress.totalCourseXP || 0,
     totalExerciseXP: backendProgress.totalExerciseXP || 0,
+    // Note: Backend /user-progress endpoint doesn't return these fields
+    // They exist in the model but are not included in the response
     completedQuizzes: backendProgress.completedQuizzes || [],
     completedExercises: backendProgress.completedExercises || [],
+    answeredQuestions: backendProgress.answeredQuestions || {},
   }),
 };
 
@@ -358,6 +443,7 @@ export default {
   progressAPI,
   exerciseAPI,
   paymentAPI,
+  compilerAPI,
   dataAdapters,
   apiStatus,
   API_ERRORS,

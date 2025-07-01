@@ -1,34 +1,25 @@
 import express from "express";
 import mongoose from "mongoose";
+import axios from "axios";
 import Exercise from "../models/Exercise.js";
 import UserProgress from "../models/UserProgress.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// POST /api/exercises/:courseId/:exerciseId/submit
+// Submit Exercise + Award XP
 router.post("/:courseId/:exerciseId/submit", protect, async (req, res) => {
   const { courseId, exerciseId } = req.params;
   const userId = req.user._id;
 
   try {
-    // Validate IDs
-    if (!mongoose.Types.ObjectId.isValid(courseId)) {
-      return res.status(400).json({ error: "Invalid course ID" });
-    }
-    if (!mongoose.Types.ObjectId.isValid(exerciseId)) {
-      return res.status(400).json({ error: "Invalid exercise ID" });
+    if (!mongoose.Types.ObjectId.isValid(courseId) || !mongoose.Types.ObjectId.isValid(exerciseId)) {
+      return res.status(400).json({ error: "Invalid course or exercise ID" });
     }
 
-    // Check if exercise exists and belongs to the course
     const exercise = await Exercise.findOne({ _id: exerciseId, courseId });
-    if (!exercise) {
-      return res
-        .status(404)
-        .json({ error: "Exercise not found for this course" });
-    }
+    if (!exercise) return res.status(404).json({ error: "Exercise not found" });
 
-    // Get or create user progress
     let progress = await UserProgress.findOne({ userId });
     if (!progress) {
       progress = new UserProgress({
@@ -43,38 +34,73 @@ router.post("/:courseId/:exerciseId/submit", protect, async (req, res) => {
       });
     }
 
-    // Check if already completed
-    if (
-      progress.completedExercises.some((id) => id.toString() === exerciseId)
-    ) {
+    if (progress.completedExercises.some(id => id.toString() === exerciseId)) {
       return res.status(400).json({ message: "Exercise already completed" });
     }
 
-    // Award XP (make it configurable in the future)
     const xpToAdd = 10;
     const currentXP = progress.exerciseXP.get(courseId) || 0;
     progress.exerciseXP.set(courseId, currentXP + xpToAdd);
-    // Note: totalExerciseXP will be calculated in getUserProgress for consistency
-
-    // Mark as completed
     progress.completedExercises.push(new mongoose.Types.ObjectId(exerciseId));
-
     await progress.save();
 
-    // Calculate current total exercise XP for response
-    let totalExerciseXP = 0;
-    for (const xp of progress.exerciseXP.values()) {
-      totalExerciseXP += xp;
-    }
+    const totalExerciseXP = [...progress.exerciseXP.values()].reduce((sum, val) => sum + val, 0);
 
     res.status(200).json({
       message: "Exercise completed successfully",
       addedXP: xpToAdd,
-      totalExerciseXP: totalExerciseXP,
+      totalExerciseXP,
     });
   } catch (err) {
     console.error("Submit error:", err);
     res.status(500).json({ error: "Exercise submission failed" });
+  }
+});
+
+//Submit Code to Judge0
+router.post("/:courseId/:exerciseId/submit-code", protect, async (req, res) => {
+  const { courseId, exerciseId } = req.params;
+  const { language, code, input } = req.body;
+
+  const languageMap = {
+    python: 71,
+    java: 62,
+  };
+
+  const languageId = languageMap[language?.toLowerCase()];
+  if (!languageId) {
+    return res.status(400).json({ error: "Unsupported language" });
+  }
+
+  try {
+    const submission = await axios.post(
+      "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true",
+      {
+        source_code: code,
+        stdin: input || "",
+        language_id: languageId,
+      },
+      {
+        headers: {
+          "x-rapidapi-key": process.env.RAPIDAPI_KEY,
+          "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const result = submission.data;
+    return res.status(200).json({
+      stdout: result.stdout,
+      stderr: result.stderr,
+      compile_output: result.compile_output,
+      status: result.status,
+      time: result.time,
+      memory: result.memory,
+    });
+  } catch (err) {
+    console.error("Judge0 error:", err.message);
+    return res.status(500).json({ error: "Code execution failed" });
   }
 });
 

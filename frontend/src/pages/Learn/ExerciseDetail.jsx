@@ -7,7 +7,7 @@ import {
   Clock, CheckCircle, Copy, RotateCcw, Send,
   FileText, Terminal, Settings, Folder, ChevronRight,
   ChevronDown, Circle, Square, Maximize2, Minimize2,
-  MoreHorizontal, Search, GitBranch, Bug
+  MoreHorizontal, Search, GitBranch, Bug, ChevronLeft
 } from 'lucide-react';
 import { exerciseAPI } from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
@@ -77,6 +77,50 @@ This simple line of code will output "Hello, World!" to the console.
     { id: 'compiler', label: 'Compiler', icon: Code },
     { id: 'preview', label: 'Live Preview', icon: Eye }
   ];
+
+  // Navigation functions for mobile slide
+  const getCurrentTabIndex = () => tabs.findIndex(tab => tab.id === activeTab);
+
+  const goToPreviousTab = () => {
+    const currentIndex = getCurrentTabIndex();
+    const previousIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
+    setActiveTab(tabs[previousIndex].id);
+  };
+
+  const goToNextTab = () => {
+    const currentIndex = getCurrentTabIndex();
+    const nextIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
+    setActiveTab(tabs[nextIndex].id);
+  };
+
+  // Touch/swipe functionality for mobile
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      goToNextTab();
+    } else if (isRightSwipe) {
+      goToPreviousTab();
+    }
+  };
 
   useEffect(() => {
     const fetchExercise = async () => {
@@ -206,6 +250,43 @@ This simple line of code will output "Hello, World!" to the console.
 
   return (
     <div className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+      {/* Custom Scrollbar Styles */}
+      <style jsx>{`
+        /* Custom scrollbar for mobile and desktop */
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+          height: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.1);
+          border-radius: 2px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #3b82f6;
+          border-radius: 2px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #2563eb;
+        }
+
+        /* For Firefox */
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: #3b82f6 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 768px) {
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 2px;
+            height: 2px;
+          }
+        }
+      `}</style>
+
       <div className="max-w-7xl mx-auto px-6">
         {/* Back Button */}
         <motion.button
@@ -256,25 +337,85 @@ This simple line of code will output "Hello, World!" to the console.
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="flex gap-2 mb-6"
+          className="mb-6"
         >
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            return (
+          {/* Desktop Tab Navigation */}
+          <div className="hidden md:flex gap-2">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
+                    activeTab === tab.id
+                      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200 border border-blue-200/50 dark:border-blue-700/50'
+                      : 'bg-white/60 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 border border-white/20 dark:border-gray-700/20'
+                  } backdrop-blur-xl`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Mobile Tab Navigation with Slide Controls */}
+          <div className="md:hidden">
+            {/* Current Tab Display with Navigation Arrows */}
+            <div className="flex items-center justify-between bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-xl border border-white/20 dark:border-gray-700/20 p-4">
               <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-                  activeTab === tab.id
-                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200 border border-blue-200/50 dark:border-blue-700/50'
-                    : 'bg-white/60 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 border border-white/20 dark:border-gray-700/20'
-                } backdrop-blur-xl`}
+                onClick={goToPreviousTab}
+                className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
               >
-                <Icon className="w-4 h-4" />
-                <span>{tab.label}</span>
+                <ChevronLeft className="w-5 h-5" />
               </button>
-            );
-          })}
+
+              <div className="flex items-center gap-3">
+                {(() => {
+                  const currentTab = tabs.find(tab => tab.id === activeTab);
+                  const Icon = currentTab.icon;
+                  return (
+                    <>
+                      <Icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {currentTab.label}
+                      </span>
+                    </>
+                  );
+                })()}
+              </div>
+
+              <button
+                onClick={goToNextTab}
+                className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Tab Indicator Dots */}
+            <div className="flex justify-center gap-2 mt-3">
+              {tabs.map((tab, index) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    activeTab === tab.id
+                      ? 'bg-blue-600 dark:bg-blue-400 w-6'
+                      : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Swipe Hint */}
+            <div className="text-center mt-2">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Swipe left or right to navigate tabs
+              </p>
+            </div>
+          </div>
         </motion.div>
 
         {/* Tab Content */}
@@ -284,10 +425,13 @@ This simple line of code will output "Hello, World!" to the console.
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/20 overflow-hidden"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
         >
           {/* Theory Tab */}
           {activeTab === 'theory' && (
-            <div className="p-8">
+            <div className="p-8 h-[700px] overflow-auto custom-scrollbar">
               <div className="prose prose-lg dark:prose-invert max-w-none">
                 <div className="whitespace-pre-wrap text-gray-800 dark:text-gray-200">
                   {exercise?.theory}
@@ -445,7 +589,7 @@ This simple line of code will output "Hello, World!" to the console.
 
               {/* Terminal Output */}
               <div className="h-[calc(100%-3.5rem)] bg-gray-900 text-white font-mono text-sm">
-                <div className="p-4 h-full overflow-auto">
+                <div className="p-4 h-full overflow-auto custom-scrollbar">
                   {output ? (
                     <>
                       <div className="text-green-400 mb-2">$ node main.js</div>

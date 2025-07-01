@@ -83,7 +83,7 @@ export const getUserProgress = async (req, res) => {
 
   try {
     const userProgress = await UserProgress.findOne({ userId }).select(
-      "courseXP exerciseXP totalCourseXP totalExerciseXP"
+      "courseXP exerciseXP totalCourseXP totalExerciseXP completedQuizzes"
     );
 
     if (!userProgress) {
@@ -119,6 +119,7 @@ export const getUserProgress = async (req, res) => {
       exerciseXP: exerciseXPObject,
       totalCourseXP: recalculatedTotalCourseXP,
       totalExerciseXP: recalculatedTotalExerciseXP,
+      completedQuizzes: userProgress.completedQuizzes || [],
     });
   } catch (err) {
     console.error("User Progress Fetch Error:", err.message);

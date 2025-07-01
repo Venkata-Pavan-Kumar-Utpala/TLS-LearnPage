@@ -135,7 +135,7 @@ const Navbar = () => {
           {/* Dark Mode Toggle - Desktop */}
           <button
             onClick={toggleTheme}
-            className={`text-[15px] transition-colors duration-300 ${
+            className={`text-[15px] transition-colors duration-300 p-1.5 ${
               isDarkMode
                 ? 'text-[#e0e6f5] hover:text-white'
                 : 'text-[#00184f]'
@@ -249,7 +249,7 @@ const Navbar = () => {
         {/* Dark Mode Toggle - Mobile */}
         <button
           onClick={toggleTheme}
-          className={`text-[15px] transition-colors duration-300 ${
+          className={`text-[15px] transition-colors duration-300 p-1.5 ${
             isDarkMode
               ? 'text-[#e0e6f5] hover:text-white'
               : 'text-[#00184f]'
