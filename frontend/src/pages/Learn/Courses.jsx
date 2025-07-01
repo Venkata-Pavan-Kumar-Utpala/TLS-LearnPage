@@ -60,7 +60,9 @@ const Courses = () => {
       description: "Master Java programming and object-oriented concepts",
       gradient: "from-blue-500 via-cyan-400 to-teal-400",
       icon: "☕",
-      image: "/java.png"
+      image: "/java.png",
+      status: "available",
+      price: "Free"
     },
     {
       id: "python",
@@ -68,7 +70,9 @@ const Courses = () => {
       description: "Learn Python programming from basics to advanced concepts",
       gradient: "from-blue-500 via-cyan-400 to-teal-400",
       icon: "🐍",
-      image: "/python.png"
+      image: "/python.png",
+      status: "available",
+      price: "Free"
     },
     {
       id: "dsa",
@@ -76,7 +80,9 @@ const Courses = () => {
       description: "Master DSA concepts for coding interviews and problem solving",
       gradient: "from-blue-500 via-cyan-400 to-teal-400",
       icon: "🧠",
-      image: "/dsa.png"
+      image: "/dsa.png",
+      status: "coming_soon",
+      price: "Coming Soon"
     },
     {
       id: "mysql",
@@ -84,7 +90,9 @@ const Courses = () => {
       description: "Learn database design, queries, and management with MySQL",
       gradient: "from-blue-500 via-cyan-400 to-teal-400",
       icon: "🗄️",
-      image: "/mysql.png"
+      image: "/mysql.png",
+      status: "coming_soon",
+      price: "Coming Soon"
     }
   ];
 
@@ -153,6 +161,7 @@ const Courses = () => {
   ];
 
   const handleCourseClick = (courseId) => {
+    // Allow navigation to all course details pages
     navigate(`/learn/courses/${courseId}`);
   };
 

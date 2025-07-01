@@ -335,6 +335,18 @@ export const dataAdapters = {
 
     const visuals = getDefaultVisuals(backendCourse.title);
 
+    // Determine course status and pricing based on title
+    const getCourseStatus = (title) => {
+      const titleLower = title.toLowerCase();
+      if (titleLower.includes('java') || titleLower.includes('python')) {
+        return { status: 'available', price: 'Free' };
+      } else {
+        return { status: 'coming_soon', price: 'Coming Soon' };
+      }
+    };
+
+    const courseStatus = getCourseStatus(backendCourse.title);
+
     return {
       id: backendCourse._id,
       title: backendCourse.title,
@@ -343,7 +355,8 @@ export const dataAdapters = {
       gradient: visuals.gradient,
       icon: visuals.icon,
       image: visuals.image,
-      price: "Free", // Default to free for now since backend doesn't have pricing
+      status: courseStatus.status,
+      price: courseStatus.price,
       difficulty: backendCourse.level, // Add difficulty alias for filtering
       topics: backendCourse.topics?.map(topic => ({
         id: topic.topicId || topic._id,

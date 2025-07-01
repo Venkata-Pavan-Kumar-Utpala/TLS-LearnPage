@@ -5,6 +5,7 @@ import AnimatedLogo from "./AnimatedLogo";
 
 const CourseCard = ({ course, index, onClick }) => {
   const [titleRef, isTitleInViewport] = useInViewport();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

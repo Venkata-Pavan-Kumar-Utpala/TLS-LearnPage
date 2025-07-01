@@ -42,6 +42,18 @@ const CourseDetails = () => {
           }
         };
 
+        // Determine course status and pricing based on title
+        const getCourseStatus = (title) => {
+          const titleLower = title.toLowerCase();
+          if (titleLower.includes('java') || titleLower.includes('python')) {
+            return { status: 'available', price: 'Free' };
+          } else {
+            return { status: 'coming_soon', price: 'Coming Soon' };
+          }
+        };
+
+        const courseStatus = getCourseStatus(backendCourse.title);
+
         // Create enhanced course object with default values for missing fields
         const enhancedCourse = {
           ...backendCourse,
@@ -52,7 +64,8 @@ const CourseDetails = () => {
           lessons: backendCourse.topics?.length || 0,
           students: 1250, // Default value
           rating: 4.8, // Default value
-          price: 'Free', // Default value
+          status: courseStatus.status,
+          price: courseStatus.price,
           instructor: {
             name: 'Prashanti Vasi',
             bio: 'Experienced developer and educator with years of industry experience',
@@ -228,24 +241,34 @@ const CourseDetails = () => {
                 </div>
               </div>
 
-              <motion.button
-                onClick={handleStartCourse}
-                whileHover={{
-                  x: 2,
-                  transition: { duration: 0.2, ease: "easeOut" }
-                }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full h-14 bg-emerald-600 hover:bg-emerald-500 text-white border-none rounded-lg cursor-pointer inline-flex items-center justify-center gap-2 transition-all duration-300 font-sans mb-6"
-              >
-                <Play className="w-5 h-5" />
-                <span>Start Learning</span>
-                <motion.div
-                  whileHover={{ x: 4 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
+              {course.status === 'coming_soon' ? (
+                <motion.button
+                  disabled
+                  className="w-full h-14 bg-gray-400 text-white border-none rounded-lg cursor-not-allowed inline-flex items-center justify-center gap-2 transition-all duration-300 font-sans mb-6 opacity-60"
                 >
-                  <ArrowRight className="w-5 h-5" />
-                </motion.div>
-              </motion.button>
+                  <Clock className="w-5 h-5" />
+                  <span>Coming Soon</span>
+                </motion.button>
+              ) : (
+                <motion.button
+                  onClick={handleStartCourse}
+                  whileHover={{
+                    x: 2,
+                    transition: { duration: 0.2, ease: "easeOut" }
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full h-14 bg-emerald-600 hover:bg-emerald-500 text-white border-none rounded-lg cursor-pointer inline-flex items-center justify-center gap-2 transition-all duration-300 font-sans mb-6"
+                >
+                  <Play className="w-5 h-5" />
+                  <span>Start Learning</span>
+                  <motion.div
+                    whileHover={{ x: 4 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.div>
+                </motion.button>
+              )}
 
               <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
                 <div className="flex items-center gap-3">
