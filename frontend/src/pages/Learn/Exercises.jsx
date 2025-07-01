@@ -73,7 +73,7 @@ const Exercises = () => {
 
   return (
     <div className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -127,7 +127,7 @@ const Exercises = () => {
                 </div>
 
                 {/* Course Cards */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   {levelCourses.map((course, index) => (
                     <motion.div
                       key={course._id}
@@ -137,7 +137,7 @@ const Exercises = () => {
                       onClick={() => handleCourseClick(course._id)}
                       className="group cursor-pointer"
                     >
-                      <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-600/50 hover:shadow-xl transition-all duration-300 hover:scale-105">
+                      <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-200/50 dark:border-gray-600/50 hover:shadow-xl transition-all duration-300 hover:scale-105">
                         {/* Course Header */}
                         <div className="flex items-start justify-between mb-4">
                           <div className={`p-3 rounded-xl bg-gradient-to-r ${getCategoryColor(course.level)} text-white`}>
@@ -146,33 +146,33 @@ const Exercises = () => {
                         </div>
 
                         {/* Course Info */}
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 line-clamp-2">
                           {course.title}
                         </h3>
-                        <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
                           {course.description || 'Practice coding exercises and improve your skills'}
                         </p>
 
                         {/* Exercise Stats */}
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-4">
+                          <div className="flex items-center gap-3 sm:gap-4 text-sm text-gray-600 dark:text-gray-400">
                             <div className="flex items-center gap-1">
                               <Code className="w-4 h-4" />
-                              <span>10 Exercises</span>
+                              <span className="text-xs sm:text-sm">10 Exercises</span>
                             </div>
                             <div className="flex items-center gap-1">
                               <Trophy className="w-4 h-4" />
-                              <span>100 XP</span>
+                              <span className="text-xs sm:text-sm">100 XP</span>
                             </div>
                           </div>
                           <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
-                            <span className="text-sm font-medium">4 Free</span>
+                            <span className="text-xs sm:text-sm font-medium">4 Free</span>
                           </div>
                         </div>
 
                         {/* Action Button */}
-                        <button className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 text-blue-800 dark:text-blue-200 font-medium rounded-xl transition-all duration-300 border border-blue-200/50 dark:border-blue-700/50">
-                          <span>Start Practicing</span>
+                        <button className="w-full flex items-center justify-center gap-2 py-2.5 sm:py-3 px-3 sm:px-4 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 text-blue-800 dark:text-blue-200 font-medium rounded-xl transition-all duration-300 border border-blue-200/50 dark:border-blue-700/50">
+                          <span className="text-sm sm:text-base">Start Practicing</span>
                           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                         </button>
                       </div>

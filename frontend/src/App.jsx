@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
@@ -10,6 +11,7 @@ import { AuthModalProvider } from './context/AuthModalContext'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import useInViewport from './hooks/useInViewport'
+import FloatingCodeWords from './components/FloatingCodeWords'
 
 // Homepage component
 const HomePage = () => {
@@ -17,47 +19,80 @@ const HomePage = () => {
   const [headingRef, isHeadingInViewport] = useInViewport()
   const [bottomTextRef, isBottomTextInViewport] = useInViewport()
 
+  // Typewriter effect state
+  const [displayedText, setDisplayedText] = useState("")
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const fullText = "TECHLEARN"
+
+  // Typewriter effect
+  useEffect(() => {
+    if (currentIndex < fullText.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText(prev => prev + fullText[currentIndex])
+        setCurrentIndex(prev => prev + 1)
+      }, 200) // 200ms delay between each character
+
+      return () => clearTimeout(timeout)
+    }
+  }, [currentIndex, fullText])
+
   return (
     <div className="bg-transparent dark:bg-transparent">
-      {/* Top Section - Header, Subtitle, Button */}
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 relative">
-        {/* Main Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="text-center mb-12 z-10"
-        >
+      {/* Hero Section - Fresh start with perfect centering */}
+      <div className="h-[70vh] flex flex-col items-center justify-center px-6 relative overflow-hidden">
+        {/* Floating Code Words Background Effect */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <FloatingCodeWords />
+        </div>
+
+        {/* Content Container - Above floating words */}
+        <div className="relative z-10 flex flex-col items-center justify-center">
+          {/* TECHLEARN Heading with True Typewriter Effect */}
           <h1
             ref={headingRef}
-            className={`Marquee-title-no-border text-6xl md:text-7xl lg:text-8xl xl:text-9xl tracking-[0.15em] mb-6 ${isHeadingInViewport ? 'in-viewport' : ''}`}
-            style={{
-              letterSpacing: '0.15em'
-            }}
+            className={`Marquee-title-no-border text-6xl md:text-7xl lg:text-8xl xl:text-9xl tracking-[0.15em] text-center mb-6 ${isHeadingInViewport ? 'in-viewport' : ''}`}
+            style={{ letterSpacing: '0.15em' }}
           >
-            TECHLEARN
+            {displayedText}
+            {currentIndex < fullText.length && (
+              <motion.span
+                animate={{ opacity: [1, 0, 1] }}
+                transition={{
+                  duration: 0.8,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="text-blue-500"
+              >
+                |
+              </motion.span>
+            )}
           </h1>
-          <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 font-medium mb-8">
-            The platform loved by student coders.
-          </p>
 
-          {/* Start for Free Button */}
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-            onClick={() => navigate('/learn')}
-            className="bg-white hover:bg-gray-50 text-gray-900 px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-          >
-            Start for Free
-          </motion.button>
-        </motion.div>
+        {/* Subtitle */}
+        <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 font-medium text-center mb-8">
+          The platform loved by student coders.
+        </p>
 
-
+        {/* Start for Free Button */}
+        <button
+          onClick={() => navigate('/learn')}
+          className="bg-white hover:bg-gray-50 text-gray-900 px-8 py-3 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+        >
+          Start for Free
+        </button>
+        </div>
       </div>
 
-      {/* Second Page - 3D Code Editor continues here */}
-      <div className="min-h-screen relative flex justify-center items-center" style={{perspective: '1000px'}}>
+      {/* 3D Code Editor Section - Flows right after hero */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.0, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+        id="code-editor-section"
+        className="relative flex justify-center items-center"
+        style={{perspective: '1000px'}}
+      >
         <motion.div
           initial={{ opacity: 0, rotateX: 45 }}
           whileInView={{ opacity: 1, rotateX: 0 }}
@@ -134,7 +169,7 @@ const HomePage = () => {
 </html>`}
           </div>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Heading Section - Right after placeholder */}
       <div className="pt-4 pb-8 flex justify-center px-6">
@@ -319,10 +354,6 @@ const HomePage = () => {
           </motion.div>
         </div>
       </div>
-
-
-
-
     </div>
   )
 }

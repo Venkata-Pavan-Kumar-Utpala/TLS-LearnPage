@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useInViewport from "../hooks/useInViewport";
-import FloatingCodeWords from "./FloatingCodeWords";
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -17,10 +16,6 @@ const HeroSection = () => {
       animate={{ filter: "blur(0px)" }}
       transition={{ duration: 1.2, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
-      {/* Floating Code Words Background Effect */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <FloatingCodeWords />
-      </div>
       <motion.div
         className="container px-4 py-12 mx-auto max-w-7xl relative z-20"
         initial={{ scale: 0.95, opacity: 0 }}
