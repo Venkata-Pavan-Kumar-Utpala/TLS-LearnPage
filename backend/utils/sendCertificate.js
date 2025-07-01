@@ -1,9 +1,15 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 // Sends certificate (with buffer) after successful course completion
-export const sendCertificate = async ({ name, email, courseName, xp, buffer }) => {
+export const sendCertificate = async ({
+  name,
+  email,
+  courseName,
+  xp,
+  buffer,
+}) => {
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
@@ -23,7 +29,7 @@ export const sendCertificate = async ({ name, email, courseName, xp, buffer }) =
       {
         filename: `${courseName}-${name}.pdf`,
         content: buffer,
-        contentType: 'application/pdf',
+        contentType: "application/pdf",
       },
     ],
   };
@@ -34,8 +40,8 @@ export const sendCertificate = async ({ name, email, courseName, xp, buffer }) =
 // Sends simple payment status update
 export const sendPaymentStatusEmail = async ({ user, status }) => {
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    host: 'smtp.gmail.com',
+    service: "gmail",
+    host: "smtp.gmail.com",
     port: 587,
     auth: {
       user: process.env.EMAIL_USER,
@@ -44,22 +50,21 @@ export const sendPaymentStatusEmail = async ({ user, status }) => {
   });
 
   let mailOptions;
-  if (status === 'approved') {
+  if (status === "approved") {
     mailOptions = {
       from: `<${process.env.EMAIL_USER}>`,
       to: user.email,
-      subject: 'Your Certificate is Ready!',
+      subject: "Your Certificate is Ready!",
       text: `Congratulations ${user.firstName}, your payment is approved. Certificate attached.`,
     };
   } else {
     mailOptions = {
       from: `<${process.env.EMAIL_USER}>`,
       to: user.email,
-      subject: 'Certificate Rejected',
+      subject: "Certificate Rejected",
       text: `Sorry ${user.firstName}, There were issues with your payment. Please contact support.`,
     };
   }
 
   await transporter.sendMail(mailOptions);
 };
-

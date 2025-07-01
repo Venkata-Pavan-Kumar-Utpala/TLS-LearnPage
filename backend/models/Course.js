@@ -38,6 +38,7 @@ const courseSchema = new mongoose.Schema(
         notesId: {
           type: mongoose.Schema.Types.ObjectId, // pointer for the notes model
           ref: "Notes",
+          select: false,
         },
       },
     ],

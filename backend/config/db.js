@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import Course from "../models/Course.js";
 import Quiz from "../models/Quiz.js";
-import { sampleCourses, quizQuestions } from "./sampleCourseData.js";
 dotenv.config();
 export const connectDB = async () => {
   try {
@@ -24,7 +23,7 @@ export const seedCourses = async () => {
       return;
     }
 
-    await Course.insertMany(sampleCourses);
+    // await Course.insertMany(sampleCourses);
     console.log("Sample courses seeded");
   } catch (error) {
     console.error("Error seeding courses:", error.message);

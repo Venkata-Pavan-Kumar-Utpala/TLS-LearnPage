@@ -57,7 +57,8 @@ export const initiatePayment = async (req, res) => {
     const eligibilityData = await getEligibilityData(userId, courseId);
 
     if (!eligibilityData.eligible) {
-      return res.status(400).json({
+      // Use 200 OK for eligibility check, even if not eligible
+      return res.status(200).json({
         message:
           "Not eligible for certificate yet. Complete all quizzes and exercises first.",
         eligible: false,
