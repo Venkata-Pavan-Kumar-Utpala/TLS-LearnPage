@@ -72,8 +72,8 @@ module.exports = {
       },
       animation: {
         fall: 'fall 5s linear infinite',
-        'scroll-up': 'scrollUp 20s linear infinite',
-        'scroll-down': 'scrollDown 20s linear infinite',
+        'scroll-up': 'scrollUp 7s linear infinite',
+        'scroll-down': 'scrollDown 7s linear infinite',
       }
     },
   },

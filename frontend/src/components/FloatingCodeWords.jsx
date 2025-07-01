@@ -21,10 +21,10 @@ const FloatingCodeWords = () => {
       text: word,
       id: index,
       left: 5 + Math.random() * 90,
-      // Distribute starting positions across a much larger vertical range
-      initialTop: -100 - (Math.random() * 1000), // Start from -100px to -1100px
-      duration: 3 + Math.random() * 6,
-      delay: Math.random() * 20, // Even longer delays (0-20s)
+      // Distribute starting positions across an even larger vertical range for extended fall
+      initialTop: -200 - (Math.random() * 1500), // Start from -200px to -1700px
+      duration: 4 + Math.random() * 8, // Longer duration for extended fall
+      delay: Math.random() * 25, // Even longer delays (0-25s)
     }));
     setWords(generatedWords);
   }, []);
@@ -69,7 +69,7 @@ const FloatingCodeWords = () => {
             opacity: 0.7;
           }
           100% {
-            transform: translateY(calc(100vh + 200px));
+            transform: translateY(calc(70vh + 600px + 200px));
             opacity: 0;
           }
         }
@@ -80,7 +80,7 @@ const FloatingCodeWords = () => {
             opacity: 0.5;
           }
           100% {
-            transform: translateY(calc(100vh + 200px));
+            transform: translateY(calc(70vh + 600px + 200px));
             opacity: 0.5;
           }
         }

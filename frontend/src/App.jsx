@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
@@ -8,7 +8,7 @@ import { AuthProvider } from './context/AuthContext'
 import { AuthModalProvider } from './context/AuthModalContext'
 
 // Import motion for animations and useInViewport hook
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import useInViewport from './hooks/useInViewport'
 import FloatingCodeWords from './components/FloatingCodeWords'
@@ -16,45 +16,103 @@ import FloatingCodeWords from './components/FloatingCodeWords'
 // Homepage component
 const HomePage = () => {
   const navigate = useNavigate()
-  const [headingRef, isHeadingInViewport] = useInViewport()
   const [bottomTextRef, isBottomTextInViewport] = useInViewport()
 
   // Typewriter effect state
   const [displayedText, setDisplayedText] = useState("")
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [isTyping, setIsTyping] = useState(false)
   const fullText = "TECHLEARN"
+  const headingRef = useRef(null)
 
-  // Typewriter effect
+  // Card popup state
+  const [selectedCard, setSelectedCard] = useState(null)
+
+  // Card data
+  const cardData = {
+    LEARN: {
+      title: "LEARN",
+      description: "Master programming fundamentals with our comprehensive courses",
+      features: ["Interactive Tutorials", "Hands-on Projects", "Expert Mentorship", "Progress Tracking"],
+      color: "from-blue-400 to-blue-600"
+    },
+    BUILD: {
+      title: "BUILD",
+      description: "Create real-world projects and build your portfolio",
+      features: ["Project-Based Learning", "Code Reviews", "Industry Standards", "Portfolio Development"],
+      color: "from-purple-400 to-purple-600"
+    },
+    GROW: {
+      title: "GROW",
+      description: "Advance your career with placement support and networking",
+      features: ["Career Guidance", "Interview Prep", "Job Placement", "Professional Network"],
+      color: "from-emerald-400 to-emerald-600"
+    }
+  }
+
+  // Custom viewport detection for typewriter - triggers every time
   useEffect(() => {
-    if (currentIndex < fullText.length) {
+    const element = headingRef.current
+    if (!element) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isTyping) {
+          // Start typewriter effect
+          setIsTyping(true)
+          setDisplayedText("")
+          setCurrentIndex(0)
+        } else if (!entry.isIntersecting && isTyping) {
+          // Reset when out of viewport
+          setIsTyping(false)
+          setDisplayedText("")
+          setCurrentIndex(0)
+        }
+      },
+      {
+        threshold: 0.3, // Trigger when 30% of element is visible
+        rootMargin: '0px'
+      }
+    )
+
+    observer.observe(element)
+    return () => observer.unobserve(element)
+  }, [isTyping])
+
+  // Typewriter animation
+  useEffect(() => {
+    if (isTyping && currentIndex < fullText.length) {
       const timeout = setTimeout(() => {
         setDisplayedText(prev => prev + fullText[currentIndex])
         setCurrentIndex(prev => prev + 1)
       }, 200) // 200ms delay between each character
 
       return () => clearTimeout(timeout)
+    } else if (isTyping && currentIndex >= fullText.length) {
+      // Animation complete, but keep isTyping true to prevent retriggering
+      // until element leaves viewport
     }
-  }, [currentIndex, fullText])
+  }, [currentIndex, fullText, isTyping])
 
   return (
-    <div className="bg-transparent dark:bg-transparent">
-      {/* Hero Section - Fresh start with perfect centering */}
-      <div className="h-[70vh] flex flex-col items-center justify-center px-6 relative overflow-hidden">
-        {/* Floating Code Words Background Effect */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <FloatingCodeWords />
-        </div>
+    <div className="bg-transparent dark:bg-transparent relative">
+      {/* Extended Floating Code Words Background Effect - Covers hero + code editor */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ height: 'calc(70vh + 600px)' }}>
+        <FloatingCodeWords />
+      </div>
 
+      {/* Hero Section - Fresh start with perfect centering */}
+      <div className="h-[70vh] flex flex-col items-center justify-center px-6 relative">
         {/* Content Container - Above floating words */}
         <div className="relative z-10 flex flex-col items-center justify-center">
           {/* TECHLEARN Heading with True Typewriter Effect */}
           <h1
             ref={headingRef}
-            className={`Marquee-title-no-border text-6xl md:text-7xl lg:text-8xl xl:text-9xl tracking-[0.15em] text-center mb-6 ${isHeadingInViewport ? 'in-viewport' : ''}`}
+            className="Marquee-title-no-border text-6xl md:text-7xl lg:text-8xl xl:text-9xl tracking-[0.15em] text-center mb-6"
             style={{ letterSpacing: '0.15em' }}
           >
             {displayedText}
-            {currentIndex < fullText.length && (
+            {isTyping && currentIndex < fullText.length && (
               <motion.span
                 animate={{ opacity: [1, 0, 1] }}
                 transition={{
@@ -172,16 +230,16 @@ const HomePage = () => {
       </motion.div>
 
       {/* Heading Section - Right after placeholder */}
-      <div className="pt-4 pb-8 flex justify-center px-6">
+      <div className="pt-16 pb-8 px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="text-center"
+          className="max-w-6xl mx-auto text-center"
         >
           <h2
             ref={bottomTextRef}
-            className={`Marquee-title-no-border ${isBottomTextInViewport ? 'in-viewport' : ''} max-w-6xl mx-auto`}
+            className={`text-xl md:text-2xl lg:text-3xl font-bold ${isBottomTextInViewport ? 'in-viewport' : ''} brand-heading-primary`}
           >
             We turn curious students into confident, real-world coders.
           </h2>
@@ -191,88 +249,133 @@ const HomePage = () => {
       {/* Three Cards Section - LEARN, BUILD, GROW */}
       <div className="py-16 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* LEARN Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="relative"
-            >
-              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/20 h-80 w-full">
-                {/* Empty placeholder content */}
-              </div>
-              <div className="text-center mt-6">
-                <h3 className="text-2xl md:text-3xl font-bold text-blue-900 dark:text-blue-100 italic">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="h-80 w-full overflow-hidden font-sans flex items-center justify-center"
+          >
+            <div className="flex h-full w-full">
+              {/* LEARN Card */}
+              <div
+                onClick={() => setSelectedCard('LEARN')}
+                className="h-full flex-1 flex items-center justify-center font-semibold tracking-wide transition-all duration-100 ease-linear cursor-pointer text-white hover:flex-[2] hover:shadow-[rgba(255,255,255,0.5)_0px_7px_29px_0px]"
+                style={{ backgroundColor: 'rgba(102, 181, 255, 0.35)' }}
+              >
+                <span className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white drop-shadow-lg brand-heading-primary hover-gradient-text">
                   LEARN
-                </h3>
+                </span>
               </div>
-            </motion.div>
 
-            {/* BUILD Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="relative"
-            >
-              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/20 h-80 w-full">
-                {/* Empty placeholder content */}
-              </div>
-              <div className="text-center mt-6">
-                <h3 className="text-2xl md:text-3xl font-bold text-blue-900 dark:text-blue-100 italic">
+              {/* BUILD Card */}
+              <div
+                onClick={() => setSelectedCard('BUILD')}
+                className="h-full flex-1 flex items-center justify-center font-semibold tracking-wide transition-all duration-100 ease-linear cursor-pointer text-white hover:flex-[2] hover:shadow-[rgba(255,255,255,0.5)_0px_7px_29px_0px]"
+                style={{ backgroundColor: 'rgba(51, 140, 255, 0.35)' }}
+              >
+                <span className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white drop-shadow-lg brand-heading-primary hover-gradient-text">
                   BUILD
-                </h3>
+                </span>
               </div>
-            </motion.div>
 
-            {/* GROW Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="relative"
-            >
-              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/20 h-80 w-full">
-                {/* Empty placeholder content */}
-              </div>
-              <div className="text-center mt-6">
-                <h3 className="text-2xl md:text-3xl font-bold text-blue-900 dark:text-blue-100 italic">
+              {/* GROW Card */}
+              <div
+                onClick={() => setSelectedCard('GROW')}
+                className="h-full flex-1 flex items-center justify-center font-semibold tracking-wide transition-all duration-100 ease-linear cursor-pointer text-white hover:flex-[2] hover:shadow-[rgba(255,255,255,0.5)_0px_7px_29px_0px]"
+                style={{ backgroundColor: 'rgba(0, 102, 255, 0.35)' }}
+              >
+                <span className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white drop-shadow-lg brand-heading-primary hover-gradient-text">
                   GROW
-                </h3>
+                </span>
               </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </div>
       </div>
+
+      {/* Card Details Popup */}
+      <AnimatePresence>
+        {selectedCard && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedCard(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+              transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20 max-w-lg w-full p-8"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedCard(null)}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-200/50 dark:bg-gray-700/50 flex items-center justify-center hover:bg-gray-300/50 dark:hover:bg-gray-600/50 transition-colors"
+              >
+                <span className="text-gray-600 dark:text-gray-300 text-lg">×</span>
+              </button>
+
+            {/* Card Content */}
+            <div className="text-center">
+              <h3 className={`text-4xl font-bold mb-4 bg-gradient-to-r ${cardData[selectedCard].color} bg-clip-text text-transparent`}>
+                {cardData[selectedCard].title}
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 text-lg mb-6">
+                {cardData[selectedCard].description}
+              </p>
+
+              {/* Features List */}
+              <div className="space-y-3">
+                {cardData[selectedCard].features.map((feature, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-center gap-3"
+                  >
+                    <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${cardData[selectedCard].color}`}></div>
+                    <span className="text-gray-600 dark:text-gray-400">{feature}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Learn Reviews Section */}
       <div className="min-h-screen flex flex-col md:flex-row overflow-hidden">
         {/* Left column scrolling up */}
         <div className="flex-1 flex flex-col justify-start items-center overflow-hidden relative">
           <div className="flex flex-col gap-5 animate-scroll-up">
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-5 min-h-[100px] w-70 shadow-xl border border-white/20 dark:border-gray-700/20">
+            <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-lg rounded-3xl p-5 min-h-[100px] w-70 shadow-sm border border-white/5 dark:border-gray-700/5">
               <div className="font-bold mb-2 text-gray-800 dark:text-gray-200">Ananya</div>
               <div className="text-gray-600 dark:text-gray-300">I loved the training experience. Super clear and helpful!</div>
             </div>
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-5 min-h-[100px] w-70 shadow-xl border border-white/20 dark:border-gray-700/20">
+            <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-lg rounded-3xl p-5 min-h-[100px] w-70 shadow-sm border border-white/5 dark:border-gray-700/5">
               <div className="font-bold mb-2 text-gray-800 dark:text-gray-200">Rohan</div>
               <div className="text-gray-600 dark:text-gray-300">Got my dream job thanks to these placement sessions.</div>
             </div>
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-5 min-h-[100px] w-70 shadow-xl border border-white/20 dark:border-gray-700/20">
+            <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-lg rounded-3xl p-5 min-h-[100px] w-70 shadow-sm border border-white/5 dark:border-gray-700/5">
               <div className="font-bold mb-2 text-gray-800 dark:text-gray-200">Priya</div>
               <div className="text-gray-600 dark:text-gray-300">Mentors are supportive, practical sessions are on point.</div>
             </div>
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-5 min-h-[100px] w-70 shadow-xl border border-white/20 dark:border-gray-700/20">
+            <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-lg rounded-3xl p-5 min-h-[100px] w-70 shadow-sm border border-white/5 dark:border-gray-700/5">
               <div className="font-bold mb-2 text-gray-800 dark:text-gray-200">Arjun</div>
               <div className="text-gray-600 dark:text-gray-300">Practical sessions rock! I feel so confident now.</div>
             </div>
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-5 min-h-[100px] w-70 shadow-xl border border-white/20 dark:border-gray-700/20">
+            <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-lg rounded-3xl p-5 min-h-[100px] w-70 shadow-sm border border-white/5 dark:border-gray-700/5">
               <div className="font-bold mb-2 text-gray-800 dark:text-gray-200">Simran</div>
               <div className="text-gray-600 dark:text-gray-300">Worth every penny — best decision ever.</div>
             </div>
             {/* Repeat for seamless scroll */}
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-5 min-h-[100px] w-70 shadow-xl border border-white/20 dark:border-gray-700/20">
+            <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-lg rounded-3xl p-5 min-h-[100px] w-70 shadow-sm border border-white/5 dark:border-gray-700/5">
               <div className="font-bold mb-2 text-gray-800 dark:text-gray-200">Ananya</div>
               <div className="text-gray-600 dark:text-gray-300">I loved the training experience. Super clear and helpful!</div>
             </div>
@@ -281,36 +384,36 @@ const HomePage = () => {
 
         {/* Center heading */}
         <div className="flex-none flex items-center justify-center px-5 py-5 md:py-0">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-900 dark:text-blue-100 text-center">
-            <span className="italic">learn</span> REVIEWS
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center overflow-visible">
+            <span className="italic hover-gradient-text pr-2" style={{ display: 'inline-block' }}>learn</span> <span className="hover-gradient-text">REVIEWS</span>
           </h2>
         </div>
 
         {/* Right column scrolling down */}
         <div className="flex-1 flex flex-col justify-start items-center overflow-hidden relative">
           <div className="flex flex-col gap-5 animate-scroll-down">
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-5 min-h-[100px] w-70 shadow-xl border border-white/20 dark:border-gray-700/20">
+            <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-lg rounded-3xl p-5 min-h-[100px] w-70 shadow-sm border border-white/5 dark:border-gray-700/5">
               <div className="font-bold mb-2 text-gray-800 dark:text-gray-200">Manoj</div>
               <div className="text-gray-600 dark:text-gray-300">Awesome placement help — landed interviews fast!</div>
             </div>
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-5 min-h-[100px] w-70 shadow-xl border border-white/20 dark:border-gray-700/20">
+            <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-lg rounded-3xl p-5 min-h-[100px] w-70 shadow-sm border border-white/5 dark:border-gray-700/5">
               <div className="font-bold mb-2 text-gray-800 dark:text-gray-200">Sana</div>
               <div className="text-gray-600 dark:text-gray-300">Concepts were crystal clear. Thank you, team!</div>
             </div>
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-5 min-h-[100px] w-70 shadow-xl border border-white/20 dark:border-gray-700/20">
+            <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-lg rounded-3xl p-5 min-h-[100px] w-70 shadow-sm border border-white/5 dark:border-gray-700/5">
               <div className="font-bold mb-2 text-gray-800 dark:text-gray-200">Akash</div>
               <div className="text-gray-600 dark:text-gray-300">5 stars. Trainers really care about students.</div>
             </div>
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-5 min-h-[100px] w-70 shadow-xl border border-white/20 dark:border-gray-700/20">
+            <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-lg rounded-3xl p-5 min-h-[100px] w-70 shadow-sm border border-white/5 dark:border-gray-700/5">
               <div className="font-bold mb-2 text-gray-800 dark:text-gray-200">Divya</div>
               <div className="text-gray-600 dark:text-gray-300">Boosted my confidence and skills for real jobs.</div>
             </div>
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-5 min-h-[100px] w-70 shadow-xl border border-white/20 dark:border-gray-700/20">
+            <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-lg rounded-3xl p-5 min-h-[100px] w-70 shadow-sm border border-white/5 dark:border-gray-700/5">
               <div className="font-bold mb-2 text-gray-800 dark:text-gray-200">Rahul</div>
               <div className="text-gray-600 dark:text-gray-300">Highly recommended for job-focused training.</div>
             </div>
             {/* Repeat for seamless scroll */}
-            <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-5 min-h-[100px] w-70 shadow-xl border border-white/20 dark:border-gray-700/20">
+            <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-lg rounded-3xl p-5 min-h-[100px] w-70 shadow-sm border border-white/5 dark:border-gray-700/5">
               <div className="font-bold mb-2 text-gray-800 dark:text-gray-200">Manoj</div>
               <div className="text-gray-600 dark:text-gray-300">Awesome placement help — landed interviews fast!</div>
             </div>
