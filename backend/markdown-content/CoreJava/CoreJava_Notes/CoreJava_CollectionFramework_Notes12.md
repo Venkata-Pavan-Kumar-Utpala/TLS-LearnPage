@@ -136,7 +136,7 @@ Collection framework was not part of original Java release. Collections was adde
 | Queue         | Extends Collection; elements are processed in **FIFO** (First-In, First-Out) order.      |
 | Deque         | Extends Queue; supports **insertion/removal from both ends** (double-ended queue).       |
 
-![collection heirarchy](../CoreJava_Images/Aspose.Words.1bc04a71-f5bf-46e2-99e8-06ace10a91c5.001.png)
+![collection heirarchy](/CoreJava_Images/Aspose.Words.1bc04a71-f5bf-46e2-99e8-06ace10a91c5.001.png)
 
 ### Why Collections Were Made Generic – Short Essay
 
@@ -678,7 +678,7 @@ Although part of the **Collections Framework**, a Map is **not a true Collection
 | SortedMap     | A subtype of Map where keys are **sorted in ascending order**.            |
 | NavigableMap  | Extends SortedMap to support **searches based on closest-match queries**. |
 
-![map interface sub interfaces](../CoreJava_Images/Aspose.Words.1bc04a71-f5bf-46e2-99e8-06ace10a91c5.002.png)
+![map interface sub interfaces](/CoreJava_Images/Aspose.Words.1bc04a71-f5bf-46e2-99e8-06ace10a91c5.002.png)
 
 ### Commonly Used Methods in Map Interface
 
