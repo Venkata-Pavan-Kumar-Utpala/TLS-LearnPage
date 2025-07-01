@@ -36,11 +36,15 @@ export const generateCertificateController = async (req, res) => {
     doc.text(`XP Earned: ${xp}`, { align: "center" });
     doc.moveDown();
 
-    doc.text(`Issued on: ${new Date().toLocaleDateString()}`, { align: "center" });
+    doc.text(`Issued on: ${new Date().toLocaleDateString()}`, {
+      align: "center",
+    });
 
     doc.end(); // End PDF stream
   } catch (err) {
     console.error("Certificate generation error:", err);
-    return res.status(500).json({ error: "Failed to generate/send certificate" });
+    return res
+      .status(500)
+      .json({ error: "Failed to generate/send certificate" });
   }
 };

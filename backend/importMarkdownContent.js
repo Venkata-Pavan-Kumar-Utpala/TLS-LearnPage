@@ -8,10 +8,12 @@ import Course from "./models/Course.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Directory containing markdown files
-const notesDir = path.join(__dirname, "markdown-content");
+// Update directories for notes, quizzes, and images
+const coreJavaDir = path.join(__dirname, "markdown-content", "CoreJava");
+const notesDir = path.join(coreJavaDir, "CoreJava_Notes");
+const quizzesDir = path.join(coreJavaDir, "CoreJava_Quiz");
 
-// Predefined list of files and titles
+// Predefined list of notes and quizzes
 export const predefinedNotes = [
   {
     file: "CoreJava_BasicsAndDataTypes_Notes01.md",
@@ -45,41 +47,6 @@ export const predefinedNotes = [
   { file: "CoreJava_MysqlDb_Notes1314.md", title: "MySQL Database" },
 ];
 
-// Function to insert markdown content into the database
-export const insertMarkdownContent = async () => {
-  try {
-    const courseTitle = "Core Java"; // Specify the course title
-
-    const notesData = predefinedNotes
-      .map((note) => {
-        const filePath = path.join(notesDir, note.file);
-        if (fs.existsSync(filePath)) {
-          const content = fs.readFileSync(filePath, "utf-8");
-          return { title: note.title, content, courseTitle };
-        } else {
-          console.warn(`File not found: ${note.file}`);
-          return null;
-        }
-      })
-      .filter(Boolean);
-
-    for (const note of notesData) {
-      const existingNote = await Notes.findOne({ title: note.title });
-      if (!existingNote) {
-        await Notes.create(note);
-        console.log(`Inserted note: ${note.title}`);
-      } else {
-        console.log(`Note already exists: ${note.title}`);
-      }
-    }
-  } catch (error) {
-    console.error("Error inserting markdown content:", error);
-  }
-};
-
-// Added predefined quizzes and logic to read quiz markdown files
-const quizzesDir = path.join(__dirname, "markdown-content");
-
 export const predefinedQuizzes = [
   {
     file: "CoreJava_BasicsAndDataTypes_Quiz01.md",
@@ -101,10 +68,7 @@ export const predefinedQuizzes = [
     file: "CoreJava_AbstractClassAndInterface_Quiz09.md",
     title: "Abstract Class and Interface",
   },
-  {
-    file: "CoreJava_ExceptionHandling_Quiz10.md",
-    title: "Exception Handling",
-  },
+  { file: "CoreJava_ExceptionHandling_Quiz10.md", title: "Exception Handling" },
   { file: "CoreJava_Multithreading_Quiz11.md", title: "Multithreading" },
   {
     file: "CoreJava_CollectionFramework_Quiz12.md",
@@ -113,64 +77,129 @@ export const predefinedQuizzes = [
   { file: "CoreJava_MysqlDb_Quiz1314.md", title: "MySQL Database" },
 ];
 
-export const readQuizMarkdown = (quizFile) => {
-  const filePath = path.join(quizzesDir, quizFile);
-  if (fs.existsSync(filePath)) {
-    return fs.readFileSync(filePath, "utf-8");
-  } else {
-    console.warn(`Quiz file not found: ${quizFile}`);
-    return null;
+// Parser for ### Question ... format with - A) ... and **Answer:** X
+const parseQuizMarkdown = (filePath) => {
+  const content = fs.readFileSync(filePath, "utf-8");
+  const questions = [];
+
+  // Match both '### Question' and '### Question:'
+  const questionRegex = /### Question:?([\s\S]*?)(?=### Question:?|$)/g;
+  let match;
+  while ((match = questionRegex.exec(content)) !== null) {
+    const block = match[0];
+    // Extract question text (first non-empty line after heading)
+    const questionLine = block.match(/### Question:?\s*([\s\S]*?)(?:\n|$)/);
+    const question = questionLine ? questionLine[1].trim() : null;
+    // Extract options
+    const options = [];
+    const optionRegex = /^-\s*([A-D])\)\s*(.*)$/gm;
+    let optMatch;
+    while ((optMatch = optionRegex.exec(block)) !== null) {
+      options.push(optMatch[2].trim());
+    }
+    // Extract answer
+    const answerMatch = block.match(/\*\*Answer:\*\*\s*([A-D])/);
+    if (!question || options.length < 2 || !answerMatch) {
+      console.warn(
+        `Skipped invalid question block in ${filePath}:\n${block}\n`
+      );
+      continue;
+    }
+    const correctLetter = answerMatch[1].toUpperCase();
+    const correctAnswer = correctLetter.charCodeAt(0) - 65;
+    if (correctAnswer >= 0 && correctAnswer < options.length) {
+      questions.push({ question, options, correctAnswer });
+    } else {
+      console.warn(`Answer index out of range in ${filePath}:\n${block}\n`);
+    }
   }
+  return questions;
 };
 
-export const insertQuizContent = async () => {
+export const insertMarkdownContent = async () => {
   try {
-    const courseTitle = "Core Java"; // Specify the course title
-
-    const quizzesData = predefinedQuizzes
-      .map((quiz) => {
-        const filePath = path.join(quizzesDir, quiz.file);
-        if (fs.existsSync(filePath)) {
-          const content = readQuizMarkdown(quiz.file);
-          return { title: quiz.title, content, courseTitle };
-        } else {
-          console.warn(`Quiz file not found: ${quiz.file}`);
-          return null;
-        }
-      })
-      .filter(Boolean);
-
-    const course = await Course.findOne({ title: courseTitle });
-    if (!course) {
-      console.error(`Course not found: ${courseTitle}`);
-      return;
+    // Only insert if Core Java course does not exist
+    let coreJavaCourse = await Course.findOne({ title: "Core Java" });
+    if (!coreJavaCourse) {
+      // Create course and topics
+      const coreJavaTopics = predefinedNotes.map((note) => ({
+        title: note.title,
+        notesId: null,
+        quizId: null,
+        exerciseId: null,
+      }));
+      coreJavaCourse = new Course({
+        title: "Core Java",
+        description: "Learn the fundamentals of Java programming.",
+        level: "Beginner",
+        topics: coreJavaTopics,
+      });
+      await coreJavaCourse.save();
+      console.log("Core Java course seeded successfully");
+    } else {
+      console.log("Core Java course already exists, skipping course creation");
     }
 
-    for (const quiz of quizzesData) {
-      const existingQuiz = await Quiz.findOne({ title: quiz.title });
-      if (!existingQuiz) {
-        const newQuiz = await Quiz.create(quiz);
-        console.log(`Inserted quiz: ${quiz.title}`);
-
-        const topic = course.topics.find(
-          (t) => t.title.trim() === quiz.title.trim()
-        );
-        if (topic) {
-          topic.quizId = newQuiz._id;
-          console.log(
-            `Updated topic: ${topic.title} with quizId: ${newQuiz._id}`
-          );
-        } else {
-          console.warn(`Topic not found for quiz: ${quiz.title}`);
+    // Insert notes only if not already present and link to topics
+    for (const note of predefinedNotes) {
+      const filePath = path.join(notesDir, note.file);
+      if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath, "utf-8");
+        let existingNote = await Notes.findOne({ content });
+        if (!existingNote) {
+          existingNote = await Notes.create({ content });
+        }
+        // Link note to topic if not already linked
+        const topic = coreJavaCourse.topics.find((t) => t.title === note.title);
+        if (
+          topic &&
+          (!topic.notesId ||
+            topic.notesId.toString() !== existingNote._id.toString())
+        ) {
+          topic.notesId = existingNote._id;
         }
       } else {
-        console.log(`Quiz already exists: ${quiz.title}`);
+        console.warn(`Note file not found: ${filePath}`);
       }
     }
 
-    await course.save();
-    console.log(`Saved course with updated topics.`);
+    // Insert quizzes only if not already present and link to topics
+    for (const quiz of predefinedQuizzes) {
+      const filePath = path.join(quizzesDir, quiz.file);
+      if (fs.existsSync(filePath)) {
+        const questions = parseQuizMarkdown(filePath);
+        if (questions.length > 0) {
+          const topic = coreJavaCourse.topics.find(
+            (t) => t.title === quiz.title
+          );
+          if (!topic) continue;
+          let existingQuiz = await Quiz.findOne({ topicTitle: quiz.title });
+          if (!existingQuiz) {
+            existingQuiz = await Quiz.create({
+              courseId: coreJavaCourse._id,
+              topicId: topic._id,
+              topicTitle: quiz.title,
+              questions,
+            });
+          }
+          // Link quiz to topic if not already linked
+          if (
+            !topic.quizId ||
+            topic.quizId.toString() !== existingQuiz._id.toString()
+          ) {
+            topic.quizId = existingQuiz._id;
+          }
+        } else {
+          console.warn(`No valid questions found in quiz: ${filePath}`);
+        }
+      } else {
+        console.warn(`Quiz file not found: ${filePath}`);
+      }
+    }
+
+    await coreJavaCourse.save();
+    console.log("Notes and quizzes linked to Core Java course successfully");
   } catch (error) {
-    console.error("Error inserting quiz content:", error);
+    console.error("Error inserting markdown content:", error);
   }
 };

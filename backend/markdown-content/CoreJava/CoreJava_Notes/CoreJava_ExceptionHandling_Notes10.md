@@ -13,7 +13,7 @@ An **Exception** is a Java object that **represents an error** or **abnormal eve
 - When something goes wrong, **Java throws** (creates and sends) an exception.
 - The code that **deals with the error** is called the **exception handler**.
 
-![exception handling in java](Images/Aspose.Words.29c8aaf6-78b7-40f1-9928-f63d3abc355b.001.png)
+![exception handling in java](../CoreJava_Images/Aspose.Words.29c8aaf6-78b7-40f1-9928-f63d3abc355b.001.png)
 
 **Java Exception Class Hierarchy**
 
@@ -101,7 +101,7 @@ public class UncaughtExample {
 
 Imagine a train without brakes — if an obstacle (exception) comes and nothing stops it (no handler), it **crashes** (program terminates).
 
-![Uncaught Exception in java](Images/Aspose.Words.29c8aaf6-78b7-40f1-9928-f63d3abc355b.002.png)
+![Uncaught Exception in java](../CoreJava_Images/Aspose.Words.29c8aaf6-78b7-40f1-9928-f63d3abc355b.002.png)
 
 As we don't have any mechanism for handling exception in the above program, hence the default handler will handle the exception and will print the details of the exception on the terminal.
 
@@ -160,7 +160,7 @@ finally {
 
 }
 
-![finally clause in exception handling in java](Images/Aspose.Words.29c8aaf6-78b7-40f1-9928-f63d3abc355b.003.png)
+![finally clause in exception handling in java](../CoreJava_Images/Aspose.Words.29c8aaf6-78b7-40f1-9928-f63d3abc355b.003.png)
 
 ` `Example using try and catch Handling Division by Zero
 

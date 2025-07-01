@@ -1,25 +1,26 @@
 ﻿**CORE JAVA NOTES - 13**
 
-**MYSQL DATABASE  - SQL QUERIES**
+**MYSQL DATABASE - SQL QUERIES**
 
 **Steps to Install and Execute SQL Queries in Mysql Database Server:**
 
-1) **Download and Install Mysql server** using the below given link:
+1. **Download and Install Mysql server** using the below given link:
 
    <https://dev.mysql.com/downloads/installer/>
 
-|**Windows (x86, 32-bit), MSI Installer**|8\.0.34|2\.4M|[**Download**](https://dev.mysql.com/downloads/file/?id=520406)||
-| :- | :-: | -: | -: | :- |
-|(mysql-installer-web-community-8.0.34.0.msi)|MD5: 01baf7b42e551d53efb557eed401ff91 | [Signature](https://dev.mysql.com/downloads/gpg/?file=mysql-installer-web-community-8.0.34.0.msi&p=25)||||
-|**Windows (x86, 32-bit), MSI Installer**|8\.0.34|331\.3M|[**Download**](https://dev.mysql.com/downloads/file/?id=520407)||
-|(mysql-installer-community-8.0.34.0.msi)|MD5: 59eaa511c39011a2f0264311a80b0228 | [Signature](https://dev.mysql.com/downloads/gpg/?file=mysql-installer-community-8.0.34.0.msi&p=25)||||
+| **Windows (x86, 32-bit), MSI Installer**     |                8\.0.34                 |                                                                                                   2\.4M | [**Download**](https://dev.mysql.com/downloads/file/?id=520406) |     |
+| :------------------------------------------- | :------------------------------------: | ------------------------------------------------------------------------------------------------------: | --------------------------------------------------------------: | :-- | --- |
+| (mysql-installer-web-community-8.0.34.0.msi) | MD5: 01baf7b42e551d53efb557eed401ff91  |  [Signature](https://dev.mysql.com/downloads/gpg/?file=mysql-installer-web-community-8.0.34.0.msi&p=25) |                                                                 |     |     |
+| **Windows (x86, 32-bit), MSI Installer**     |                8\.0.34                 |                                                                                                 331\.3M | [**Download**](https://dev.mysql.com/downloads/file/?id=520407) |     |
+| (mysql-installer-community-8.0.34.0.msi)     | MD5: 59eaa511c39011a2f0264311a80b0228  |      [Signature](https://dev.mysql.com/downloads/gpg/?file=mysql-installer-community-8.0.34.0.msi&p=25) |                                                                 |     |     |
 
 Once the mysql server is downloaded successfully, click on the setup file and install it by following the installation steps and give the Password during installation as “root” for the default port number 3306
 
-1) **Steps to interact with database using mysql command Line**
-1. **Open mysql 8.0 Command Line Client and type root as the password**
+1. **Steps to interact with database using mysql command Line**
 
-Enter password:  root
+1) **Open mysql 8.0 Command Line Client and type root as the password**
+
+Enter password: root
 
 1. **Connect with the default database mysql by typing:**
 
@@ -27,27 +28,31 @@ USE DATABASE mysql;
 
 Or
 
-1. **create a new database  tls\_db, by typing:**
+1. **create a new database tls_db, by typing:**
 
-CREATE DATABASE tls\_db;
+CREATE DATABASE tls_db;
 
-1. **To use the newly created db -> tls\_db, by typing:**
+1. **To use the newly created db -> tls_db, by typing:**
 
-USE tls\_db;
+USE tls_db;
 
 1. **To view the tables list found in the db, type:**
 
 SHOW TABLES;
+
 ### DDL – Data Definition Language
+
 DDL commands are used to define and modify the **structure** of database objects like **tables, views, indexes**, etc.
+
 ### CREATE– Create a database or table
-CREATE DATABASE tls\_db;
+
+CREATE DATABASE tls_db;
 
 CREATE TABLE customer (
 
-`    `customer\_id INT PRIMARY KEY,
+`    `customer_id INT PRIMARY KEY,
 
-`    `customer\_name VARCHAR(45) NOT NULL UNIQUE,
+`    `customer_name VARCHAR(45) NOT NULL UNIQUE,
 
 `    `email VARCHAR(100) NOT NULL UNIQUE,
 
@@ -55,35 +60,39 @@ CREATE TABLE customer (
 
 CREATE TABLE customer2 (
 
-`    `student\_id INT PRIMARY KEY,
+`    `student_id INT PRIMARY KEY,
 
-`    `student\_name VARCHAR(45) NOT NULL,
+`    `student_name VARCHAR(45) NOT NULL,
 
 `    `email VARCHAR(100) NOT NULL,
 
 `    `mobile BIGINT(10) NOT NULL,
 
-`    `CONSTRAINT eml\_unq UNIQUE(email),
+`    `CONSTRAINT eml_unq UNIQUE(email),
 
-`    `CONSTRAINT mob\_unq UNIQUE(mobile));
+`    `CONSTRAINT mob_unq UNIQUE(mobile));
 
 **View table structure:**
 
 DESC student;
 
 DESCRIBE student;
+
 ### DROP – Delete database or table permanently
+
 -- Drop the entire database (including all tables)
 
-DROP DATABASE tls\_db;
+DROP DATABASE tls_db;
 
 -- Drop a single table
 
 DROP TABLE student;
+
 ### ALTER – Modify table structure
+
 ALTER TABLE student
 
-ADD COLUMN total\_marks INT DEFAULT 0;
+ADD COLUMN total_marks INT DEFAULT 0;
 
 ALTER TABLE student
 
@@ -91,91 +100,124 @@ ADD COLUMN email VARCHAR(100);
 
 ALTER TABLE student
 
-ADD CONSTRAINT eml\_unq UNIQUE(email);
+ADD CONSTRAINT eml_unq UNIQUE(email);
 
 ALTER TABLE student
 
-ADD CONSTRAINT std\_unq UNIQUE(mobile, email);
+ADD CONSTRAINT std_unq UNIQUE(mobile, email);
 
 ALTER TABLE student
 
-DROP CONSTRAINT eml\_unq;
+DROP CONSTRAINT eml_unq;
 
 ALTER TABLE student
 
 MODIFY COLUMN email VARCHAR(200);
+
 ### DQL – Data Query Language
+
 DQL is used to **fetch data** from the database using the **SELECT** statement.
 
 View entire table
 
 SELECT \* FROM student;
+
 ### View a specific row using PRIMARY KEY
+
 SELECT \* FROM student
 
 WHERE sid = 1;
+
 ### View multiple rows based on a condition
+
 SELECT \* FROM student
 
-WHERE total\_marks >= 400;
+WHERE total_marks >= 400;
+
 ### View a single column for all rows
+
 SELECT sname FROM student;
+
 ### View multiple columns for all rows
+
 SELECT sname, mobile FROM student;
+
 ### DML – Data Manipulation Language
+
 Used to **Insert**, **Update**, and **Delete** records (rows) in a table.
+
 ### INSERT – Add new rows
+
 INSERT INTO student
 
 VALUES (2, 'Pranav', 987654321, 450, 'pranav@gmail.com');
-#### *Insert partial values (specify columns)*
+
+#### _Insert partial values (specify columns)_
+
 INSERT INTO student (sid, sname, mobile, email)
 
 VALUES (3, 'Sunil', 789654321, 'sunil@gmail.com');
-#### *Insert with a NULL value*
+
+#### _Insert with a NULL value_
+
 INSERT INTO student
 
 VALUES (4, 'Nikhil', 900654321, NULL, 'nikhil12@gmail.com');
+
 ### DELETE – Remove rows
-#### *Delete one row using primary key*
+
+#### _Delete one row using primary key_
+
 DELETE FROM student
 
 WHERE sid = 3;
-#### ` `*Delete all rows (table stays)*
-#### *DELETE FROM student;*
-#### *Delete multiple rows by condition*
+
+#### ` `_Delete all rows (table stays)_
+
+#### _DELETE FROM student;_
+
+#### _Delete multiple rows by condition_
+
 DELETE FROM student
 
-WHERE total\_marks = 450;
+WHERE total_marks = 450;
+
 ### UPDATE – Modify existing rows
-#### *Update one column of one row*
+
+#### _Update one column of one row_
+
 UPDATE student
 
 SET mobile = 96766663136
 
 WHERE sid = 1;
-#### *Update multiple columns of one row*
+
+#### _Update multiple columns of one row_
+
 UPDATE student
 
-SET mobile = 9000663666, total\_marks = 400
+SET mobile = 9000663666, total_marks = 400
 
 WHERE sid = 3;
-#### *Set default value for NULL entries*
+
+#### _Set default value for NULL entries_
+
 UPDATE student
 
-SET total\_marks = 0
+SET total_marks = 0
 
-WHERE total\_marks IS NULL;
-#### *Set total\_marks = 480 for sid = 4*
+WHERE total_marks IS NULL;
+
+#### _Set total_marks = 480 for sid = 4_
+
 UPDATE student
 
-SET total\_marks = 480
+SET total_marks = 480
 
 WHERE sid = 4;
 
 **CORE JAVA NOTES – 14**
-**\
-
+\*\*\
 
 **Steps to Connect Java with MySQL Database (JDBC)**
 
@@ -187,12 +229,18 @@ To store and manage student information:
 
 Use your MySQL command line or GUI tool (like MySQL Workbench):
 
-*(-- Login command)* **mysql -u root -p**
-#### ` `*Create a database:*
-CREATE DATABASE tls\_db;
-#### *Use the database:*
-USE tls\_db;
-#### *Create a table:*
+_(-- Login command)_ **mysql -u root -p**
+
+#### ` `_Create a database:_
+
+CREATE DATABASE tls_db;
+
+#### _Use the database:_
+
+USE tls_db;
+
+#### _Create a table:_
+
 CREATE TABLE student (
 
 `    `sid INT,
@@ -204,24 +252,35 @@ CREATE TABLE student (
 `    `email VARCHAR(100)
 
 );
-#### *Insert a row:*
+
+#### _Insert a row:_
+
 INSERT INTO student VALUES (101, 'Gowri', 9876666890, 'gowri@gmail.com');
-#### *Delete a row:*
+
+#### _Delete a row:_
+
 DELETE FROM student WHERE sid = 101;
-#### ` `*Update a row:*
+
+#### ` `_Update a row:_
+
 UPDATE student
 
 SET sname = 'Gowri'
 
 WHERE sid = 101;
-#### *View all rows:*
+
+#### _View all rows:_
+
 SELECT \* FROM student;
-#### *View specific columns:*
+
+#### _View specific columns:_
+
 SELECT email, mobile FROM student
 
 WHERE sname = 'Gowri';
 
-#### *Full Example Program (With INSERT, UPDATE, DELETE, SELECT)*
+#### _Full Example Program (With INSERT, UPDATE, DELETE, SELECT)_
+
 import java.sql.\*;
 
 public class StudentDBApp {
@@ -238,7 +297,7 @@ public class StudentDBApp {
 
 `            `Connection con = DriverManager.getConnection(
 
-`                `"jdbc:mysql://localhost:3306/tls\_db", "root", "your\_password");
+`                `"jdbc:mysql://localhost:3306/tls_db", "root", "your_password");
 
 `            `// Step 3: Create Statement
 
@@ -300,7 +359,6 @@ public class StudentDBApp {
 
 `            `e.printStackTrace();}}}
 
-
 \2) Db Program to insert a row in student table
 
 import java.sql.\*;
@@ -319,7 +377,7 @@ public class InsertStudent {
 
 `            `Connection con = DriverManager.getConnection(
 
-`                `"jdbc:mysql://localhost:3306/tls\_db", "root", "your\_password");
+`                `"jdbc:mysql://localhost:3306/tls_db", "root", "your_password");
 
 `            `// 3. Create a PreparedStatement to insert values
 
@@ -375,7 +433,7 @@ public class InsertStudentFromUser {
 
 `            `Connection con = DriverManager.getConnection(
 
-`                `"jdbc:mysql://localhost:3306/tls\_db", "root", "your\_password");
+`                `"jdbc:mysql://localhost:3306/tls_db", "root", "your_password");
 
 `            `// 3. Prepare SQL insert query
 
@@ -432,7 +490,9 @@ public class InsertStudentFromUser {
 `        `} catch (Exception e) {
 
 `            `e.printStackTrace();}}}
+
 ## 4) Update Student Email Based on ID (User Input)
+
 import java.sql.\*;
 
 import java.util.Scanner;
@@ -449,7 +509,7 @@ public class UpdateStudentEmail {
 
 `            `Connection con = DriverManager.getConnection(
 
-`                `"jdbc:mysql://localhost:3306/tls\_db", "root", "your\_password");
+`                `"jdbc:mysql://localhost:3306/tls_db", "root", "your_password");
 
 `            `String updateQuery = "UPDATE student SET email = ? WHERE sid = ?";
 
@@ -488,7 +548,9 @@ public class UpdateStudentEmail {
 `        `} catch (Exception e) {
 
 `            `e.printStackTrace();}}}
+
 ## 5) Delete a Student Record Using ID (User Input)
+
 import java.sql.\*;
 
 import java.util.Scanner;
@@ -505,7 +567,7 @@ public class DeleteStudent {
 
 `            `Connection con = DriverManager.getConnection(
 
-`                `"jdbc:mysql://localhost:3306/tls\_db", "root", "your\_password");
+`                `"jdbc:mysql://localhost:3306/tls_db", "root", "your_password");
 
 `            `String deleteQuery = "DELETE FROM student WHERE sid = ?";
 
@@ -538,43 +600,43 @@ public class DeleteStudent {
 `            `e.printStackTrace();}}}
 
 ### Real-Life JDBC Scenario-Based Questions
+
 1. **Admission Portal**
 
-   *A college wants to collect new student details including name, mobile number, email, and department. Write a Java JDBC program to insert this data into the student table.*
+   _A college wants to collect new student details including name, mobile number, email, and department. Write a Java JDBC program to insert this data into the student table._
 
 1. **Update Contact**
 
-   *A student has changed their phone number. How would you write a JDBC program to update the mobile number using the student’s ID?*
+   _A student has changed their phone number. How would you write a JDBC program to update the mobile number using the student’s ID?_
 
 1. **Student Withdrawal**
 
-   *A student has left the college. Write a program to delete their record from the database using their student ID.*
+   _A student has left the college. Write a program to delete their record from the database using their student ID._
 
 1. **Search Feature**
 
-   *A teacher wants to check details of a student by their name. Write a program to fetch and display student data where sname matches user input.*
+   _A teacher wants to check details of a student by their name. Write a program to fetch and display student data where sname matches user input._
 
 1. **Filtered Display**
 
-   *Display all students who scored more than 400 marks. How would you implement this using a SELECT query in JDBC?*
+   _Display all students who scored more than 400 marks. How would you implement this using a SELECT query in JDBC?_
 
 1. **Department-Wise Count**
 
-   *You are maintaining students by department. How would you write a program to count how many students are registered in the “CSE” department?*
+   _You are maintaining students by department. How would you write a program to count how many students are registered in the “CSE” department?_
 
 1. **Bulk Registration**
 
-   *Write a loop-based program that takes data for multiple students (using Scanner) and stores them in the database one by one.*
+   _Write a loop-based program that takes data for multiple students (using Scanner) and stores them in the database one by one._
 
 1. **Email Validation**
 
-   *You want to prevent duplicate emails from being inserted into the student table. How will you handle this in your JDBC code?*
+   _You want to prevent duplicate emails from being inserted into the student table. How will you handle this in your JDBC code?_
 
 1. **Import from CSV**
 
-   *How would you write a Java program to read a CSV file of student records and insert them into the student table?*
+   _How would you write a Java program to read a CSV file of student records and insert them into the student table?_
 
 1. **Transaction Handling**
 
-   *A program is inserting student data into two related tables (student and login). If one fails, both should roll back. How will you use JDBC transactions to handle this?*
-
+   _A program is inserting student data into two related tables (student and login). If one fails, both should roll back. How will you use JDBC transactions to handle this?_

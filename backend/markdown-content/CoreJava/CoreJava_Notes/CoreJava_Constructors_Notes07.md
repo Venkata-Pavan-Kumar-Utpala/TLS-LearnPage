@@ -23,7 +23,7 @@ When you write:
 
 ![A black and white background with purple letters
 
-AI-generated content may be incorrect.](images/Aspose.Words.a7c2e997-95ce-4551-a647-2e0841eec8ee.001.png)
+AI-generated content may be incorrect.](../CoreJava_Images/Aspose.Words.a7c2e997-95ce-4551-a647-2e0841eec8ee.001.png)
 
 Java performs:
 
@@ -40,7 +40,7 @@ After the object memory is created, **Java automatically calls the constructor**
 
 ![A black background with text
 
-AI-generated content may be incorrect.](images/Aspose.Words.a7c2e997-95ce-4551-a647-2e0841eec8ee.002.png)
+AI-generated content may be incorrect.](../CoreJava_Images/Aspose.Words.a7c2e997-95ce-4551-a647-2e0841eec8ee.002.png)
 
 So, this constructor:
 
@@ -57,7 +57,7 @@ At this point:
 
 - Here’s the provided class for reference:
 
-![](images/Aspose.Words.a7c2e997-95ce-4551-a647-2e0841eec8ee.003.png)
+![](../CoreJava_Images/Aspose.Words.a7c2e997-95ce-4551-a647-2e0841eec8ee.003.png)
 
 **Step-by-Step Execution**
 
