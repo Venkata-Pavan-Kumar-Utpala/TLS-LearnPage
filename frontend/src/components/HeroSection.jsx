@@ -60,10 +60,9 @@ const HeroSection = () => {
 
             {/* Warning Text - Right Below Heading in Left Column */}
             <motion.p
-              ref={descriptionRef}
-              className={`font-poppins text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 hover-gradient-text whitespace-nowrap ${isDescriptionInViewport ? 'in-viewport' : ''}`}
-              initial={{ opacity: 0, y: 30, filter: "blur(4px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              className="font-poppins text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 hover-gradient-text whitespace-nowrap"
+              initial={{ filter: "blur(4px)" }}
+              animate={{ filter: "blur(0px)" }}
               transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               Warning: Coding skills may cause sudden job offers and inflated Git pushes.
