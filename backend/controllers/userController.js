@@ -35,11 +35,9 @@ export const registerUser = async (req, res) => {
     const trimmedEmail = email.trim().toLowerCase();
 
     if (trimmedFirstName.length < 2 || trimmedLastName.length < 2) {
-      return res
-        .status(400)
-        .json({
-          message: "First name and last name must be at least 2 characters",
-        });
+      return res.status(400).json({
+        message: "First name and last name must be at least 2 characters",
+      });
     }
 
     if (!isValidEmail(trimmedEmail)) {
@@ -49,12 +47,10 @@ export const registerUser = async (req, res) => {
     }
 
     if (!isValidPassword(password)) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Password must be at least 6 characters with at least one letter and one number",
-        });
+      return res.status(400).json({
+        message:
+          "Password must be at least 6 characters with at least one letter and one number",
+      });
     }
 
     if (password !== confirmPassword) {

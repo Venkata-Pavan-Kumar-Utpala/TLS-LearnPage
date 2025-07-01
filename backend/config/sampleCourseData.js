@@ -104,7 +104,7 @@ export const quizQuestions = {
       xp: 10,
     },
   ],
-  "Threads": [
+  Threads: [
     {
       question: "Which method is used to start a thread in Java?",
       options: ["run()", "start()", "execute()", "begin()"],
@@ -190,13 +190,19 @@ export const quizQuestions = {
     },
     {
       question: "What is the purpose of the __init__ method in Python?",
-      options: ["To delete an object", "To initialize an object", "To copy an object", "To print an object"],
+      options: [
+        "To delete an object",
+        "To initialize an object",
+        "To copy an object",
+        "To print an object",
+      ],
       correctAnswer: 1,
-      explanation: "The __init__ method is used to initialize an object when it's created.",
+      explanation:
+        "The __init__ method is used to initialize an object when it's created.",
       xp: 10,
     },
   ],
-  "Dictionaries": [
+  Dictionaries: [
     {
       question: "How do you create an empty dictionary in Python?",
       options: ["{}", "[]", "()", "dict()"],
@@ -212,7 +218,7 @@ export const quizQuestions = {
       xp: 10,
     },
   ],
-  "Functions": [
+  Functions: [
     {
       question: "Which keyword is used to define a function in Python?",
       options: ["function", "def", "func", "define"],
@@ -222,9 +228,15 @@ export const quizQuestions = {
     },
     {
       question: "What does the return statement do in a function?",
-      options: ["Ends the function", "Returns a value", "Both A and B", "None of the above"],
+      options: [
+        "Ends the function",
+        "Returns a value",
+        "Both A and B",
+        "None of the above",
+      ],
       correctAnswer: 2,
-      explanation: "The return statement both ends the function and returns a value.",
+      explanation:
+        "The return statement both ends the function and returns a value.",
       xp: 10,
     },
   ],
@@ -249,7 +261,7 @@ export const quizQuestions = {
       xp: 10,
     },
   ],
-  "Dictionaries": [
+  Dictionaries: [
     {
       question: "How do you create an empty dictionary in Python?",
       options: ["{}", "[]", "()", "dict()"],
@@ -265,7 +277,7 @@ export const quizQuestions = {
       xp: 10,
     },
   ],
-  "Functions": [
+  Functions: [
     {
       question: "How do you define a function in Python?",
       options: ["def func():", "function func():", "func():", "define func():"],
@@ -290,7 +302,8 @@ export const quizQuestions = {
   // Data Structures & Algorithms Topics
   "Arrays and Strings": [
     {
-      question: "What is the time complexity of accessing an element in an array?",
+      question:
+        "What is the time complexity of accessing an element in an array?",
       options: ["O(1)", "O(n)", "O(log n)", "O(n²)"],
       correctAnswer: 0,
       explanation: "Array access by index is constant time O(1).",
@@ -300,13 +313,15 @@ export const quizQuestions = {
       question: "Which algorithm is used to reverse a string in-place?",
       options: ["Two pointers", "Binary search", "Merge sort", "DFS"],
       correctAnswer: 0,
-      explanation: "Two pointers technique is commonly used to reverse strings.",
+      explanation:
+        "Two pointers technique is commonly used to reverse strings.",
       xp: 10,
     },
   ],
   "Linked Lists": [
     {
-      question: "What is the time complexity of inserting at the beginning of a linked list?",
+      question:
+        "What is the time complexity of inserting at the beginning of a linked list?",
       options: ["O(1)", "O(n)", "O(log n)", "O(n²)"],
       correctAnswer: 0,
       explanation: "Insertion at the beginning of a linked list is O(1).",
@@ -321,7 +336,8 @@ export const quizQuestions = {
         "A list with duplicate values",
       ],
       correctAnswer: 0,
-      explanation: "In circular linked list, the last node points to the first node.",
+      explanation:
+        "In circular linked list, the last node points to the first node.",
       xp: 10,
     },
   ],
@@ -343,7 +359,8 @@ export const quizQuestions = {
   ],
   "Trees and Graphs": [
     {
-      question: "What is the maximum number of children a binary tree node can have?",
+      question:
+        "What is the maximum number of children a binary tree node can have?",
       options: ["1", "2", "3", "Unlimited"],
       correctAnswer: 1,
       explanation: "A binary tree node can have at most 2 children.",
@@ -366,8 +383,14 @@ export const quizQuestions = {
       xp: 10,
     },
     {
-      question: "Which sorting algorithm has the best average case time complexity?",
-      options: ["Bubble sort", "Quick sort", "Selection sort", "Insertion sort"],
+      question:
+        "Which sorting algorithm has the best average case time complexity?",
+      options: [
+        "Bubble sort",
+        "Quick sort",
+        "Selection sort",
+        "Insertion sort",
+      ],
       correctAnswer: 1,
       explanation: "Quick sort has O(n log n) average case time complexity.",
       xp: 10,
@@ -390,7 +413,12 @@ export const quizQuestions = {
     },
     {
       question: "Which command is used to create a new database?",
-      options: ["CREATE DATABASE", "NEW DATABASE", "MAKE DATABASE", "ADD DATABASE"],
+      options: [
+        "CREATE DATABASE",
+        "NEW DATABASE",
+        "MAKE DATABASE",
+        "ADD DATABASE",
+      ],
       correctAnswer: 0,
       explanation: "CREATE DATABASE command is used to create a new database.",
       xp: 10,
@@ -429,7 +457,8 @@ export const quizQuestions = {
         "A constraint",
       ],
       correctAnswer: 0,
-      explanation: "A foreign key is a key that references the primary key of another table.",
+      explanation:
+        "A foreign key is a key that references the primary key of another table.",
       xp: 10,
     },
   ],
@@ -457,14 +486,10 @@ export const quizQuestions = {
   "Stored Procedures": [
     {
       question: "What is a stored procedure?",
-      options: [
-        "A precompiled SQL code",
-        "A table",
-        "An index",
-        "A database",
-      ],
+      options: ["A precompiled SQL code", "A table", "An index", "A database"],
       correctAnswer: 0,
-      explanation: "A stored procedure is precompiled SQL code stored in the database.",
+      explanation:
+        "A stored procedure is precompiled SQL code stored in the database.",
       xp: 10,
     },
     {
