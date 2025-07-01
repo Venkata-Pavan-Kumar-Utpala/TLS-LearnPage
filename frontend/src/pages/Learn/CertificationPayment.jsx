@@ -49,14 +49,39 @@ const CertificationPayment = () => {
       try {
         if (courseId) {
           const courseData = await courseAPI.getCourse(courseId);
+
+          // Get pricing based on course title
+          const getCertificationPricing = (title) => {
+            const titleLower = title.toLowerCase();
+            if (titleLower.includes('java') || titleLower.includes('python')) {
+              return {
+                price: 999, // Final price after XP discount
+                originalPrice: 1499, // Base price
+                xpDiscount: 500,
+                requiredXP: 1000
+              };
+            } else {
+              return {
+                price: 4999, // Default for other courses
+                originalPrice: 7999,
+                xpDiscount: null,
+                requiredXP: null
+              };
+            }
+          };
+
+          const pricing = getCertificationPricing(courseData.title);
+
           setCertification({
             id: courseData._id,
             title: courseData.title,
             description: courseData.description || "Master the fundamentals and advanced concepts",
             duration: "12 weeks",
             level: courseData.level || "Intermediate",
-            price: 4999,
-            originalPrice: 7999,
+            price: pricing.price,
+            originalPrice: pricing.originalPrice,
+            xpDiscount: pricing.xpDiscount,
+            requiredXP: pricing.requiredXP,
             rating: 4.8,
             studentsEnrolled: Math.floor(Math.random() * 2000) + 1000,
             features: [
@@ -391,8 +416,15 @@ const CertificationPayment = () => {
                         </div>
                         <div>
                           <h4 className="font-semibold text-gray-900 dark:text-white">Redeem XP Points</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">Use your earned XP points</p>
-                          <p className="text-lg font-bold text-yellow-600 dark:text-yellow-400">1000 XP</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {certification.xpDiscount ?
+                              `Save ₹${certification.xpDiscount} with XP points` :
+                              'Use your earned XP points'
+                            }
+                          </p>
+                          <p className="text-lg font-bold text-yellow-600 dark:text-yellow-400">
+                            {certification.requiredXP || 1000} XP Required
+                          </p>
                         </div>
                       </div>
                       {selectedPaymentMethod === 'xp' && (
@@ -609,10 +641,17 @@ const CertificationPayment = () => {
                     <span className="text-gray-600 dark:text-gray-400">Original Price:</span>
                     <span className="text-gray-600 dark:text-gray-400 line-through">₹{certification.originalPrice.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Discount:</span>
-                    <span className="text-green-600 dark:text-green-400">-₹{(certification.originalPrice - certification.price).toLocaleString()}</span>
-                  </div>
+                  {certification.xpDiscount ? (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">XP Discount ({certification.requiredXP} XP):</span>
+                      <span className="text-green-600 dark:text-green-400">-₹{certification.xpDiscount.toLocaleString()}</span>
+                    </div>
+                  ) : (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Discount:</span>
+                      <span className="text-green-600 dark:text-green-400">-₹{(certification.originalPrice - certification.price).toLocaleString()}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-xl font-bold">
                     <span className="text-gray-900 dark:text-white">Total:</span>
                     <span className="text-gray-900 dark:text-white">₹{certification.price.toLocaleString()}</span>

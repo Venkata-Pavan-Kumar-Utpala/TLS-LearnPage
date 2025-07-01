@@ -62,7 +62,11 @@ const Courses = () => {
       icon: "☕",
       image: "/java.png",
       status: "available",
-      price: "Free"
+      price: "Free",
+      certificationPrice: 1499,
+      certificationDiscountedPrice: 999,
+      xpDiscount: 500,
+      requiredXP: 1000
     },
     {
       id: "python",
@@ -72,7 +76,11 @@ const Courses = () => {
       icon: "🐍",
       image: "/python.png",
       status: "available",
-      price: "Free"
+      price: "Free",
+      certificationPrice: 1499,
+      certificationDiscountedPrice: 999,
+      xpDiscount: 500,
+      requiredXP: 1000
     },
     {
       id: "dsa",

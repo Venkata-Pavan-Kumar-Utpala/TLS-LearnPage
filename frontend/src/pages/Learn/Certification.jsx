@@ -35,6 +35,28 @@ const Certification = () => {
 
         // Transform courses into certification format
         const transformedCertifications = courses.map((course, index) => {
+          // Get pricing based on course title
+          const getCertificationPricing = (title) => {
+            const titleLower = title.toLowerCase();
+            if (titleLower.includes('java') || titleLower.includes('python')) {
+              return {
+                price: 999, // Final price after XP discount
+                originalPrice: 1499, // Base price
+                xpDiscount: 500,
+                requiredXP: 1000
+              };
+            } else {
+              return {
+                price: 4999, // Default for other courses
+                originalPrice: 7999,
+                xpDiscount: null,
+                requiredXP: null
+              };
+            }
+          };
+
+          const pricing = getCertificationPricing(course.title);
+
           // Generate certification-specific data based on course
           const certificationData = {
             id: course._id,
@@ -42,8 +64,10 @@ const Certification = () => {
             description: course.description || "Master the fundamentals and advanced concepts",
             duration: "12 weeks", // Default duration
             level: course.level || "Intermediate",
-            price: 4999, // Default price for certifications
-            originalPrice: 7999,
+            price: pricing.price,
+            originalPrice: pricing.originalPrice,
+            xpDiscount: pricing.xpDiscount,
+            requiredXP: pricing.requiredXP,
             rating: 4.8, // Default rating
             studentsEnrolled: Math.floor(Math.random() * 2000) + 1000, // Random enrollment
             modules: course.topics?.length || 10,
@@ -275,6 +299,11 @@ const CertificationCard = ({ certification, index, onGetCertified }) => {
             <div className="text-sm text-gray-500 line-through">
               ₹{certification.originalPrice.toLocaleString()}
             </div>
+            {certification.xpDiscount && (
+              <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                ₹{certification.xpDiscount} XP Discount Applied
+              </div>
+            )}
           </div>
         </div>
 

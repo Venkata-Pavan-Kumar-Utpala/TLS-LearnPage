@@ -339,9 +339,23 @@ export const dataAdapters = {
     const getCourseStatus = (title) => {
       const titleLower = title.toLowerCase();
       if (titleLower.includes('java') || titleLower.includes('python')) {
-        return { status: 'available', price: 'Free' };
+        return {
+          status: 'available',
+          price: 'Free',
+          certificationPrice: 1499,
+          certificationDiscountedPrice: 999,
+          xpDiscount: 500,
+          requiredXP: 1000
+        };
       } else {
-        return { status: 'coming_soon', price: 'Coming Soon' };
+        return {
+          status: 'coming_soon',
+          price: 'Coming Soon',
+          certificationPrice: null,
+          certificationDiscountedPrice: null,
+          xpDiscount: null,
+          requiredXP: null
+        };
       }
     };
 
@@ -357,6 +371,10 @@ export const dataAdapters = {
       image: visuals.image,
       status: courseStatus.status,
       price: courseStatus.price,
+      certificationPrice: courseStatus.certificationPrice,
+      certificationDiscountedPrice: courseStatus.certificationDiscountedPrice,
+      xpDiscount: courseStatus.xpDiscount,
+      requiredXP: courseStatus.requiredXP,
       difficulty: backendCourse.level, // Add difficulty alias for filtering
       topics: backendCourse.topics?.map(topic => ({
         id: topic.topicId || topic._id,

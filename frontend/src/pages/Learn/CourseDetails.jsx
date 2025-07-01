@@ -46,9 +46,23 @@ const CourseDetails = () => {
         const getCourseStatus = (title) => {
           const titleLower = title.toLowerCase();
           if (titleLower.includes('java') || titleLower.includes('python')) {
-            return { status: 'available', price: 'Free' };
+            return {
+              status: 'available',
+              price: 'Free',
+              certificationPrice: 1499,
+              certificationDiscountedPrice: 999,
+              xpDiscount: 500,
+              requiredXP: 1000
+            };
           } else {
-            return { status: 'coming_soon', price: 'Coming Soon' };
+            return {
+              status: 'coming_soon',
+              price: 'Coming Soon',
+              certificationPrice: null,
+              certificationDiscountedPrice: null,
+              xpDiscount: null,
+              requiredXP: null
+            };
           }
         };
 
@@ -66,6 +80,10 @@ const CourseDetails = () => {
           rating: 4.8, // Default value
           status: courseStatus.status,
           price: courseStatus.price,
+          certificationPrice: courseStatus.certificationPrice,
+          certificationDiscountedPrice: courseStatus.certificationDiscountedPrice,
+          xpDiscount: courseStatus.xpDiscount,
+          requiredXP: courseStatus.requiredXP,
           instructor: {
             name: 'Prashanti Vasi',
             bio: 'Experienced developer and educator with years of industry experience',
@@ -284,6 +302,33 @@ const CourseDetails = () => {
                   <span>Community support</span>
                 </div>
               </div>
+
+              {/* Certification Pricing Section */}
+              {course.status === 'available' && course.certificationPrice && (
+                <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Award className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    <h4 className="font-semibold text-blue-900 dark:text-blue-100">Certificate Pricing</h4>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 dark:text-gray-400">Base Price:</span>
+                      <span className="font-medium text-gray-900 dark:text-white line-through">₹{course.certificationPrice}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 dark:text-gray-400">XP Discount ({course.requiredXP} XP):</span>
+                      <span className="font-medium text-green-600 dark:text-green-400">-₹{course.xpDiscount}</span>
+                    </div>
+                    <div className="flex justify-between items-center pt-2 border-t border-blue-200 dark:border-blue-700">
+                      <span className="font-semibold text-blue-900 dark:text-blue-100">Final Price:</span>
+                      <span className="font-bold text-xl text-blue-600 dark:text-blue-400">₹{course.certificationDiscountedPrice}</span>
+                    </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      Complete all exercises and quizzes to earn {course.requiredXP} XP and unlock the discount!
+                    </p>
+                  </div>
+                </div>
+              )}
             </motion.div>
           </div>
         </div>
