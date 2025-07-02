@@ -1,6 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/github-dark.css';
+import '../../styles/markdown.css';
 import {
   BookOpen, Code2, Trophy, PanelLeft, Play, CheckCircle,
   Clock, ArrowRight, FileText, Lightbulb, ChevronLeft, ChevronRight,
@@ -44,7 +49,6 @@ const CourseTopics = () => {
       try {
         setLoading(true);
         const course = await courseAPI.getCourse(courseId);
-        console.log('Backend course data for topics:', course);
         setBackendCourse(course);
         setError(null);
       } catch (error) {
@@ -279,8 +283,9 @@ print(df.describe())    # Statistical summary`,
             maxXP: 50,
             completed: false,
             hasNotes: !!topic.notesId, // Check if this topic has notes in the backend
+            notesContent: topic.notes, // Store the actual notes content (backend returns it as 'notes')
             content: {
-              theory: `Learn the fundamentals of ${topic.title}. This topic covers essential concepts and practical applications.`,
+              theory: topic.notes || `Learn the fundamentals of ${topic.title}. This topic covers essential concepts and practical applications.`,
               codeExample: `// Example code for ${topic.title}\nconsole.log("Learning ${topic.title}");`,
               keyPoints: [
                 `Understand ${topic.title} basics`,
@@ -750,8 +755,37 @@ print(df.describe())    # Statistical summary`,
                     <h2 className="text-2xl font-poppins font-semibold text-gray-900 dark:text-white">Notes</h2>
                   </div>
 
-                  <div className="prose prose-gray dark:prose-invert max-w-none">
-                    {currentTopic?.hasNotes ? (
+                  <div className="max-w-none">
+                    {currentTopic?.hasNotes && currentTopic?.notesContent ? (
+                      <div className="markdown-content bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50 dark:border-gray-700/50">
+                        <div className="prose prose-gray dark:prose-invert max-w-none prose-headings:text-blue-600 dark:prose-headings:text-blue-400 prose-code:text-emerald-600 dark:prose-code:text-emerald-400 prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-700">
+                          <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            rehypePlugins={[rehypeHighlight]}
+                          components={{
+                            h1: ({children}) => <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-6 pb-3 border-b border-gray-200 dark:border-gray-700">{children}</h1>,
+                            h2: ({children}) => <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-4 mt-8">{children}</h2>,
+                            h3: ({children}) => <h3 className="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-3 mt-6">{children}</h3>,
+                            code: ({inline, className, children, ...props}) => {
+                              if (inline) {
+                                return <code className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-2 py-1 rounded text-sm font-mono" {...props}>{children}</code>
+                              }
+                              return <code className={className} {...props}>{children}</code>
+                            },
+                            pre: ({children}) => <pre className="bg-gray-900 border border-gray-700 rounded-lg p-4 overflow-x-auto my-4">{children}</pre>,
+                            p: ({children}) => <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">{children}</p>,
+                            ul: ({children}) => <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-4">{children}</ul>,
+                            ol: ({children}) => <ol className="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-4">{children}</ol>,
+                            li: ({children}) => <li className="text-gray-700 dark:text-gray-300">{children}</li>,
+                            blockquote: ({children}) => <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-600 dark:text-gray-400 my-4">{children}</blockquote>,
+                            strong: ({children}) => <strong className="font-semibold text-gray-900 dark:text-gray-100">{children}</strong>
+                          }}
+                          >
+                            {currentTopic.notesContent}
+                          </ReactMarkdown>
+                        </div>
+                      </div>
+                    ) : currentTopic?.hasNotes ? (
                       <div className="flex items-center justify-center py-8">
                         <div className="text-center">
                           <AlertCircle className="w-8 h-8 text-blue-500 mx-auto mb-4" />
@@ -760,64 +794,16 @@ print(df.describe())    # Statistical summary`,
                         </div>
                       </div>
                     ) : (
-                      <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                      <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50 dark:border-gray-700/50">
                         {currentTopic?.content.theory}
                       </div>
                     )}
                   </div>
                 </motion.div>
 
-                {/* Code Example Section */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                  className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20"
-                >
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                      <Code2 className="w-4 h-4 text-green-600 dark:text-green-400" />
-                    </div>
-                    <h2 className="text-2xl font-poppins font-semibold text-gray-900 dark:text-white">Code Example</h2>
-                  </div>
 
-                  <div className="bg-gray-900 rounded-xl p-6 overflow-x-auto">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                    </div>
-                    <pre className="text-sm text-gray-300 font-mono leading-relaxed">
-                      <code>{currentTopic?.content.codeExample}</code>
-                    </pre>
-                  </div>
-                </motion.div>
 
-                {/* Key Points Section */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20"
-                >
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-8 h-8 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
-                      <Lightbulb className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
-                    </div>
-                    <h2 className="text-2xl font-poppins font-semibold text-gray-900 dark:text-white">Key Points</h2>
-                  </div>
 
-                  <ul className="space-y-3">
-                    {currentTopic?.content.keyPoints.map((point, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mt-0.5 shrink-0">
-                          <CheckCircle className="w-3 h-3 text-blue-600 dark:text-blue-400" />
-                        </div>
-                        <span className="text-gray-700 dark:text-gray-300 leading-relaxed">{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
 
                 {/* Quick Actions Section */}
                 <motion.div
