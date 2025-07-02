@@ -11,6 +11,8 @@
 [build.environment]
   # Node.js version
   NODE_VERSION = "18"
+  # Backend API URL for production
+  VITE_API_URL = "https://tls-learn-page.onrender.com/api"
 
 # Redirect rules for SPA (Single Page Application)
 [[redirects]]
