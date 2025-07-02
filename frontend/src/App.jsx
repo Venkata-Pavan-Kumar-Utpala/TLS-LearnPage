@@ -472,7 +472,7 @@ const BuildPage = () => {
   }, []);
 
   if (loading) {
-    return <LoadingScreen message="Loading Build page..." size={48} duration={800} />;
+    return <LoadingScreen showMessage={false} size={48} duration={800} />;
   }
 
   return (
@@ -495,7 +495,7 @@ const CareersPage = () => {
   }, []);
 
   if (loading) {
-    return <LoadingScreen message="Loading Careers page..." size={48} duration={800} />;
+    return <LoadingScreen showMessage={false} size={48} duration={800} />;
   }
 
   return (

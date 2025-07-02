@@ -175,7 +175,7 @@ const Certification = () => {
       <>
         <ScrollProgress />
         <LoadingScreen
-          message="Loading certifications..."
+          showMessage={false}
           size={48}
           duration={800}
         />

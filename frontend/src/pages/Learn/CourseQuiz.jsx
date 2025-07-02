@@ -295,7 +295,7 @@ const CourseQuiz = () => {
   if (loading) {
     return (
       <LoadingScreen
-        message="Loading quiz..."
+        showMessage={false}
         size={48}
         duration={800}
       />

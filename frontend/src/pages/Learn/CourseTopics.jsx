@@ -315,7 +315,7 @@ print(df.describe())    # Statistical summary`,
   if (loading) {
     return (
       <LoadingScreen
-        message="Loading course topics..."
+        showMessage={false}
         size={48}
         duration={800}
       />

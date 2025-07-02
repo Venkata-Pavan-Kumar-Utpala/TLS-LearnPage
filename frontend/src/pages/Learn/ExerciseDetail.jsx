@@ -247,7 +247,7 @@ This simple line of code will output "Hello, World!" to the console.
   if (loading) {
     return (
       <LoadingScreen
-        message="Loading exercise..."
+        showMessage={false}
         size={48}
         duration={800}
       />

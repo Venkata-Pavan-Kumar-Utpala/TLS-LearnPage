@@ -129,7 +129,7 @@ const CourseDetails = () => {
       <>
         <ScrollProgress />
         <LoadingScreen
-          message="Loading course details..."
+          showMessage={false}
           size={48}
           duration={800}
         />

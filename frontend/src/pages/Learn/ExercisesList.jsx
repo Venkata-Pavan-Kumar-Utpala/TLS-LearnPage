@@ -93,7 +93,7 @@ const ExercisesList = () => {
   if (loading) {
     return (
       <LoadingScreen
-        message="Loading exercises..."
+        showMessage={false}
         size={48}
         duration={800}
       />

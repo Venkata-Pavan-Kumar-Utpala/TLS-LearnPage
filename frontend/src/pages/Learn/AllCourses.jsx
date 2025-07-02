@@ -67,7 +67,7 @@ const AllCourses = () => {
       <>
         <ScrollProgress />
         <LoadingScreen
-          message="Loading all courses..."
+          showMessage={false}
           size={48}
           duration={800}
         />

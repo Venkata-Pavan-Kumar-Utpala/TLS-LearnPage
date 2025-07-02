@@ -162,8 +162,7 @@ const XPBadge = () => {
           >
             {loading ? (
               <div className="p-6 text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">Loading XP data...</p>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
               </div>
             ) : (
               <div className="p-6">
