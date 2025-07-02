@@ -40,14 +40,14 @@ const Certification = () => {
             const titleLower = title.toLowerCase();
             if (titleLower.includes('java') || titleLower.includes('python')) {
               return {
-                price: 999, // Final price after XP discount
+                price: 1499, // Original price (no discount pre-applied)
                 originalPrice: 1499, // Base price
                 xpDiscount: 500,
                 requiredXP: 1000
               };
             } else {
               return {
-                price: 4999, // Default for other courses
+                price: 7999, // Original price (no discount pre-applied)
                 originalPrice: 7999,
                 xpDiscount: null,
                 requiredXP: null
@@ -296,12 +296,9 @@ const CertificationCard = ({ certification, index, onGetCertified }) => {
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               ₹{certification.price.toLocaleString()}
             </div>
-            <div className="text-sm text-gray-500 line-through">
-              ₹{certification.originalPrice.toLocaleString()}
-            </div>
             {certification.xpDiscount && (
-              <div className="text-xs text-green-600 dark:text-green-400 mt-1">
-                ₹{certification.xpDiscount} XP Discount Applied
+              <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                Save ₹{certification.xpDiscount} with {certification.requiredXP} XP
               </div>
             )}
           </div>

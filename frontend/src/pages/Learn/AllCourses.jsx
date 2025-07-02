@@ -45,12 +45,12 @@ const AllCourses = () => {
     { id: "beginner", label: "Beginner" },
     { id: "intermediate", label: "Intermediate" },
     { id: "advanced", label: "Advanced" },
-    { id: "free", label: "Free" }
+    { id: "available", label: "Available" }
   ];
 
   const filteredCourses = courses.filter(course => {
     if (selectedFilter === "all") return true;
-    if (selectedFilter === "free") return course.price === "Free";
+    if (selectedFilter === "available") return course.status === "available";
     return course.difficulty?.toLowerCase() === selectedFilter;
   });
 

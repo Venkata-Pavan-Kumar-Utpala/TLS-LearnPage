@@ -6,6 +6,7 @@ import {
   Trophy, Star, Home, X, Send
 } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
+import LoadingScreen from "../../components/LoadingScreen";
 import useInViewport from "../../hooks/useInViewport";
 import { courseAPI, progressAPI } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
@@ -293,12 +294,11 @@ const CourseQuiz = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading quiz...</p>
-        </div>
-      </div>
+      <LoadingScreen
+        message="Loading quiz..."
+        size={48}
+        duration={800}
+      />
     );
   }
 

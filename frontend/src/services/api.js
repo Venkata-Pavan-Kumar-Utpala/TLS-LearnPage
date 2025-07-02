@@ -343,7 +343,7 @@ export const dataAdapters = {
       if (titleLower.includes('java') || titleLower.includes('python')) {
         return {
           status: 'available',
-          price: 'Free',
+          price: '₹1499',
           certificationPrice: 1499,
           certificationDiscountedPrice: 999,
           xpDiscount: 500,

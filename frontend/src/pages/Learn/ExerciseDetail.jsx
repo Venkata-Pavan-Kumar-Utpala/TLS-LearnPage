@@ -11,13 +11,15 @@ import {
 } from 'lucide-react';
 import { exerciseAPI } from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
+import { useTheme } from '../../context/ThemeContext';
 
 const ExerciseDetail = () => {
   const { courseId, exerciseId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { theme } = useTheme();
   const codeEditorRef = useRef(null);
-  
+
   const [activeTab, setActiveTab] = useState('theory');
   const [exercise, setExercise] = useState(null);
   const [userCode, setUserCode] = useState('');
@@ -30,7 +32,7 @@ const ExerciseDetail = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [terminalCollapsed, setTerminalCollapsed] = useState(false);
   const [currentFile, setCurrentFile] = useState('main.js');
-  const [editorTheme, setEditorTheme] = useState('vs-dark');
+  const [editorTheme, setEditorTheme] = useState(theme === 'dark' ? 'vs-dark' : 'light');
 
   // Mock exercise data
   const mockExercise = {
@@ -62,8 +64,7 @@ console.log("Hello, World!");
 
 This simple line of code will output "Hello, World!" to the console.
     `,
-    starterCode: `// Write your Hello World program here
-// Use console.log() to output "Hello, World!"
+    starterCode: `// Use console.log() to output "Hello, World!"
 
 `,
     expectedOutput: 'Hello, World!',
@@ -121,6 +122,11 @@ This simple line of code will output "Hello, World!" to the console.
       goToPreviousTab();
     }
   };
+
+  // Update editor theme when app theme changes
+  useEffect(() => {
+    setEditorTheme(theme === 'dark' ? 'vs-dark' : 'light');
+  }, [theme]);
 
   useEffect(() => {
     const fetchExercise = async () => {
@@ -444,18 +450,13 @@ This simple line of code will output "Hello, World!" to the console.
           {activeTab === 'compiler' && (
             <div className="h-[700px] bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
               {/* Code Editor Header */}
-              <div className="bg-gray-800 text-white px-4 py-3 flex items-center justify-between">
+              <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-3 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-2">
-                  <div className="flex gap-1">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  </div>
-                  <span className="font-medium ml-2">Code Editor</span>
+                  <span className="font-medium">Code Editor</span>
                 </div>
                 <button
                   onClick={resetCode}
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                 >
                   <RotateCcw className="w-4 h-4" />
                 </button>
@@ -466,7 +467,7 @@ This simple line of code will output "Hello, World!" to the console.
                 <Editor
                   height="100%"
                   defaultLanguage="javascript"
-                  theme="vs-dark"
+                  theme={editorTheme}
                   value={userCode}
                   onChange={(value) => setUserCode(value || '')}
                   options={{
@@ -549,11 +550,6 @@ This simple line of code will output "Hello, World!" to the console.
                     });
                   }}
                 />
-
-                {/* Language indicator */}
-                <div className="absolute bottom-2 right-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
-                  JAVASCRIPT | Line 1
-                </div>
               </div>
 
               {/* Action Buttons */}
@@ -569,7 +565,7 @@ This simple line of code will output "Hello, World!" to the console.
                 <button
                   onClick={submitCode}
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-all duration-300 disabled:opacity-50"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-300 disabled:opacity-50"
                 >
                   <Send className="w-4 h-4" />
                   {isSubmitting ? 'Submitting...' : 'Submit'}
@@ -582,34 +578,34 @@ This simple line of code will output "Hello, World!" to the console.
           {activeTab === 'preview' && (
             <div className="h-[700px] bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
               {/* Output Header */}
-              <div className="bg-gradient-to-r from-green-500 to-teal-600 text-white px-4 py-3 flex items-center gap-2">
+              <div className="bg-white dark:bg-gradient-to-r dark:from-green-500 dark:to-teal-600 bg-gradient-to-r from-green-500 to-teal-600 text-gray-900 dark:text-white px-4 py-3 flex items-center gap-2 border-b border-gray-200 dark:border-gray-700">
                 <Terminal className="w-4 h-4" />
                 <span className="font-medium">Output</span>
               </div>
 
               {/* Terminal Output */}
-              <div className="h-[calc(100%-3.5rem)] bg-gray-900 text-white font-mono text-sm">
+              <div className="h-[calc(100%-3.5rem)] bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-mono text-sm">
                 <div className="p-4 h-full overflow-auto custom-scrollbar">
                   {output ? (
                     <>
-                      <div className="text-green-400 mb-2">$ node main.js</div>
-                      <div className="text-white whitespace-pre-wrap">
+                      <div className="text-green-600 dark:text-green-400 mb-2">$ node main.js</div>
+                      <div className="text-gray-900 dark:text-white whitespace-pre-wrap">
                         {output}
                       </div>
                       {exercise?.expectedOutput && (
-                        <div className="mt-4 pt-2 border-t border-gray-700">
-                          <div className="text-gray-400 text-xs mb-1">Expected Output:</div>
-                          <div className="text-yellow-400">{exercise.expectedOutput}</div>
+                        <div className="mt-4 pt-2 border-t border-gray-300 dark:border-gray-700">
+                          <div className="text-gray-600 dark:text-gray-400 text-xs mb-1">Expected Output:</div>
+                          <div className="text-yellow-600 dark:text-yellow-400">{exercise.expectedOutput}</div>
                         </div>
                       )}
                     </>
                   ) : (
                     <div className="flex flex-col items-center justify-center h-full text-center">
                       <Eye className="w-16 h-16 text-gray-500 mb-4" />
-                      <h3 className="text-xl font-semibold text-white mb-2">
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                         Live Preview
                       </h3>
-                      <p className="text-gray-400">
+                      <p className="text-gray-600 dark:text-gray-400">
                         Run your code in the Compiler tab to see the output here.
                       </p>
                     </div>

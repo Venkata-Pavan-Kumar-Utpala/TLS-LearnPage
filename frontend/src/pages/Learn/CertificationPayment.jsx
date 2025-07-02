@@ -55,14 +55,14 @@ const CertificationPayment = () => {
             const titleLower = title.toLowerCase();
             if (titleLower.includes('java') || titleLower.includes('python')) {
               return {
-                price: 999, // Final price after XP discount
+                price: 1499, // Original price (no discount pre-applied)
                 originalPrice: 1499, // Base price
                 xpDiscount: 500,
                 requiredXP: 1000
               };
             } else {
               return {
-                price: 4999, // Default for other courses
+                price: 7999, // Original price (no discount pre-applied)
                 originalPrice: 7999,
                 xpDiscount: null,
                 requiredXP: null
@@ -133,6 +133,23 @@ const CertificationPayment = () => {
       ...formData,
       [name]: value
     });
+  };
+
+  // Calculate final price based on user's XP
+  const getFinalPrice = () => {
+    if (!certification) return 0;
+
+    // Check if user has enough XP for discount
+    if (certification.xpDiscount && certification.requiredXP && userXP >= certification.requiredXP) {
+      return certification.price - certification.xpDiscount;
+    }
+
+    return certification.price;
+  };
+
+  // Check if user is eligible for XP discount
+  const isEligibleForXPDiscount = () => {
+    return certification?.xpDiscount && certification?.requiredXP && userXP >= certification.requiredXP;
   };
 
   const handleInitiatePayment = async () => {
@@ -384,7 +401,7 @@ const CertificationPayment = () => {
                         <div>
                           <h4 className="font-semibold text-gray-900 dark:text-white">UPI Payment</h4>
                           <p className="text-sm text-gray-600 dark:text-gray-400">Secure payment with UPI</p>
-                          <p className="text-lg font-bold text-blue-600 dark:text-blue-400">₹{certification.price.toLocaleString()}</p>
+                          <p className="text-lg font-bold text-blue-600 dark:text-blue-400">₹{getFinalPrice().toLocaleString()}</p>
                         </div>
                       </div>
                       {selectedPaymentMethod === 'upi' && (
@@ -456,7 +473,7 @@ const CertificationPayment = () => {
                         Scan QR code or pay to UPI ID: <strong className="text-gray-900 dark:text-white">9676663136@axl</strong>
                       </p>
                       <p className="text-lg font-bold text-blue-600 dark:text-blue-400 mt-2">
-                        Amount: ₹{certification?.price?.toLocaleString()}
+                        Amount: ₹{getFinalPrice()?.toLocaleString()}
                       </p>
                     </div>
 
@@ -639,22 +656,17 @@ const CertificationPayment = () => {
                 <div className="border-t border-gray-200 dark:border-gray-600 pt-4 space-y-2">
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Original Price:</span>
-                    <span className="text-gray-600 dark:text-gray-400 line-through">₹{certification.originalPrice.toLocaleString()}</span>
+                    <span className="text-gray-900 dark:text-white">₹{certification.originalPrice.toLocaleString()}</span>
                   </div>
-                  {certification.xpDiscount ? (
+                  {isEligibleForXPDiscount() && (
                     <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">XP Discount ({certification.requiredXP} XP):</span>
                       <span className="text-green-600 dark:text-green-400">-₹{certification.xpDiscount.toLocaleString()}</span>
                     </div>
-                  ) : (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Discount:</span>
-                      <span className="text-green-600 dark:text-green-400">-₹{(certification.originalPrice - certification.price).toLocaleString()}</span>
-                    </div>
                   )}
                   <div className="flex justify-between text-xl font-bold">
                     <span className="text-gray-900 dark:text-white">Total:</span>
-                    <span className="text-gray-900 dark:text-white">₹{certification.price.toLocaleString()}</span>
+                    <span className="text-gray-900 dark:text-white">₹{getFinalPrice().toLocaleString()}</span>
                   </div>
                 </div>
               </div>
