@@ -80,6 +80,8 @@ const CourseTopics = () => {
     fetchUserProgress();
   }, [isAuthenticated]);
 
+
+
   // Course topics data
   const courseTopicsData = {
     "python": {
@@ -262,28 +264,33 @@ print(df.describe())    # Statistical summary`,
   // Create a hybrid course object using backend data when available
   const currentCourse = (() => {
     if (backendCourse && backendCourse.topics) {
-      // Use backend course data with fallback content
+      // Use backend course data with placeholder content for now
       return {
         title: backendCourse.title,
         description: `Master ${backendCourse.title} fundamentals with hands-on coding exercises`,
-        topics: backendCourse.topics.map((topic, index) => ({
-          id: topic._id || topic.topicId || topic.id || `topic_${index}`,
-          title: topic.title,
-          description: `Learn about ${topic.title} concepts and applications`,
-          exercises: 5,
-          maxXP: 50,
-          completed: false,
-          content: {
-            theory: `Learn the fundamentals of ${topic.title}. This topic covers essential concepts and practical applications.`,
-            codeExample: `// Example code for ${topic.title}\nconsole.log("Learning ${topic.title}");`,
-            keyPoints: [
-              `Understand ${topic.title} basics`,
-              "Apply concepts in practical scenarios",
-              "Master key techniques",
-              "Build real-world applications"
-            ]
-          }
-        }))
+        topics: backendCourse.topics.map((topic, index) => {
+          const topicId = topic._id || topic.topicId || topic.id || `topic_${index}`;
+
+          return {
+            id: topicId,
+            title: topic.title,
+            description: `Learn about ${topic.title} concepts and applications`,
+            exercises: 5,
+            maxXP: 50,
+            completed: false,
+            hasNotes: !!topic.notesId, // Check if this topic has notes in the backend
+            content: {
+              theory: `Learn the fundamentals of ${topic.title}. This topic covers essential concepts and practical applications.`,
+              codeExample: `// Example code for ${topic.title}\nconsole.log("Learning ${topic.title}");`,
+              keyPoints: [
+                `Understand ${topic.title} basics`,
+                "Apply concepts in practical scenarios",
+                "Master key techniques",
+                "Build real-world applications"
+              ]
+            }
+          };
+        })
       };
     }
 
@@ -740,13 +747,23 @@ print(df.describe())    # Statistical summary`,
                     <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                       <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <h2 className="text-2xl font-poppins font-semibold text-gray-900 dark:text-white">Theory</h2>
+                    <h2 className="text-2xl font-poppins font-semibold text-gray-900 dark:text-white">Notes</h2>
                   </div>
-                  
+
                   <div className="prose prose-gray dark:prose-invert max-w-none">
-                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                      {currentTopic?.content.theory}
-                    </p>
+                    {currentTopic?.hasNotes ? (
+                      <div className="flex items-center justify-center py-8">
+                        <div className="text-center">
+                          <AlertCircle className="w-8 h-8 text-blue-500 mx-auto mb-4" />
+                          <p className="text-gray-600 dark:text-gray-400 mb-2">Detailed notes are available for this topic!</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-500">Notes feature is being integrated. Coming soon...</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                        {currentTopic?.content.theory}
+                      </div>
+                    )}
                   </div>
                 </motion.div>
 

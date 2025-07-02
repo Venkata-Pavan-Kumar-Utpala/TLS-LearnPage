@@ -8,6 +8,7 @@ import userRoutes from "./routes/userRoutes.js";
 import userProgressRouter from "./routes/userProgressRoutes.js";
 import paymentRouter from "./routes/paymentRoutes.js";
 import certificationRoutes from "./routes/certificationRoutes.js";
+import compilerRoutes from "./routes/compilerRoutes.js";
 import { insertJavaMarkdownContent } from "./config/insertJavaMarkdown.js";
 import { insertPythonMarkdownContent } from "./config/insertPythonMarkdown.js";
 
@@ -54,6 +55,7 @@ app.use("/api/auth", userRoutes);
 app.use("/api/user-progress", userProgressRouter);
 app.use("/api/certificate", paymentRouter);
 app.use("/api/certification", certificationRoutes);
+app.use("/api/compiler", compilerRoutes);
 
 // Test route
 app.get("/", (req, res) => {

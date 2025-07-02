@@ -269,6 +269,8 @@ export const compilerAPI = {
   },
 };
 
+
+
 // Data Adapters - Transform backend data to frontend format
 export const dataAdapters = {
   // Adapt course data from backend to frontend format
