@@ -182,7 +182,7 @@ const Courses = () => {
 
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
+    <div className="min-h-screen relative overflow-hidden bg-[#daf0fa] dark:bg-[#020b23]">
       <ScrollProgress />
 
       {/* Header Section */}
