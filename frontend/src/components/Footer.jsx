@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
-    <footer className="bg-[#00113b] text-white text-center pt-10 px-5 pb-0 w-full relative z-10 mt-5 overflow-hidden">
+    <footer className="bg-[#00113b] text-white text-center pt-16 px-8 pb-0 w-full relative z-10 overflow-hidden -mt-1">
       {/* Top Section with Centered Columns */}
       <div className="pb-56 flex flex-col items-center">
         <div className="w-full max-w-5xl flex flex-col md:flex-row justify-center items-center md:items-start md:space-x-32 text-center md:text-left space-y-8 md:space-y-0">

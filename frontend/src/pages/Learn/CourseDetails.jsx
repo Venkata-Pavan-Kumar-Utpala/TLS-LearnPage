@@ -43,13 +43,12 @@ const CourseDetails = () => {
           }
         };
 
-        // Determine course status and pricing based on title
+        // Determine course status based on title
         const getCourseStatus = (title) => {
           const titleLower = title.toLowerCase();
           if (titleLower.includes('java') || titleLower.includes('python')) {
             return {
               status: 'available',
-              price: '₹1499',
               certificationPrice: 1499,
               certificationDiscountedPrice: 999,
               xpDiscount: 500,
@@ -58,7 +57,6 @@ const CourseDetails = () => {
           } else {
             return {
               status: 'coming_soon',
-              price: 'Coming Soon',
               certificationPrice: null,
               certificationDiscountedPrice: null,
               xpDiscount: null,
@@ -80,7 +78,6 @@ const CourseDetails = () => {
           students: 1250, // Default value
           rating: 4.8, // Default value
           status: courseStatus.status,
-          price: courseStatus.price,
           certificationPrice: courseStatus.certificationPrice,
           certificationDiscountedPrice: courseStatus.certificationDiscountedPrice,
           xpDiscount: courseStatus.xpDiscount,
@@ -253,12 +250,6 @@ const CourseDetails = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-white/20 dark:border-gray-700/20 sticky top-24"
             >
-              <div className="text-center mb-6">
-                <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  {course.price}
-                </div>
-              </div>
-
               {course.status === 'coming_soon' ? (
                 <motion.button
                   disabled
@@ -302,8 +293,6 @@ const CourseDetails = () => {
                   <span>Community support</span>
                 </div>
               </div>
-
-
             </motion.div>
           </div>
         </div>

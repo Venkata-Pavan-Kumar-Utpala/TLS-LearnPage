@@ -186,7 +186,7 @@ const Courses = () => {
       <>
         <ScrollProgress />
         <LoadingScreen
-          message="Loading courses..."
+          showMessage={false}
           size={48}
           duration={800}
         />
@@ -204,10 +204,10 @@ const Courses = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-      <div className="relative z-10 pt-24 pb-12">
-        <div className="container px-6 mx-auto max-w-7xl">
+      <div className="relative z-10 pt-24 pb-16">
+        <div className="container px-8 mx-auto max-w-7xl">
           {/* Courses Heading - Match Live Batches structure */}
-          <div className="flex items-center gap-3 mb-8">
+          <div className="flex items-center gap-3 mb-12">
             <h2
               ref={coursesHeadingRef}
               className={`font-poppins text-5xl font-medium brand-heading-primary ${isCoursesHeadingInViewport ? 'in-viewport' : ''} uppercase tracking-wider`}
@@ -215,7 +215,7 @@ const Courses = () => {
               Courses
             </h2>
           </div>
-          <p className="text-lg text-blue-600 dark:text-blue-400 font-medium mb-8">
+          <p className="text-lg text-blue-600 dark:text-blue-400 font-medium mb-12">
             Discover our comprehensive learning programs
           </p>
 
@@ -224,7 +224,7 @@ const Courses = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="mb-16"
+            className="mb-20"
           >
 
 
@@ -286,8 +286,9 @@ const Courses = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
+            className="pb-16"
           >
-            <div className="flex items-center gap-3 mb-8">
+            <div className="flex items-center gap-3 mb-12">
               <h2
                 ref={liveBatchesHeadingRef}
                 className={`font-poppins text-3xl font-medium brand-heading-primary ${isLiveBatchesHeadingInViewport ? 'in-viewport' : ''} uppercase tracking-wider`}
@@ -304,7 +305,7 @@ const Courses = () => {
             </div>
 
             {/* Netflix-style carousel for cards */}
-            <div className="relative px-1">
+            <div className="relative px-2 mb-8">
               <Carousel
                 opts={{
                   align: "start",
@@ -367,7 +368,7 @@ const LiveBatchCard = ({ batch, index, onWhatsAppClick, onGetStarted }) => {
         type: "spring",
         stiffness: 100
       }}
-      className="bg-white/80 dark:bg-gray-800/80 rounded-2xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer h-full flex flex-col"
+      className="bg-white/80 dark:bg-gray-800/80 rounded-2xl p-8 shadow-lg border border-gray-200/50 dark:border-gray-600/50 cursor-pointer h-full flex flex-col"
     >
       {/* Header - Fixed height section */}
       <div className="mb-6">
