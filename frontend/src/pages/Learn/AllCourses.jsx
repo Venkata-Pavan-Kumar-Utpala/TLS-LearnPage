@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Clock, Star, BookOpen, ArrowRight, Filter } from "lucide-react";
 import { useState, useEffect } from "react";
 import ScrollProgress from "../../components/ScrollProgress";
+import LoadingScreen from "../../components/LoadingScreen";
 import useInViewport from "../../hooks/useInViewport";
 import CourseCard from "../../components/CourseCard";
 import { courseAPI, dataAdapters } from "../../services/api";
@@ -60,6 +61,20 @@ const AllCourses = () => {
     navigate(`/learn/courses/${courseId}`);
   };
 
+  // Loading state
+  if (loading) {
+    return (
+      <>
+        <ScrollProgress />
+        <LoadingScreen
+          message="Loading all courses..."
+          size={48}
+          duration={800}
+        />
+      </>
+    );
+  }
+
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
       <ScrollProgress />
@@ -111,19 +126,6 @@ const AllCourses = () => {
 
       {/* Courses Grid */}
       <div className="container px-6 pb-16 mx-auto max-w-7xl">
-        {/* Loading State */}
-        {loading && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div key={i} className="bg-white/90 dark:bg-gray-800/90 rounded-2xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-600/50 animate-pulse">
-                <div className="h-48 bg-gray-300 dark:bg-gray-600 rounded-xl mb-4"></div>
-                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded mb-4"></div>
-                <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded mb-2"></div>
-                <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
-              </div>
-            ))}
-          </div>
-        )}
 
         {/* Error State */}
         {error && !loading && (

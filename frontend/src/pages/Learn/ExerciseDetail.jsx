@@ -12,6 +12,7 @@ import {
 import { exerciseAPI } from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../context/ThemeContext';
+import LoadingScreen from '../../components/LoadingScreen';
 
 const ExerciseDetail = () => {
   const { courseId, exerciseId } = useParams();
@@ -245,12 +246,11 @@ This simple line of code will output "Hello, World!" to the console.
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128] flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading exercise...</p>
-        </div>
-      </div>
+      <LoadingScreen
+        message="Loading exercise..."
+        size={48}
+        duration={800}
+      />
     );
   }
 

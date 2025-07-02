@@ -16,6 +16,7 @@ import {
   Zap
 } from 'lucide-react';
 import ScrollProgress from '../../components/ScrollProgress';
+import LoadingScreen from '../../components/LoadingScreen';
 import useInViewport from '../../hooks/useInViewport';
 import { courseAPI } from '../../services/api';
 
@@ -171,16 +172,14 @@ const Certification = () => {
   // Show loading state while fetching certifications
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-[#daf0fa] via-[#bceaff] to-[#bceaff] dark:from-[#020b23] dark:via-[#001233] dark:to-[#0a1128]">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-400">Loading certifications...</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <>
+        <ScrollProgress />
+        <LoadingScreen
+          message="Loading certifications..."
+          size={48}
+          duration={800}
+        />
+      </>
     );
   }
 

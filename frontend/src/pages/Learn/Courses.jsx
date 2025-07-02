@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Clock, Calendar, MessageCircle, Dot, ArrowRight } from "lucide-react";
 import ScrollProgress from "../../components/ScrollProgress";
+import LoadingScreen from "../../components/LoadingScreen";
 import CourseCard from "../../components/CourseCard";
 import CourseLogosMarquee from "../../components/CourseLogosMarquee";
 import useInViewport from "../../hooks/useInViewport";
@@ -179,7 +180,19 @@ const Courses = () => {
     window.open(whatsappUrl, '_blank');
   };
 
-
+  // Loading state
+  if (loading) {
+    return (
+      <>
+        <ScrollProgress />
+        <LoadingScreen
+          message="Loading courses..."
+          size={48}
+          duration={800}
+        />
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-[#daf0fa] dark:bg-[#020b23]">
@@ -213,19 +226,7 @@ const Courses = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mb-16"
           >
-            {/* Loading State */}
-            {loading && (
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="bg-white/90 dark:bg-gray-800/90 rounded-2xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-600/50 animate-pulse">
-                    <div className="h-48 bg-gray-300 dark:bg-gray-600 rounded-xl mb-4"></div>
-                    <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded mb-4"></div>
-                    <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded mb-2"></div>
-                    <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
-                  </div>
-                ))}
-              </div>
-            )}
+
 
             {/* Error State */}
             {error && !loading && (

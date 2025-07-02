@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import useInViewport from './hooks/useInViewport'
 import FloatingCodeWords from './components/FloatingCodeWords'
+import LoadingScreen from './components/LoadingScreen'
 
 // Homepage component
 const HomePage = () => {
@@ -461,23 +462,51 @@ const HomePage = () => {
   )
 }
 
-const BuildPage = () => (
-  <div className="min-h-screen pt-24 pb-16 flex items-center justify-center bg-transparent dark:bg-transparent">
-    <div className="max-w-md mx-auto text-center">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Build Page</h1>
-      <p className="text-gray-600 dark:text-gray-300">Coming soon...</p>
-    </div>
-  </div>
-)
+const BuildPage = () => {
+  const [loading, setLoading] = useState(true);
 
-const CareersPage = () => (
-  <div className="min-h-screen pt-24 pb-16 flex items-center justify-center bg-transparent dark:bg-transparent">
-    <div className="max-w-md mx-auto text-center">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Careers Page</h1>
-      <p className="text-gray-600 dark:text-gray-300">Coming soon...</p>
+  useEffect(() => {
+    // Simulate loading time for consistency
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <LoadingScreen message="Loading Build page..." size={48} duration={800} />;
+  }
+
+  return (
+    <div className="min-h-screen pt-24 pb-16 flex items-center justify-center bg-transparent dark:bg-transparent">
+      <div className="max-w-md mx-auto text-center">
+        <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Build Page</h1>
+        <p className="text-gray-600 dark:text-gray-300">Coming soon...</p>
+      </div>
     </div>
-  </div>
-)
+  );
+};
+
+const CareersPage = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading time for consistency
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <LoadingScreen message="Loading Careers page..." size={48} duration={800} />;
+  }
+
+  return (
+    <div className="min-h-screen pt-24 pb-16 flex items-center justify-center bg-transparent dark:bg-transparent">
+      <div className="max-w-md mx-auto text-center">
+        <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Careers Page</h1>
+        <p className="text-gray-600 dark:text-gray-300">Coming soon...</p>
+      </div>
+    </div>
+  );
+};
 
 
 
