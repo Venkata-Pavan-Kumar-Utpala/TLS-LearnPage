@@ -20,18 +20,20 @@ const LoadingScreen = ({
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="flex flex-col items-center gap-6"
+        className="flex flex-col items-center gap-12"
       >
         {/* 3D Loader */}
-        <Loader3D size={size} duration={duration} />
-        
+        <div className="mb-4">
+          <Loader3D size={size} duration={duration} />
+        </div>
+
         {/* Loading Message */}
         {showMessage && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-center"
+            className="text-center mt-8"
           >
             <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
               {message}
