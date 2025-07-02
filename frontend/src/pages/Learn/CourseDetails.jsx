@@ -259,40 +259,42 @@ const CourseDetails = () => {
                   <span>Coming Soon</span>
                 </motion.button>
               ) : (
-                <motion.button
-                  onClick={handleStartCourse}
-                  whileHover={{
-                    x: 2,
-                    transition: { duration: 0.2, ease: "easeOut" }
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full h-14 bg-emerald-600 hover:bg-emerald-500 text-white border-none rounded-lg cursor-pointer inline-flex items-center justify-center gap-2 transition-all duration-300 font-sans mb-6"
-                >
-                  <Play className="w-5 h-5" />
-                  <span>Start Learning</span>
-                  <motion.div
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                  >
-                    <ArrowRight className="w-5 h-5" />
-                  </motion.div>
-                </motion.button>
-              )}
+                <>
+                  <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400 mb-6">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span>Lifetime access</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span>Mobile and desktop access</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span>Community support</span>
+                    </div>
+                  </div>
 
-              <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span>Lifetime access</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span>Mobile and desktop access</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span>Community support</span>
-                </div>
-              </div>
+                  <motion.button
+                    onClick={handleStartCourse}
+                    whileHover={{
+                      x: 2,
+                      transition: { duration: 0.2, ease: "easeOut" }
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full h-14 bg-emerald-600 hover:bg-emerald-500 text-white border-none rounded-lg cursor-pointer inline-flex items-center justify-center gap-2 transition-all duration-300 font-sans"
+                  >
+                    <Play className="w-5 h-5" />
+                    <span>Start Learning</span>
+                    <motion.div
+                      whileHover={{ x: 4 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                    >
+                      <ArrowRight className="w-5 h-5" />
+                    </motion.div>
+                  </motion.button>
+                </>
+              )}
             </motion.div>
           </div>
         </div>
@@ -305,13 +307,13 @@ const CourseDetails = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="flex gap-4 mb-12 border-b border-gray-200 dark:border-gray-700"
+          className="flex gap-2 sm:gap-4 mb-12 border-b border-gray-200 dark:border-gray-700 overflow-x-auto"
         >
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-6 py-3 font-medium transition-all duration-300 border-b-2 ${
+              className={`px-3 sm:px-6 py-3 font-medium transition-all duration-300 border-b-2 whitespace-nowrap text-sm sm:text-base flex-shrink-0 ${
                 activeTab === tab.id
                   ? "border-blue-600 text-blue-600 dark:text-blue-400"
                   : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
@@ -408,24 +410,24 @@ const CourseDetails = () => {
           )}
 
           {activeTab === "instructor" && (
-            <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-xl p-8 border border-white/20 dark:border-gray-700/20">
-              <div className="flex items-start gap-6">
-                <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full flex items-center justify-center">
-                  <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-xl p-4 sm:p-6 md:p-8 border border-white/20 dark:border-gray-700/20">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                     {course.instructor.name.charAt(0)}
                   </span>
                 </div>
-                <div>
+                <div className="flex-1 text-center sm:text-left">
                   <h3
                     ref={instructorRef}
-                    className={`font-poppins text-2xl font-medium mb-2 hover-gradient-text ${isInstructorInViewport ? 'in-viewport' : ''}`}
+                    className={`font-poppins text-xl sm:text-2xl font-medium mb-2 hover-gradient-text ${isInstructorInViewport ? 'in-viewport' : ''}`}
                   >
                     {course.instructor.name}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm sm:text-base">
                     {course.instructor.bio}
                   </p>
-                  <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                  <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm text-gray-500 dark:text-gray-400">
                     <div className="flex items-center gap-1">
                       <Users className="w-4 h-4" />
                       <span>{course.students} students</span>

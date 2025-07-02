@@ -575,9 +575,9 @@ print(df.describe())    # Statistical summary`,
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMobileMenuOpen(true)}
-          className="lg:hidden fixed top-24 left-4 z-40 p-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl border border-white/20 dark:border-gray-700/20 shadow-lg"
+          className="lg:hidden fixed top-20 right-4 z-40 p-3 bg-blue-500/90 hover:bg-blue-600/90 backdrop-blur-sm rounded-full border border-blue-400/30 shadow-lg transition-all duration-200 hover:scale-105"
         >
-          <Menu className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <Menu className="w-5 h-5 text-white" />
         </button>
 
         {/* Mobile Sidebar Overlay */}
@@ -665,16 +665,7 @@ print(df.describe())    # Statistical summary`,
               sidebarCollapsed ? 'px-6' : 'px-6 lg:px-8'
             }`}>
               
-              {/* Breadcrumb */}
-              <nav className="mb-6 flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 font-medium">
-                <span className="hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer">Roadmaps</span>
-                <span className="mx-1.5">/</span>
-                <span className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
-                  {currentCourse.title}
-                </span>
-                <span className="mx-1.5">/</span>
-                <span className="text-gray-900 dark:text-white font-bold">{currentTopic?.title}</span>
-              </nav>
+
 
               {/* Header */}
               <div className="border-b border-gray-200/20 dark:border-gray-700/30 bg-white/40 dark:bg-gray-900/20 backdrop-blur-sm rounded-2xl p-8 mb-8">
@@ -757,7 +748,7 @@ print(df.describe())    # Statistical summary`,
 
                   <div className="max-w-none">
                     {currentTopic?.hasNotes && currentTopic?.notesContent ? (
-                      <div className="markdown-content bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50 dark:border-gray-700/50">
+                      <div className="markdown-content bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-200/50 dark:border-gray-700/50">
                         <div className="prose prose-gray dark:prose-invert max-w-none prose-headings:text-blue-600 dark:prose-headings:text-blue-400 prose-code:text-emerald-600 dark:prose-code:text-emerald-400 prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-700">
                           <ReactMarkdown
                             remarkPlugins={[remarkGfm]}
@@ -778,7 +769,12 @@ print(df.describe())    # Statistical summary`,
                             ol: ({children}) => <ol className="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-4">{children}</ol>,
                             li: ({children}) => <li className="text-gray-700 dark:text-gray-300">{children}</li>,
                             blockquote: ({children}) => <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-600 dark:text-gray-400 my-4">{children}</blockquote>,
-                            strong: ({children}) => <strong className="font-semibold text-gray-900 dark:text-gray-100">{children}</strong>
+                            strong: ({children}) => <strong className="font-semibold text-gray-900 dark:text-gray-100">{children}</strong>,
+                            table: ({children}) => (
+                              <div className="overflow-x-auto -mx-2 sm:mx-0 my-4">
+                                <table className="min-w-full">{children}</table>
+                              </div>
+                            )
                           }}
                           >
                             {currentTopic.notesContent}

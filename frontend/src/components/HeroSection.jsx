@@ -55,7 +55,7 @@ const HeroSection = () => {
 
             {/* Warning Text - Right Below Heading in Left Column */}
             <motion.p
-              className="font-poppins text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 hover-gradient-text whitespace-nowrap"
+              className="font-poppins text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 hover-gradient-text max-w-full break-words"
               initial={{ filter: "blur(4px)" }}
               animate={{ filter: "blur(0px)" }}
               transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
