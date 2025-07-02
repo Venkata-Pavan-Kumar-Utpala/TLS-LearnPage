@@ -19,7 +19,9 @@ export const getAllCourses = async (req, res) => {
 export const getCourseById = async (req, res) => {
   const { courseId } = req.params;
   try {
-    const course = await Course.findById(courseId).populate("topics.quizId");
+    const course = await Course.findById(courseId)
+      .populate("topics.quizId")
+      .populate("topics.notesId");
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
@@ -28,6 +30,9 @@ export const getCourseById = async (req, res) => {
       topicId: topic._id,
       title: topic.title,
       quizId: topic.quizId ? topic.quizId._id : null, // Ensure quizId is populated
+      notesId: topic.notesId ? topic.notesId._id || topic.notesId : null, // Ensure notesId is included
+      notes:
+        topic.notesId && topic.notesId.content ? topic.notesId.content : null,
     }));
     res.status(200).json({
       ...course.toObject(),

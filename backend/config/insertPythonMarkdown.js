@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 import Notes from "../models/Notes.js";
 import Course from "../models/Course.js";
 
@@ -49,23 +48,17 @@ export const insertPythonMarkdownContent = async () => {
       console.log("Python course already exists, skipping course creation");
     }
 
-    // Insert notes only if not already present and link to topics
+    // Insert or update notes and always ensure correct linking
     let courseModified = false;
     for (const note of predefinedPythonNotes) {
       const filePath = path.join(pythonNotesDir, note.file);
       if (fs.existsSync(filePath)) {
         const content = fs.readFileSync(filePath, "utf-8");
-        // Check if a note with this content is already linked to the course topic
-        const topic = pythonCourse.topics.find((t) => t.title === note.title);
-        if (topic && topic.notesId) {
-          // Already linked, skip
-          continue;
-        }
-        // Only create if not already present
         let existingNote = await Notes.findOne({ content });
         if (!existingNote) {
           existingNote = await Notes.create({ content });
         }
+        const topic = pythonCourse.topics.find((t) => t.title === note.title);
         if (
           topic &&
           (!topic.notesId ||
