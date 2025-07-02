@@ -13,7 +13,10 @@ router.post("/:courseId/:exerciseId/submit", protect, async (req, res) => {
   const userId = req.user._id;
 
   try {
-    if (!mongoose.Types.ObjectId.isValid(courseId) || !mongoose.Types.ObjectId.isValid(exerciseId)) {
+    if (
+      !mongoose.Types.ObjectId.isValid(courseId) ||
+      !mongoose.Types.ObjectId.isValid(exerciseId)
+    ) {
       return res.status(400).json({ error: "Invalid course or exercise ID" });
     }
 
@@ -34,7 +37,9 @@ router.post("/:courseId/:exerciseId/submit", protect, async (req, res) => {
       });
     }
 
-    if (progress.completedExercises.some(id => id.toString() === exerciseId)) {
+    if (
+      progress.completedExercises.some((id) => id.toString() === exerciseId)
+    ) {
       return res.status(400).json({ message: "Exercise already completed" });
     }
 
@@ -44,7 +49,10 @@ router.post("/:courseId/:exerciseId/submit", protect, async (req, res) => {
     progress.completedExercises.push(new mongoose.Types.ObjectId(exerciseId));
     await progress.save();
 
-    const totalExerciseXP = [...progress.exerciseXP.values()].reduce((sum, val) => sum + val, 0);
+    const totalExerciseXP = [...progress.exerciseXP.values()].reduce(
+      (sum, val) => sum + val,
+      0
+    );
 
     res.status(200).json({
       message: "Exercise completed successfully",

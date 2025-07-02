@@ -26,7 +26,7 @@ Java uses **5 main memory areas** to load program/class data depending on the va
 
 ### Storage Types Visualization
 
-![StorageTypesVisualization](../CoreJava_Images/StorageTypesVisualization.6.1.png)
+![StorageTypesVisualization](/CoreJava_Images/StorageTypesVisualization.6.1.png)
 
 ### Variable Types in Java
 

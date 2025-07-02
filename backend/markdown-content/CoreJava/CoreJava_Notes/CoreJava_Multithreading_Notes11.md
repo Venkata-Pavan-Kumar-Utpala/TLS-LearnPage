@@ -17,7 +17,7 @@ A multithreaded program contains two or more threads that can run **simultaneous
 - However, the **thread of execution** (the actual unit of work) is distinct—it has its **own call stack**.
 - When multiple threads run concurrently, each thread maintains **its own execution context** (call stack), although they may share objects and resources.
 
-![thread call stack](../CoreJava_Images/Aspose.Words.ca7bdb30-9d3a-4662-b6b3-a71cea3fd0ef.001.png)
+![thread call stack](/CoreJava_Images/Aspose.Words.ca7bdb30-9d3a-4662-b6b3-a71cea3fd0ef.001.png)
 
 **The Main Thread in Java**
 
@@ -44,7 +44,7 @@ public class MainThreadExample {
 
 **Life cycle of a Thread**
 
-![thread life cycle](../CoreJava_Images/Aspose.Words.ca7bdb30-9d3a-4662-b6b3-a71cea3fd0ef.002.png)
+![thread life cycle](/CoreJava_Images/Aspose.Words.ca7bdb30-9d3a-4662-b6b3-a71cea3fd0ef.002.png)
 
 1. **New/Born :** A thread begins its life cycle in the new state. It remains in this state until the start() method is called on it.
 1. **Runnable :** After invocation of start() method on new thread, the thread becomes runnable.
@@ -160,7 +160,7 @@ If you call the run() method **directly** (like a normal method call), it will *
 
 `        `t.run(); // Executes in main thread}}
 
-![calling run without start method](../CoreJava_Images/Aspose.Words.ca7bdb30-9d3a-4662-b6b3-a71cea3fd0ef.003.png)
+![calling run without start method](/CoreJava_Images/Aspose.Words.ca7bdb30-9d3a-4662-b6b3-a71cea3fd0ef.003.png)
 
 **Can we Start a thread twice ?**
 
