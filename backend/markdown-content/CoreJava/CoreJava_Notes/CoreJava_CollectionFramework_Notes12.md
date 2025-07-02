@@ -1,10 +1,10 @@
-﻿**CORE JAVA NOTES - 12**
+﻿# CORE JAVA NOTES - 12
 
-**COLLECTION FRAMEWORK**
+## Collection Framework
 
-**Java Collections Framework – Simplified**
+### Java Collections Framework – Simplified
 
-Before Java 2, classes like Vector, Stack, Dictionary, and Properties were used to store and manage groups of objects. While helpful, these classes lacked consistency—each worked differently and wasn’t part of a unified system.
+Before Java 2, classes like `Vector`, `Stack`, `Dictionary`, and `Properties` were used to store and manage groups of objects. While helpful, these classes lacked consistency—each worked differently and wasn’t part of a unified system.
 
 To solve this, Java introduced the **Collections Framework**, with the following key goals:
 
@@ -12,28 +12,32 @@ To solve this, Java introduced the **Collections Framework**, with the following
 - **Uniform Access:** Different types of collections can be used in a similar way.
 - **Extensibility:** Easy to extend or create your own collection types.
 
+---
+
 ### What is the Collections Framework?
 
 A **collections framework** is a standardized architecture for storing and manipulating groups of objects. It consists of:
 
-#### _1. Interfaces_
+#### 1. Interfaces
 
-These define the core behavior of collection types (e.g., List, Set, Queue). They allow code to work with collections abstractly, without worrying about the specific implementation.
+These define the core behavior of collection types (e.g., `List`, `Set`, `Queue`). They allow code to work with collections abstractly, without worrying about the specific implementation.
 
-#### _2. Implementations (Classes)_
+#### 2. Implementations (Classes)
 
 These are ready-to-use data structures that implement the collection interfaces, such as:
 
-- ArrayList and LinkedList (implement List)
-- HashSet and TreeSet (implement Set)
+- `ArrayList` and `LinkedList` (implement List)
+- `HashSet` and `TreeSet` (implement Set)
 
-#### _3. Algorithms_
+#### 3. Algorithms
 
-These are utility methods for operations like sorting, searching, or shuffling collections. Provided in the Collections class, they work across all compatible collection types.
+These are utility methods for operations like sorting, searching, or shuffling collections. Provided in the `Collections` class, they work across all compatible collection types.
+
+---
 
 ### What About Maps?
 
-Although **Maps** (like HashMap or TreeMap) don’t technically implement the Collection interface, they are still part of the framework. Maps store key-value pairs and are fully integrated, meaning they follow similar design and usage principles.
+Although **Maps** (like `HashMap` or `TreeMap`) don’t technically implement the `Collection` interface, they are still part of the framework. Maps store key-value pairs and are fully integrated, meaning they follow similar design and usage principles.
 
 | **S.No** | **Interface**          | **Description**                                                                |
 | :------- | :--------------------- | :----------------------------------------------------------------------------- |
@@ -46,11 +50,11 @@ Although **Maps** (like HashMap or TreeMap) don’t technically implement the Co
 | 7        | SortedMap              | Extends Map; maintains keys in ascending order.                                |
 | 8        | Enumeration _(Legacy)_ | Used to iterate elements in older collections; replaced by Iterator.           |
 
-##
+---
 
-## The Collection Classes:
+## The Collection Classes
 
-Java provides a set of standard collection classes that implement Collection interfaces. Some of the classes provide full implementations that can be used as-is and others are abstract class, providing skeletal implementations that are used as starting points for creating concrete collections.
+Java provides a set of standard collection classes that implement Collection interfaces. Some of the classes provide full implementations that can be used as-is and others are abstract classes, providing skeletal implementations that are used as starting points for creating concrete collections.
 
 The standard collection classes are summarized in the following table:
 
@@ -271,393 +275,373 @@ The Queue<E> interface extends the Collection interface and represents a **First
 
 **Example of ArrayList**
 
-import java.util.\*;
+```java
+import java.util.*;
 
-class ArrayListEx1{
-
-public static void main(String[] args) {
-
-ArrayList< String> states= new ArrayList< String>();
-
-states.add("Telangana");
-
-states.add("Kerala");
-
-states.add("Tamilnadu");
-
-states.add("Karnataka");
-
-System.out.println(states);
-
+class ArrayListEx1 {
+    public static void main(String[] args) {
+        ArrayList<String> states = new ArrayList<String>();
+        states.add("Telangana");
+        states.add("Kerala");
+        states.add("Tamilnadu");
+        states.add("Karnataka");
+        System.out.println(states);
+    }
 }
-
-}
+```
 
 ### Getting an Array from an ArrayList
 
-The toArray() method is used to convert an ArrayList into an array.
+The `toArray()` method is used to convert an ArrayList into an array.
 
-#### _Why use toArray()?_
+#### Why use toArray()?
 
 - **Faster processing** in some scenarios (especially in loops).
 - **Compatibility** with methods that accept arrays but not collections.
 - **Integration with legacy code** that predates the Collections Framework.
 
-Example:
+**Example:**
 
+```java
 import java.util.ArrayList;
 
 public class ToArrayExample {
+    public static void main(String[] args) {
+        ArrayList<String> names = new ArrayList<>();
+        names.add("Alice");
+        names.add("Bob");
+        names.add("Charlie");
+        String[] nameArray = names.toArray(new String[0]);
+        for (String name : nameArray) {
+            System.out.println(name);
+        }
+    }
+}
+```
 
-`    `public static void main(String[] args) {
-
-`        `ArrayList<String> names = new ArrayList<>();
-
-`        `names.add("Alice");
-
-`        `names.add("Bob");
-
-`        `names.add("Charlie");
-
-`        `String[] nameArray = names.toArray(new String[0]);
-
-`        `for (String name : nameArray) {
-
-System.out.println(name);}}}
-
-**Storing User-Defined classes**
-
-In the above example we are storing only string object in ArrayList collection. But You can store any type of object, including object of class that you create in Collection classes.
+---
 
 ### Storing User-Defined Objects in ArrayList
 
+In the above example we are storing only String objects in ArrayList. But you can store any type of object, including objects of classes that you create.
+
+```java
 import java.util.ArrayList;
 
 class Student {
-
-`    `int id;
-
-`    `String name;
-
-`    `Student(int id, String name) {
-
-`        `this.id = id;
-
-`        `this.name = name;}
-
-`    `public String toString() {
-
-`        `return "ID: " + id + ", Name: " + name;}}
+    int id;
+    String name;
+    Student(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+    public String toString() {
+        return "ID: " + id + ", Name: " + name;
+    }
+}
 
 public class UserDefinedObjectExample {
+    public static void main(String[] args) {
+        ArrayList<Student> studentList = new ArrayList<>();
+        studentList.add(new Student(1, "Alice"));
+        studentList.add(new Student(2, "Bob"));
+        studentList.add(new Student(3, "Charlie"));
+        for (Student s : studentList) {
+            System.out.println(s);
+        }
+    }
+}
+```
 
-`    `public static void main(String[] args) {
+The `get()` method returns the element at the specified index, whereas the `set()` method changes the element.
 
-`        `ArrayList<Student> studentList = new ArrayList<>();
+```java
+System.out.println("Returning element: " + al.get(1));
+al.set(1, "Dates");
+System.out.println(al);
+```
 
-`        `studentList.add(new Student(1, "Alice"));
+---
 
-`        `studentList.add(new Student(2, "Bob"));
+### Sorting an ArrayList
 
-`        `studentList.add(new Student(3, "Charlie"));
+The `java.util` package provides a utility class **Collections**, which has the static method `sort()`. Using the `Collections.sort()` method, we can easily sort the ArrayList.
 
-`        `for (Student s : studentList) {
+#### Example: Sorting Strings
 
-`            `System.out.println(s);}}}
-
-The *get() method* returns the element at the specified index, whereas the *set() method* changes the element.
-
-`  `System.out.println("Returning element: "+al.get(1));
-
-`   `al.set(1,"Dates");
-
-`   `System.out.println(al);
-
-**Sorting an ArrayList**
-
-The *java.util* package provides a utility class **Collections**, which has the static method sort(). Using the **Collections.sort()** method, we can easily sort the ArrayList.
-
-### Example: Sorting Strings
-
-import java.util.\*;
+```java
+import java.util.*;
 
 public class SortExample {
+    public static void main(String[] args) {
+        ArrayList<String> names = new ArrayList<>();
+        names.add("Zara");
+        names.add("Alice");
+        names.add("John");
+        Collections.sort(names); // Sort in ascending order
+        for (String name : names) {
+            System.out.println(name);
+        }
+    }
+}
+```
 
-`    `public static void main(String[] args) {
-
-`        `ArrayList<String> names = new ArrayList<>();
-
-`        `names.add("Zara");
-
-`        `names.add("Alice");
-
-`        `names.add("John");
-
-`        `Collections.sort(names); // Sort in ascending order
-
-`        `for (String name : names) {
-
-`            `System.out.println(name);}}}
+---
 
 **There are various ways to traverse the collection elements:**
 
-1. By Iterator interface.
-1. By for-each loop.
-1. By ListIterator interface.
-1. By for loop.
-1. By forEach() method.
-1. By forEachRemaining() method.<
+1. By Iterator interface
+2. By for-each loop
+3. By ListIterator interface
+4. By for loop
+5. By forEach() method
+6. By forEachRemaining() method
 
-### 1\.By Iterator Interface
+#### 1. By Iterator Interface
 
-`        `Iterator<String> itr = list.iterator();
+```java
+Iterator<String> itr = list.iterator();
+while (itr.hasNext()) {
+    System.out.println(itr.next());
+}
+```
 
-`        `while (itr.hasNext()) {
+#### 2. By For-Each Loop
 
-`            `System.out.println(itr.next());
+```java
+for (String fruit : list) {
+    System.out.println(fruit);
+}
+```
 
-`        `}
+#### 3. By ListIterator Interface (Allows backward traversal too)
 
-### 2\. By For-Each Loop
+```java
+ListIterator<String> listItr = list.listIterator();
+while (listItr.hasNext()) {
+    System.out.println(listItr.next());
+}
+```
 
-`        `for (String fruit : list) {
+#### 4. By For Loop (Using Index)
 
-`            `System.out.println(fruit);
+```java
+for (int i = 0; i < list.size(); i++) {
+    System.out.println(list.get(i));
+}
+```
 
-`        `}
+#### 5. By forEach() Method (Java 8+)
 
-### 3\. By ListIterator Interface(Allows backward traversal too)
+```java
+list.forEach(fruit -> System.out.println(fruit));
+```
 
-`        `ListIterator<String> listItr = list.listIterator();
+#### 6. By forEachRemaining() Method
 
-`        `while (listItr.hasNext()) {
+```java
+Iterator<String> it = list.iterator();
+it.forEachRemaining(fruit -> System.out.println(fruit));
+```
 
-`            `System.out.println(listItr.next());
-
-`        `}
-
-### 4\. By For Loop (Using Index)
-
-`        `for (int i = 0; i < list.size(); i++) {
-
-`            `System.out.println(list.get(i));
-
-`        `}
-
-### 5\. By forEach() Method (Java 8+)
-
-`        `list.forEach(fruit -> System.out.println(fruit));
-
-### 6\. By forEachRemaining() Method
-
-`        `Iterator<String> it = list.iterator();
-
-`        `it.forEachRemaining(fruit -> System.out.println(fruit));
+---
 
 ### Different Ways to Add Elements to an ArrayList
 
-|      **Method**      |                       **Description**                        |
-| :------------------: | :----------------------------------------------------------: |
-|   add(Object obj)    |              Adds a single element to the list.              |
-|  add(Collection c)   | _[Incorrect]_ – No such method exists. Use addAll() instead. |
-| addAll(Collection c) |    Adds all elements from another collection to the list.    |
+|      **Method**      |                    **Description**                     |
+| :------------------: | :----------------------------------------------------: |
+|   add(Object obj)    |           Adds a single element to the list.           |
+|  add(Collection c)   |  _[Incorrect]_ – No such method exists. Use addAll().  |
+| addAll(Collection c) | Adds all elements from another collection to the list. |
 
-### Examples:
+#### Examples:
 
-import java.util.\*;
+```java
+import java.util.*;
 
 public class AddExample {
+    public static void main(String[] args) {
+        ArrayList<String> list1 = new ArrayList<>();
+        // 1. add(Object obj)
+        list1.add("Apple");
+        list1.add("Banana");
+        // 2. add(index, Object obj) - optional: insert at specific position
+        list1.add(1, "Mango");
+        // 3. addAll(Collection c)
+        ArrayList<String> list2 = new ArrayList<>();
+        list2.add("Cherry");
+        list2.add("Dates");
+        list1.addAll(list2); // Adds all elements from list2 to list1
+        // Print all elements
+        System.out.println(list1);
+    }
+}
+```
 
-`    `public static void main(String[] args) {
-
-`        `ArrayList<String> list1 = new ArrayList<>();
-
-`        `// 1. add(Object obj)
-
-`        `list1.add("Apple");
-
-`        `list1.add("Banana");
-
-`        `// 2. add(index, Object obj) - optional: insert at specific position
-
-`        `list1.add(1, "Mango");
-
-`        `// 3. addAll(Collection c)
-
-`        `ArrayList<String> list2 = new ArrayList<>();
-
-`        `list2.add("Cherry");
-
-`        `list2.add("Dates");
-
-`        `list1.addAll(list2); // Adds all elements from list2 to list1
-
-`        `// Print all elements
-
-`        `System.out.println(list1);}} ###
+---
 
 ### LinkedList Class – Overview
 
 1. LinkedList **extends** AbstractSequentialList and **implements** List, Deque, and Queue interfaces.
-1. It can function as a **List**, **Queue**, or **Stack** due to its flexible structure.
-1. It **allows duplicate elements** and is **not synchronized** (not thread-safe).
+2. It can function as a **List**, **Queue**, or **Stack** due to its flexible structure.
+3. It **allows duplicate elements** and is **not synchronized** (not thread-safe).
 
-### Example: Using LinkedList
+#### Example: Using LinkedList
 
-import java.util.\* ;
+```java
+import java.util.*;
 
-class Test{
+public class Test {
+    public static void main(String[] args) {
+        LinkedList<String> ll = new LinkedList<String>();
+        ll.add("a");
+        ll.add("b");
+        ll.add("c");
+        ll.addLast("z");
+        ll.addFirst("A");
+        System.out.println(ll);
+    }
+}
+```
 
-public static void main(String[] args) {
-
-**LinkedList< String> ll = new LinkedList< String>();**
-
-ll.add("a");
-
-ll.add("b");
-
-ll.add("c");
-
-ll.addLast("z");
-
-ll.addFirst("A");
-
-System.out.println(ll);}}
+---
 
 ### HashSet Class
 
 1. HashSet **extends** AbstractSet and **implements** the Set interface.
-1. It stores elements using a **hash table**, ensuring **fast access and lookup**.
-1. **No order** is maintained — elements appear in **unpredictable order**.
-1. It is **asynchronous** (not thread-safe).
-1. **Duplicates are not allowed**.
+2. It stores elements using a **hash table**, ensuring **fast access and lookup**.
+3. **No order** is maintained — elements appear in **unpredictable order**.
+4. It is **asynchronous** (not thread-safe).
+5. **Duplicates are not allowed**.
 
-### Example: Using HashSet
+#### Example: Using HashSet
 
+```java
 import java.util.HashSet;
 
 public class HashSetExample {
+    public static void main(String[] args) {
+        HashSet<String> set = new HashSet<>();
+        set.add("Apple");
+        set.add("Banana");
+        set.add("Mango");
+        set.add("Apple"); // Duplicate, won't be added
+        for (String fruit : set) {
+            System.out.println(fruit);
+        }
+    }
+}
+```
 
-`    `public static void main(String[] args) {
-
-`        `HashSet<String> set = new HashSet<>();
-
-`        `set.add("Apple");
-
-`        `set.add("Banana");
-
-`        `set.add("Mango");
-
-`        `set.add("Apple"); // Duplicate, won't be added
-
-`        `for (String fruit : set) {
-
-`            `System.out.println(fruit);}}}
+---
 
 ### LinkedHashSet Class
 
 1. LinkedHashSet **extends** HashSet and implements the **Set interface**.
-1. It **maintains a linked list** of elements internally, preserving the **insertion order**.
-1. It does **not allow duplicate elements**, just like HashSet.
+2. It **maintains a linked list** of elements internally, preserving the **insertion order**.
+3. It does **not allow duplicate elements**, just like HashSet.
 
-### Example: Using LinkedHashSet
+#### Example: Using LinkedHashSet
 
+```java
 import java.util.LinkedHashSet;
 
 public class LinkedHashSetExample {
+    public static void main(String[] args) {
+        LinkedHashSet<String> set = new LinkedHashSet<>();
+        set.add("Banana");
+        set.add("Apple");
+        set.add("Mango");
+        set.add("Banana"); // Duplicate, will be ignored
+        for (String fruit : set) {
+            System.out.println(fruit);
+        }
+    }
+}
+```
 
-`    `public static void main(String[] args) {
-
-`        `LinkedHashSet<String> set = new LinkedHashSet<>();
-
-`        `set.add("Banana");
-
-`        `set.add("Apple");
-
-`        `set.add("Mango");
-
-`        `set.add("Banana"); // Duplicate, will be ignored
-
-`        `for (String fruit : set) {
-
-`            `System.out.println(fruit);}}}
+---
 
 ### TreeSet Class – Overview
 
 1. TreeSet **extends** AbstractSet and **implements** NavigableSet.
-1. **Stores elements in ascending sorted order** by default.
-1. Internally uses a **Red-Black Tree** (self-balancing binary search tree).
-1. **Fast access and retrieval** (logarithmic time for basic operations).
-1. It’s a **homogeneous collection** – stores **only same-type objects**.
-1. All elements must be **Comparable**; otherwise, a **ClassCastException** is thrown at runtime.
-1. To store non-Comparable elements, pass a **Comparator** to the constructor.
-1. **Constructors:**
-   1. TreeSet()
-   1. TreeSet(Collection c)
-   1. TreeSet(Comparator comp)
-   1. TreeSet(SortedSet s)
+2. **Stores elements in ascending sorted order** by default.
+3. Internally uses a **Red-Black Tree** (self-balancing binary search tree).
+4. **Fast access and retrieval** (logarithmic time for basic operations).
+5. It’s a **homogeneous collection** – stores **only same-type objects**.
+6. All elements must be **Comparable**; otherwise, a **ClassCastException** is thrown at runtime.
+7. To store non-Comparable elements, pass a **Comparator** to the constructor.
+8. **Constructors:**
+   - TreeSet()
+   - TreeSet(Collection c)
+   - TreeSet(Comparator comp)
+   - TreeSet(SortedSet s)
 
 ### Accessing a Collection in Java
 
 To **access, modify, or remove** elements in a collection, we must **iterate through its elements**. Java provides the following three common ways to do this:
 
-### 1\.Using Iterator Interface
+### 1. Using Iterator Interface
 
 - Works with all collection types.
 - Supports **forward-only traversal**.
 - Allows **element removal** during iteration.
 
-import java.util.\*;
+```java
+
+import java.util.*;
 
 public class IteratorExample {
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("A", "B", "C");
+        Iterator<String> itr = list.iterator();
+        while (itr.hasNext()) {
+            System.out.println(itr.next());
+        }
+    }
+}
+```
 
-`    `public static void main(String[] args) {
-
-`        `List<String> list = Arrays.asList("A", "B", "C");
-
-`        `Iterator<String> itr = list.iterator();
-
-`        `while (itr.hasNext()) {
-
-`            `System.out.println(itr.next());}}}
-
-### 2\.Using ListIterator Interface
+### 2. Using ListIterator Interface
 
 - Works only with **List** types.
 - Supports **bidirectional traversal**.
 - Allows **modification and removal** during iteration.
 
-import java.util.\*
+```java
+import java.util.*;
 
 public class ListIteratorExample {
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("X", "Y", "Z");
+        ListIterator<String> litr = list.listIterator();
+        while (litr.hasNext()) {
+            System.out.println(litr.next());
+        }
+    }
+}
+```
 
-`    `public static void main(String[] args) {
-
-`        `List<String> list = Arrays.asList("X", "Y", "Z");
-
-`        `ListIterator<String> litr = list.listIterator();
-
-`        `while (litr.hasNext()) {
-
-`            `System.out.println(litr.next());}}}
-
-### 4\.Using For-Each Loop
+### 4. Using For-Each Loop
 
 - Simplest and cleanest.
 - Works for **all collections**.
 - **Cannot modify or remove** elements directly during iteration.
 
-import java.util.\*;
+````java
+
+```java
+import java.util.*;
 
 public class ForEachExample {
-
-`    `public static void main(String[] args) {
-
-`        `List<String> list = Arrays.asList("One", "Two", "Three");
-
-`        `for (String item : list) {
-
-`            `System.out.println(item);}}}
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("One", "Two", "Three");
+        for (String item : list) {
+            System.out.println(item);
+        }
+    }
+}
+````
 
 ### Map Interface – Overview
 
@@ -695,35 +679,31 @@ Although part of the **Collections Framework**, a Map is **not a true Collection
 ### HashMap Class – Overview
 
 1. HashMap **extends** AbstractMap and **implements** the Map interface.
-1. It stores data using a **hash table**, offering **constant-time performance** for put() and get() operations (on average).
-1. It provides **four constructors**:
+2. It stores data using a **hash table**, offering **constant-time performance** for put() and get() operations (on average).
+3. It provides **four constructors**:
    1. HashMap()
    1. HashMap(Map<? extends K, ? extends V> m)
    1. HashMap(int initialCapacity)
    1. HashMap(int initialCapacity, float loadFactor)
-1. It **does not maintain any order** of the inserted elements.
+4. It **does not maintain any order** of the inserted elements.
 
-Example: Using HashMap
+**Example: Using HashMap**
 
-import java.util.\*
-
+```java
+import java.util.*;
 public class HashMapExample {
-
-`    `public static void main(String[] args) {
-
-`        `HashMap<Integer, String> map = new HashMap<>();
-
-`        `map.put(101, "Apple");
-
-`        `map.put(102, "Banana");
-
-`        `map.put(103, "Cherry");
-
-`        `System.out.println("Value for key 102: " + map.get(102));
-
-`        `for (Map.Entry<Integer, String> entry : map.entrySet()) {
-
-`            `System.out.println(entry.getKey() + " => " + entry.getValue());}}}
+    public static void main(String[] args) {
+        HashMap<Integer, String> map = new HashMap<>();
+        map.put(101, "Apple");
+        map.put(102, "Banana");
+        map.put(103, "Cherry");
+        System.out.println("Value for key 102: " + map.get(102));
+        for (Map.Entry<Integer, String> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + " => " + entry.getValue());
+        }
+    }
+}
+```
 
 **TreeMap class**
 
@@ -732,37 +712,31 @@ public class HashMapExample {
 1. A **TreeMap** provides an efficient means of storing key/value pair in efficient order.
 1. It provides key/value pairs in sorted order and allows rapid retrieval.
 
-**Example**
+**Example:**
 
-import java.util.\*;
-
-class TreeMapDemo{
-
-public static void main(String args[]) {
-
-TreeMap< String,Integer> tm = new TreeMap< String,Integer>();
-
-tm.put("a",new Integer(100));
-
-tm.put("b",new Integer(200));
-
-tm.put("c",new Integer(300));
-
-tm.put("d",new Integer(400));
-
-Set< Map.Entry< String,Integer> > st = tm.entrySet();
-
-for(Map.Entry me:st)    {
-
-System.out.print(me.getKey()+":");
-
-System.out.println(me.getValue());}}}
+```java
+import java.util.*;
+class TreeMapDemo {
+    public static void main(String args[]) {
+        TreeMap<String, Integer> tm = new TreeMap<String, Integer>();
+        tm.put("a", 100);
+        tm.put("b", 200);
+        tm.put("c", 300);
+        tm.put("d", 400);
+        Set<Map.Entry<String, Integer>> st = tm.entrySet();
+        for (Map.Entry me : st) {
+            System.out.print(me.getKey() + ":");
+            System.out.println(me.getValue());
+        }
+    }
+}
+```
 
 ### LinkedHashMap Class – Overview
 
 1. LinkedHashMap **extends** HashMap and implements the Map interface.
-1. It maintains a **linked list** of entries, preserving the **insertion order**.
-1. It provides the following **constructors**:
+2. It maintains a **linked list** of entries, preserving the **insertion order**.
+3. It provides the following **constructors**:
    1. LinkedHashMap()
    1. LinkedHashMap(Map<? extends K, ? extends V> m)
    1. LinkedHashMap(int capacity)
@@ -773,31 +747,27 @@ System.out.println(me.getValue());}}}
 ### EnumMap Class – Overview
 
 1. EnumMap **extends** AbstractMap and **implements** the Map interface.
-1. It is specifically designed to use **enum constants as keys**.
-1. It is **efficient and compact** compared to other map implementations when working with enums.
-1. Keys must be from a **single enum type**, which is specified when the map is created.
+2. It is specifically designed to use **enum constants as keys**.
+3. It is **efficient and compact** compared to other map implementations when working with enums.
+4. Keys must be from a **single enum type**, which is specified when the map is created.
 
-Example
+**Example:**
 
-import java.util.\*;
-
+```java
+import java.util.*;
 enum Day { MON, TUE, WED }
-
 public class EnumMapExample {
-
-`    `public static void main(String[] args) {
-
-`        `EnumMap<Day, String> map = new EnumMap<>(Day.class);
-
-`        `map.put(Day.MON, "Monday");
-
-`        `map.put(Day.TUE, "Tuesday");
-
-`        `map.put(Day.WED, "Wednesday");
-
-`        `for (Map.Entry<Day, String> entry : map.entrySet()) {
-
-`            `System.out.println(entry.getKey() + " => " + entry.getValue());}}}
+    public static void main(String[] args) {
+        EnumMap<Day, String> map = new EnumMap<>(Day.class);
+        map.put(Day.MON, "Monday");
+        map.put(Day.TUE, "Tuesday");
+        map.put(Day.WED, "Wednesday");
+        for (Map.Entry<Day, String> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + " => " + entry.getValue());
+        }
+    }
+}
+```
 
 ### Legacy Classes
 
@@ -815,14 +785,17 @@ There is only one legacy interface called **Enumeration**
 
 **NOTE:** All the legacy classes are synchronized
 
-### Enumeration Interface The Enumeration interface is used to **traverse (enumerate) elements** in a collection, mainly in **legacy classes** like Vector and Properties.
+### Enumeration Interface
+
+The Enumeration interface is used to **traverse (enumerate) elements** in a collection, mainly in **legacy classes** like Vector and Properties.
 
 1. It has largely been **superseded by the Iterator interface**, which provides more functionality (like element removal).
-1. Despite being outdated, some legacy classes **still use Enumeration** for backward compatibility.
+2. Despite being outdated, some legacy classes **still use Enumeration** for backward compatibility.
 
+```java
 boolean hasMoreElements()
-
-Object netenement()
+Object nextElement()
+```
 
 ### Vector Class – Overview
 
@@ -852,31 +825,26 @@ Object netenement()
 
 #### _Example of Vector_
 
-import java.util.\*;
+```java
 
 public class Test {
 
-public static void main(String[] args)    {
-
-Vector ve = new Vector();
-
-ve.add(10);
-
-ve.add(20);
-
-ve.add(30);
-
-ve.add(40);
-
-ve.add(50);
-
-ve.add(60);
-
-Enumeration en = ve.elements();
-
-while(en.hasMoreElements())       {
-
-System.out.println(en.nextElement());}}} ###
+public class Test {
+    public static void main(String[] args) {
+        Vector ve = new Vector();
+        ve.add(10);
+        ve.add(20);
+        ve.add(30);
+        ve.add(40);
+        ve.add(50);
+        ve.add(60);
+        Enumeration en = ve.elements();
+        while(en.hasMoreElements()) {
+            System.out.println(en.nextElement());
+        }
+    }
+}
+```
 
 ### Hashtable Class – Overview
 
@@ -887,25 +855,21 @@ System.out.println(en.nextElement());}}} ###
 
 ### Basic Example: Using Hashtable
 
-import java.util.\*;
-
+```java
+import java.util.*;
 public class HashtableExample {
-
-`    `public static void main(String[] args) {
-
-`        `Hashtable<Integer, String> table = new Hashtable<>();
-
-`        `table.put(1, "Java");
-
-`        `table.put(2, "Python");
-
-`        `table.put(3, "C++");
-
-for (Map.Entry<Integer, String> entry : table.entrySet()) {
-
-`            `System.out.println(entry.getKey() + " => " + entry.getValue());}
-
-`        `System.out.println("Value for key 2: " + table.get(2));}} ###
+    public static void main(String[] args) {
+        Hashtable<Integer, String> table = new Hashtable<>();
+        table.put(1, "Java");
+        table.put(2, "Python");
+        table.put(3, "C++");
+        for (Map.Entry<Integer, String> entry : table.entrySet()) {
+            System.out.println(entry.getKey() + " => " + entry.getValue());
+        }
+        System.out.println("Value for key 2: " + table.get(2));
+    }
+}
+```
 
 ### Difference Between HashMap and Hashtable
 
@@ -928,27 +892,21 @@ for (Map.Entry<Integer, String> entry : table.entrySet()) {
 
 ### Example: Using Properties
 
-import java.util.\*;
+```java
+import java.util.*;
 
 public class PropertiesExample {
-
-`    `public static void main(String[] args) {
-
-`        `Properties defaultProps = new Properties();
-
-`        `defaultProps.setProperty("language", "English");
-
-`        `Properties props = new Properties(defaultProps);
-
-`        `props.setProperty("username", "admin");
-
-`        `System.out.println("Username: " + props.getProperty("username"));
-
-`        `System.out.println("Language: " + props.getProperty("language")); // from default
-
-`        `System.out.println("Password: " + props.getProperty("password", "not set")); // fallback default
-
-}}
+    public static void main(String[] args) {
+        Properties defaultProps = new Properties();
+        defaultProps.setProperty("language", "English");
+        Properties props = new Properties(defaultProps);
+        props.setProperty("username", "admin");
+        System.out.println("Username: " + props.getProperty("username"));
+        System.out.println("Language: " + props.getProperty("language")); // from default
+        System.out.println("Password: " + props.getProperty("password", "not set")); // fallback default
+    }
+}
+```
 
 ### Summary: Java Collections Framework
 

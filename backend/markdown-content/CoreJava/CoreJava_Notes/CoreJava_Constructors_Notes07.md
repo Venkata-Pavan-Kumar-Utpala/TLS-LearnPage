@@ -296,14 +296,80 @@ Print user progress report showing updated goals.
 
 Use both ways to book tickets and show how overloading offers flexibility in booking.
 
-### 12\. Private Constructor in Singleton Logger
+### 12. Private Constructor in Singleton Logger
 
-**Problem:** Create a Logger class with a **private constructor** and a static method getInstance().
+**Problem:** Create a `Logger` class with a **private constructor** and a static method `getInstance()`.
 
-Ensure only one object of Logger is created and used in multiple parts of an application.
+Ensure only one object of `Logger` is created and used in multiple parts of an application.
 
-### 13\. IoT Smart Home Devices
+```java
+public class Logger {
+    private static Logger instance;
 
-**Problem:** Create a SmartDevice class for controlling devices like lights, AC, etc.
+    private Logger() {
+        // Private constructor
+    }
 
-Use this to update device state (ON/OFF) and show output through printStatus() method.
+    public static Logger getInstance() {
+        if (instance == null) {
+            instance = new Logger();
+        }
+        return instance;
+    }
+
+    public void log(String message) {
+        System.out.println("Log: " + message);
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        Logger logger = Logger.getInstance();
+        logger.log("Application started");
+    }
+}
+```
+
+---
+
+### 13. IoT Smart Home Devices
+
+**Problem:** Create a `SmartDevice` class for controlling devices like lights, AC, etc.
+
+Use this to update device state (ON/OFF) and show output through `printStatus()` method.
+
+```java
+public class SmartDevice {
+    private String deviceName;
+    private boolean isOn;
+
+    public SmartDevice(String deviceName) {
+        this.deviceName = deviceName;
+        this.isOn = false; // Default state is OFF
+    }
+
+    public void turnOn() {
+        this.isOn = true;
+    }
+
+    public void turnOff() {
+        this.isOn = false;
+    }
+
+    public void printStatus() {
+        System.out.println(deviceName + " is " + (isOn ? "ON" : "OFF"));
+    }
+
+    public static void main(String[] args) {
+        SmartDevice light = new SmartDevice("Light");
+        light.turnOn();
+        light.printStatus();
+
+        SmartDevice ac = new SmartDevice("AC");
+        ac.turnOff();
+        ac.printStatus();
+    }
+}
+```
+
+---

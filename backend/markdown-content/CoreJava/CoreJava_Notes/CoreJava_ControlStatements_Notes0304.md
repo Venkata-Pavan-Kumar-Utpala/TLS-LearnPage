@@ -122,91 +122,80 @@ System.out.println("Fail");
 
 }
 
-**d) Nested if-else Statement**
-
-Syntax:
-
-if (condition1) {
-
-`    `if (condition2) {
-
-`    `} else {
-
-`    `}
-
-} else {
-
-}
-
-Example:
-
-int num = 10;
-
-if (num >= 0) {
-
-`    `if (num % 2 == 0) {
-
-`        `System.out.println("Positive and Even");
-
-`    `} else {
-
-`        `System.out.println("Positive and Odd");
-
-`    `}
-
-} else {
-
-`    `System.out.println("Negative number");
-
-}
-
-**Switch Statement**
-
-**Purpose:** Used as a **cleaner alternative** to long if-else-if ladders when comparing a single variable to many constant values.\*\*
+**d) Nested if-else Statement**
 
 **Syntax:**
 
-switch (expression) {
-
-`    `case value1:
-
-`        `break;
-
-`    `case value2:
-
-`        `break;
-
-`    `default:
-
+```java
+if (condition1) {
+    if (condition2) {
+        // Code block for condition2
+    } else {
+        // Code block for else of condition2
+    }
+} else {
+    // Code block for else of condition1
 }
+```
 
 **Example:**
 
+```java
+int num = 10;
+
+if (num >= 0) {
+    if (num % 2 == 0) {
+        System.out.println("Positive and Even");
+    } else {
+        System.out.println("Positive and Odd");
+    }
+} else {
+    System.out.println("Negative number");
+}
+```
+
+---
+
+**Switch Statement**
+
+**Purpose:** Used as a **cleaner alternative** to long if-else-if ladders when comparing a single variable to many constant values.
+
+**Syntax:**
+
+```java
+switch (expression) {
+    case value1:
+        // Code block for value1
+        break;
+    case value2:
+        // Code block for value2
+        break;
+    default:
+        // Code block for default case
+}
+```
+
+**Example:**
+
+```java
 int day = 3;
 
 switch (day) {
+    case 1:
+        System.out.println("Monday");
+        break;
+    case 2:
+        System.out.println("Tuesday");
+        break;
+    case 3:
+        System.out.println("Wednesday");
+        break;
+    default:
+        System.out.println("Invalid day");
+}
+```
 
-`    `case 1:
-
-`        `System.out.println("Monday");
-
-`        `break;
-
-`    `case 2:
-
-`        `System.out.println("Tuesday");
-
-`        `break;
-
-`    `case 3:
-
-`        `System.out.println("Wednesday");
-
-`        `break;
-
-`    `default:
-
-`        `System.out.println("Invalid day");}
+---
 
 **Key Differences Between if-else and switch**
 
