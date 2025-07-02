@@ -50,8 +50,7 @@ export const recordQuizAttempt = async ({
     courseId,
     (userProgress.courseXP.get(courseId) ?? 0) + xp
   );
-  // Note: totalCourseXP will be calculated in getUserProgress for consistency
-
+  userProgress.totalCourseXP += xp;
   await userProgress.save();
 
   // Check if quiz is now complete (all questions answered)
