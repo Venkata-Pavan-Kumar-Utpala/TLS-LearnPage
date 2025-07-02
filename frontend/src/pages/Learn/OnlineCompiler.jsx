@@ -20,10 +20,159 @@ import ScrollProgress from '../../components/ScrollProgress';
 
 // Language configurations
 const LANGUAGES = {
+  html: {
+    id: 'html',
+    name: 'HTML',
+    icon: '/html.png',
+    extension: '.html',
+    defaultCode: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to HTML</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            color: #fff;
+            text-align: center;
+        }
+        .highlight {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 Welcome to HTML & CSS!</h1>
+        <p>This is a live HTML preview. You can edit the code and see changes instantly!</p>
+
+        <div class="highlight">
+            <h3>Features:</h3>
+            <ul>
+                <li>Live preview</li>
+                <li>HTML & CSS support</li>
+                <li>Responsive design</li>
+                <li>Modern styling</li>
+            </ul>
+        </div>
+
+        <p><strong>Try editing the code</strong> to see your changes in real-time!</p>
+    </div>
+</body>
+</html>`,
+    monacoLanguage: 'html',
+    isWebLanguage: true
+  },
+  css: {
+    id: 'css',
+    name: 'CSS',
+    icon: '/css.png',
+    extension: '.css',
+    defaultCode: `/* Welcome to CSS Online Editor */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+    background-size: 400% 400%;
+    animation: gradientShift 8s ease infinite;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+p {
+    color: #666;
+    line-height: 1.6;
+    font-size: 1.1em;
+}
+
+.button {
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    margin-top: 20px;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}`,
+    monacoLanguage: 'css',
+    isWebLanguage: true,
+    htmlTemplate: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Preview</title>
+    <style>
+        {{CSS_CODE}}
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🎨 CSS Styling</h1>
+        <p>This is a preview of your CSS code. Edit the CSS to see changes!</p>
+        <button class="button">Sample Button</button>
+    </div>
+</body>
+</html>`
+  },
   python: {
     id: 'python',
     name: 'Python',
-    icon: '🐍',
+    icon: '/python.png',
     extension: '.py',
     defaultCode: `# Welcome to Python Online Compiler
 print("Hello, World!")
@@ -39,12 +188,13 @@ numbers = [1, 2, 3, 4, 5]
 squared = [n**2 for n in numbers]
 print(f"Original: {numbers}")
 print(f"Squared: {squared}")`,
-    monacoLanguage: 'python'
+    monacoLanguage: 'python',
+    requiresAuth: true
   },
   java: {
     id: 'java',
     name: 'Java',
-    icon: '☕',
+    icon: '/java.png',
     extension: '.java',
     defaultCode: `// Welcome to Java Online Compiler
 public class Main {
@@ -66,17 +216,18 @@ public class Main {
         System.out.println();
     }
 }`,
-    monacoLanguage: 'java'
+    monacoLanguage: 'java',
+    requiresAuth: true
   }
 };
 
 const OnlineCompiler = () => {
   const { theme } = useTheme();
   const { user } = useAuth();
-  const [selectedLanguage, setSelectedLanguage] = useState('python');
+  const [selectedLanguage, setSelectedLanguage] = useState('html');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [code, setCode] = useState(LANGUAGES.python.defaultCode);
+  const [code, setCode] = useState(LANGUAGES.html.defaultCode);
   const [output, setOutput] = useState('');
   const [isRunning, setIsRunning] = useState(false);
   const [editorTheme, setEditorTheme] = useState(theme === 'dark' ? 'vs-dark' : 'light');
@@ -102,17 +253,26 @@ const OnlineCompiler = () => {
   };
 
   const handleRunCode = async () => {
+    const currentLang = LANGUAGES[selectedLanguage];
+
     // Check if user is logged in for Python and Java
-    if ((selectedLanguage === 'python' || selectedLanguage === 'java') && !user) {
+    if (currentLang.requiresAuth && !user) {
       setOutput('❌ Please log in to run Python and Java code.');
       return;
     }
 
     setIsRunning(true);
-    setOutput('Running code...\n');
 
     try {
-      // For Python and Java, use the backend compiler API
+      // Handle web languages (HTML/CSS) - client-side rendering
+      if (currentLang.isWebLanguage) {
+        setOutput('✅ Code rendered successfully! Check the preview panel.');
+        return;
+      }
+
+      // Handle server-side languages (Python/Java)
+      setOutput('Running code...\n');
+
       const result = await compilerAPI.compileCode({
         language: selectedLanguage,
         source_code: code,
@@ -160,6 +320,18 @@ const OnlineCompiler = () => {
   const handleResetCode = () => {
     setCode(LANGUAGES[selectedLanguage].defaultCode);
     setOutput('');
+  };
+
+  // Generate preview content for web languages
+  const getPreviewContent = () => {
+    const currentLang = LANGUAGES[selectedLanguage];
+
+    if (selectedLanguage === 'html') {
+      return code;
+    } else if (selectedLanguage === 'css') {
+      return currentLang.htmlTemplate.replace('{{CSS_CODE}}', code);
+    }
+    return '';
   };
 
   const currentLanguage = LANGUAGES[selectedLanguage];
@@ -228,9 +400,11 @@ const OnlineCompiler = () => {
                 >
                   <div className={`flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-3'}`}>
                     <div className={`${sidebarCollapsed ? 'w-10 h-8' : 'w-8 h-8'} rounded-lg flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 shadow-sm ${sidebarCollapsed ? 'border border-white/10 dark:border-gray-500/20' : ''}`}>
-                      <span className={`${sidebarCollapsed ? 'text-lg' : 'text-base'}`}>
-                        {language.icon}
-                      </span>
+                      <img
+                        src={language.icon}
+                        alt={`${language.name} logo`}
+                        className={`${sidebarCollapsed ? 'w-6 h-6' : 'w-5 h-5'} object-contain`}
+                      />
                     </div>
 
                     <AnimatePresence mode="wait">
@@ -308,7 +482,11 @@ const OnlineCompiler = () => {
                       >
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800">
-                            <span className="text-base">{language.icon}</span>
+                            <img
+                              src={language.icon}
+                              alt={`${language.name} logo`}
+                              className="w-5 h-5 object-contain"
+                            />
                           </div>
                           <div>
                             <h4 className="font-medium text-gray-900 dark:text-white">
@@ -338,10 +516,16 @@ const OnlineCompiler = () => {
               {/* Header */}
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">{currentLanguage.icon}</span>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 shadow-sm">
+                      <img
+                        src={currentLanguage.icon}
+                        alt={`${currentLanguage.name} logo`}
+                        className="w-6 h-6 object-contain"
+                      />
+                    </div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {currentLanguage.name} Compiler
+                      {currentLanguage.name} {currentLanguage.isWebLanguage ? 'Editor' : 'Compiler'}
                     </h1>
                   </div>
                 </div>
@@ -372,7 +556,7 @@ const OnlineCompiler = () => {
                     ) : (
                       <>
                         <Play className="w-4 h-4" />
-                        Run
+                        {currentLanguage.isWebLanguage ? 'Preview' : 'Run'}
                       </>
                     )}
                   </button>
@@ -427,13 +611,24 @@ const OnlineCompiler = () => {
                 <div className="bg-white/20 dark:bg-gray-900/40 backdrop-blur-xl rounded-xl border border-white/20 dark:border-gray-700/20 overflow-hidden">
                   <div className="p-3 border-b border-white/10 dark:border-gray-700/20 bg-white/10 dark:bg-gray-800/20">
                     <h3 className="font-medium text-gray-900 dark:text-white">
-                      Output
+                      {currentLanguage.isWebLanguage ? 'Live Preview' : 'Output'}
                     </h3>
                   </div>
-                  <div className="h-[calc(100%-3.5rem)] p-4 overflow-auto">
-                    <pre className="text-sm text-gray-900 dark:text-gray-100 font-mono whitespace-pre-wrap">
-                      {output || 'Click "Run" to execute your code...'}
-                    </pre>
+                  <div className="h-[calc(100%-3.5rem)] overflow-hidden">
+                    {currentLanguage.isWebLanguage ? (
+                      <iframe
+                        srcDoc={getPreviewContent()}
+                        className="w-full h-full border-0 bg-white"
+                        sandbox="allow-scripts"
+                        title="Live Preview"
+                      />
+                    ) : (
+                      <div className="h-full p-4 overflow-auto">
+                        <pre className="text-sm text-gray-900 dark:text-gray-100 font-mono whitespace-pre-wrap">
+                          {output || 'Click "Run" to execute your code...'}
+                        </pre>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
