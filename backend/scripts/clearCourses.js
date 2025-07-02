@@ -17,7 +17,9 @@ const clearCourses = async () => {
     const quizCount = await Quiz.countDocuments();
     const notesCount = await Notes.countDocuments();
 
-    console.log(`Found ${courseCount} courses, ${quizCount} quizzes, and ${notesCount} notes`);
+    console.log(
+      `Found ${courseCount} courses, ${quizCount} quizzes, and ${notesCount} notes`
+    );
 
     if (courseCount === 0 && quizCount === 0 && notesCount === 0) {
       console.log("No data to clear");
@@ -30,12 +32,12 @@ const clearCourses = async () => {
     await Quiz.deleteMany({});
     await Notes.deleteMany({});
 
-    console.log("✅ All courses, quizzes, and notes cleared successfully!");
-    console.log("💡 Restart the server to seed new courses automatically");
+    console.log("All courses, quizzes, and notes cleared successfully!");
+    console.log("Restart the server to seed new courses automatically");
 
     process.exit(0);
   } catch (error) {
-    console.error("❌ Error clearing courses:", error.message);
+    console.error("Error clearing courses:", error.message);
     process.exit(1);
   }
 };

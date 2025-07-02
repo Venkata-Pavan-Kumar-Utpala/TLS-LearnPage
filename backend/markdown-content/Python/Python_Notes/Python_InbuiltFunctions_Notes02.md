@@ -1,14 +1,14 @@
 ## Python Notes – 2
 
-## INBUILT FUNCTIONS IN PYTHON
+## Inbuilt Functions in Python
 
-### 1. print() Function
+### 1. `print()` Function
 
 The `print()` function is one of the most commonly used built-in functions in Python. It is used to display data on the standard output device (i.e., the console or terminal). Whether you're debugging your code or presenting output to a user, `print()` is the go-to function.
 
 ---
 
-### a) Printing Different Data Types
+#### a) Printing Different Data Types
 
 The `print()` function can be used to display values of all fundamental Python data types:
 
@@ -19,7 +19,7 @@ print(3.14)                              # Floating-point (float) type
 print([1, 2, 3, 4])                      # List (list) type
 print((5, 6, 7))                         # Tuple (tuple) type
 print({1, 2, 3, 10, 4})                  # Set (set) type
-print({1:'One', 2:'Two', 3:'Three'})     # Dictionary (dict) type
+print({1: 'One', 2: 'Two', 3: 'Three'})  # Dictionary (dict) type
 print(True)                              # Boolean (bool) type
 print(3 + 4j)                            # Complex number (complex) type
 print(None)                              # NoneType (None) – represents the absence of value
@@ -42,15 +42,17 @@ print(email)
 
 **Output:**
 
+```
 Techlearn Solutions
 9000663666
 techlearnsolutions@gmail.com
+```
 
 ---
 
 **c) Printing Multiple Values Together**
 
-You can use print() to display multiple values at once, separated by commas. Python will automatically insert a space between them.
+You can use `print()` to display multiple values at once, separated by commas. Python will automatically insert a space between them.
 
 ```python
 print(1, 2, 3, 4)
@@ -59,20 +61,22 @@ print('TechLearn', 9676663136, 'AS Rao Nagar')
 
 **Output:**
 
+```
 1 2 3 4
 TechLearn 9676663136 AS Rao Nagar
+```
 
 ---
 
 **d) Ways to Print Strings Along With Values**
 
-There are multiple ways to format strings with values using the print() function:
+There are multiple ways to format strings with values using the `print()` function:
 
 ---
 
 **1) Using Commas**
 
-Commas separate values in print() and automatically insert spaces.
+Commas separate values in `print()` and automatically insert spaces.
 
 ```python
 name = 'Techlearn Solutions'
@@ -83,14 +87,16 @@ print('Mobile:', mobile)
 
 **Output:**
 
+```
 Name : Techlearn Solutions
 Mobile: 9000663666
+```
 
 ---
 
 **2) Using String Concatenation (+)**
 
-The + operator is used to concatenate (combine) strings.
+The `+` operator is used to concatenate (combine) strings.
 
 ```python
 name = 'Techlearn Solutions'
@@ -99,9 +105,11 @@ print('Name : ' + name)
 
 **Output:**
 
+```
 Name : Techlearn Solutions
+```
 
-**Note:** You can only concatenate strings with strings. If you try to add a string and an integer directly, Python will raise a TypeError. You need to explicitly convert other types to strings using str() before concatenation.
+**Note:** You can only concatenate strings with strings. If you try to add a string and an integer directly, Python will raise a `TypeError`. You need to explicitly convert other types to strings using `str()` before concatenation.
 
 ---
 
@@ -113,7 +121,7 @@ Python provides a set of built-in functions for **type casting** or **type conve
 
 **str() Function**
 
-The str() function converts any data type to its string representation.
+The `str()` function converts any data type to its string representation.
 
 ```python
 print(str(5))          # Output: '5'
@@ -124,10 +132,7 @@ print(str(5.6))        # Output: '5.6'
 
 **int() Function**
 
-b = int('60') # Converts string to int
-c = a + b
-
-The int() function converts a string (that contains a valid integer) or a float (by truncating the decimal part) to an integer.
+The `int()` function converts a string (that contains a valid integer) or a float (by truncating the decimal part) to an integer.
 
 ```python
 a = int('56')          # Converts string to int
@@ -136,17 +141,13 @@ c = a + b
 print(c)               # Output: 116
 ```
 
-⚠️ int('12.5') would raise a ValueError because '12.5' is not an integer.
+⚠️ `int('12.5')` would raise a `ValueError` because '12.5' is not an integer.
 
 ---
 
 **float() Function**
 
-b = float(a) # Converts integer to float
-c = '12.3'
-d = float(c) # Converts string to float
-
-The float() function converts integers or numeric strings (with decimal) to floating-point numbers.
+The `float()` function converts integers or numeric strings (with decimal) to floating-point numbers.
 
 ```python
 a = 5
@@ -181,11 +182,7 @@ print(type(bList))    # Output: <class 'list'>
 
 **tuple() Function**
 
-aTuple = tuple(x) # Converts each character into tuple elements
-y = 'TECH'
-bTuple = tuple(y) # Output: ('T', 'E', 'C', 'H')
-
-The tuple() function converts other iterable types into tuples.
+The `tuple()` function converts other iterable types into tuples.
 
 ```python
 x = '(1,2,3)'         # String type
@@ -201,8 +198,6 @@ print(type(bTuple))   # <class 'tuple'>
 
 **f) Real-Life Example Using Type Conversion**
 
-gold_rate = 6605
-
 **Example 1: Printing the Gold Rate in Hyderabad**
 
 ```python
@@ -210,7 +205,7 @@ gold_rate = 6605
 print('Gold rate today in Hyderabad is: ' + str(gold_rate))
 ```
 
-**Explanation:** Since gold_rate is an integer, we need to convert it to a string using str() before concatenating it with another string.
+**Explanation:** Since `gold_rate` is an integer, we need to convert it to a string using `str()` before concatenating it with another string.
 
 ---
 
@@ -218,15 +213,15 @@ print('Gold rate today in Hyderabad is: ' + str(gold_rate))
 
 Format specifiers are placeholders used to embed values into strings:
 
-- %d → for integers
-- %f → for floats
-- %s → for strings
+- `%d` → for integers
+- `%f` → for floats
+- `%s` → for strings
 
 ---
 
 **Example 1: Rectangle Dimensions and Area**
 
-```
+```python
 length = 5
 breadth = 3
 area = length * breadth
@@ -239,7 +234,7 @@ print('Area = %d' % area)
 
 **Example 2: Country Details**
 
-```
+```python
 name = 'India'
 capital = 'Delhi'
 population = 1449297353
@@ -250,9 +245,9 @@ print("Country: %s Capital: %s Population: %d" % (name, capital, population))
 
 **h) Using f-Strings (Formatted String Literals)**
 
-Introduced in Python 3.6, **f-strings** are a modern and efficient way to embed expressions inside string literals using {}.
+Introduced in Python 3.6, **f-strings** are a modern and efficient way to embed expressions inside string literals using `{}`.
 
-```
+```python
 x = 5
 y = 3
 print(f'value of x={x} and value of y={y}')

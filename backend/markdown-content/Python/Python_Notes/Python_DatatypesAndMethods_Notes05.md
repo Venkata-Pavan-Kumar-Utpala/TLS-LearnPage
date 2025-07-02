@@ -1,16 +1,16 @@
-## PYTHON NOTES 5
+## Python Notes – 5
 
 ### Python Notes – 05: Data Types and Methods
 
 Python provides several built-in data types, grouped into the following major categories:
 
-1. Numeric Types
-2. Sequence Types
-3. Mapping Types
-4. Set Types
-5. Boolean Type
-6. Binary Types
-7. None Type
+1. **Numeric Types**
+2. **Sequence Types**
+3. **Mapping Types**
+4. **Set Types**
+5. **Boolean Type**
+6. **Binary Types**
+7. **None Type**
 
 Each category is discussed in detail below.
 
@@ -20,7 +20,7 @@ Each category is discussed in detail below.
 
 Python supports three primary numeric types:
 
-#### a. int (Integer)
+#### a. `int` (Integer)
 
 - Represents whole numbers (positive, negative, or zero) without a fractional component.
 - Arbitrary precision; can handle very large integers.
@@ -30,13 +30,14 @@ Python supports three primary numeric types:
 ```python
 x = 100
 print(type(x))  # <class 'int'>
+
 # Attributes:
 x = 5
 print(x.numerator)    # 5
 print(x.denominator)  # 1
 ```
 
-#### b. float (Floating-Point)
+#### b. `float` (Floating-Point)
 
 - Represents real numbers with a decimal point.
 - Precision may be limited due to binary representation.
@@ -48,7 +49,7 @@ y = 7.25
 print(type(y))  # <class 'float'>
 ```
 
-#### c. complex (Complex Numbers)
+#### c. `complex` (Complex Numbers)
 
 - Represents complex numbers in the form a + bj.
 - a is the real part, b is the imaginary part.
@@ -63,11 +64,11 @@ print(z.imag)  # 3.0
 
 ---
 
-**2. Sequence Types**
+### 2. Sequence Types
 
 These represent ordered collections of items. The three main sequence types are:
 
-#### a. str (String)
+#### a. `str` (String)
 
 - Represents a sequence of Unicode characters.
 - Immutable (cannot be changed after creation).
@@ -78,6 +79,7 @@ These represent ordered collections of items. The three main sequence types are:
 s = "Hello, World!"
 print(s[0])  # 'H'
 print(len(s))  # 13
+
 # Common methods:
 print(s.lower())
 print(s.upper())
@@ -86,7 +88,7 @@ print(s.find('World'))
 print(s.split(','))
 ```
 
-#### b. list
+#### b. `list`
 
 - Represents an ordered, mutable collection.
 - Can contain elements of different types.
@@ -100,7 +102,7 @@ lst[0] = 100
 print(lst)
 ```
 
-#### c. tuple
+#### c. `tuple`
 
 - Represents an ordered, immutable collection.
 - Useful when data should not change.
@@ -114,9 +116,9 @@ print(t[1])  # 2
 
 ---
 
-**3. Mapping Type**
+### 3. Mapping Type
 
-#### dict (Dictionary)
+#### `dict` (Dictionary)
 
 - Represents a collection of key-value pairs.
 - Unordered (in versions before 3.7) but insertion-ordered (Python 3.7+).
@@ -127,6 +129,7 @@ print(t[1])  # 2
 ```python
 d = {'name': 'Alice', 'age': 25}
 print(d['name'])  # 'Alice'
+
 # Common methods:
 print(d.keys())
 print(d.values())
@@ -138,11 +141,11 @@ print(d.pop('age'))
 
 ---
 
-**4. Set Types**
+### 4. Set Types
 
 Used for collections of **unique**, unordered items.
 
-#### a. set
+#### a. `set`
 
 - Mutable and unordered.
 - No duplicate elements allowed.
@@ -153,6 +156,7 @@ Used for collections of **unique**, unordered items.
 ```python
 s = {1, 2, 3, 3}
 print(s)  # {1, 2, 3}
+
 # Operations:
 s.add(4)
 s.remove(2)
@@ -161,7 +165,7 @@ print(s.intersection({1, 3, 5}))
 print(s.difference({3}))
 ```
 
-#### b. frozenset
+#### b. `frozenset`
 
 - Immutable version of a set.
 - Supports set operations but cannot be changed after creation.
@@ -175,9 +179,9 @@ print(fs)
 
 ---
 
-**5. Boolean Type**
+### 5. Boolean Type
 
-#### bool
+#### `bool`
 
 - Represents truth values: True and False.
 - Internally, True is equivalent to 1 and False to 0.
@@ -189,6 +193,7 @@ print(fs)
 x = True
 y = False
 print(type(x))  # <class 'bool'>
+
 # Logical operations:
 print(x and y)
 print(x or y)
@@ -197,11 +202,11 @@ print(not x)
 
 ---
 
-**6. Binary Types**
+### 6. Binary Types
 
 Used for working with raw binary data.
 
-#### a. bytes
+#### a. `bytes`
 
 - Immutable sequence of bytes.
 
@@ -212,7 +217,7 @@ b = b'hello'
 print(b)
 ```
 
-#### b. bytearray
+#### b. `bytearray`
 
 - Mutable version of bytes.
 
@@ -224,16 +229,16 @@ ba[0] = 68  # Changes to 68, which is 'D'
 print(ba)
 ```
 
-#### c. memoryview
+#### c. `memoryview`
 
 - Provides memory-efficient view of binary data.
 - Useful for manipulating slices of data without copying.
 
 ---
 
-**7. None Type**
+### 7. None Type
 
-#### NoneType
+#### `NoneType`
 
 - Represents the absence of a value or a null value.
 - There is only one instance: None.
@@ -246,8 +251,9 @@ x = None
 print(type(x))  # <class 'NoneType'>
 ```
 
-\
-**Casting or Type Conversion in Python**
+---
+
+## Casting or Type Conversion in Python
 
 **Type conversion**, also called **type casting**, refers to converting one data type into another. Python provides constructor functions to perform this explicitly for numeric types.
 
@@ -255,9 +261,9 @@ print(type(x))  # <class 'NoneType'>
 
 Python offers the following built-in functions for type conversion:
 
-1. int() – Converts a number or numeric string to an integer, truncating any decimal part.
-1. float() – Converts an integer or a numeric string to a floating-point number.
-1. complex() – Converts an integer or float into a complex number.
+1. `int()` – Converts a number or numeric string to an integer, truncating any decimal part.
+2. `float()` – Converts an integer or a numeric string to a floating-point number.
+3. `complex()` – Converts an integer or float into a complex number.
 
 ---
 
@@ -275,7 +281,7 @@ print(b)
 5
 ```
 
-**Explanation:** The int() function truncates the decimal part. 5.6 becomes 5.
+**Explanation:** The `int()` function truncates the decimal part. 5.6 becomes 5.
 
 ---
 
@@ -333,11 +339,11 @@ print(b)
 
 ---
 
-**Sequence Types in Python: Strings**
+## Sequence Types in Python: Strings
 
 A **sequence** in Python is an ordered collection of elements. A **string** is one such sequence type that consists of Unicode characters.
 
-**1. String (str)**
+### 1. String (`str`)
 
 **Definition:**
 
@@ -345,7 +351,7 @@ A **string** in Python is a sequence of characters enclosed in **single quotes (
 
 ---
 
-**Creating Strings**
+### Creating Strings
 
 **a) Empty Strings**
 
@@ -364,7 +370,7 @@ s3 = 'techlearn'
 
 ---
 
-**Multiline Strings**
+### Multiline Strings
 
 ```python
 para = """This is the first line,
@@ -385,17 +391,17 @@ This is third line.
 
 ---
 
-**Properties of Strings**
+### Properties of Strings
 
 1. **Strings are immutable**
-   1. Once a string is created, it cannot be modified.
-   1. Any operation that modifies a string returns a new string instead.
-1. **Strings are index-based**
-   1. Characters in a string can be accessed using **index numbers**, starting from 0 for the first character.
+   - Once a string is created, it cannot be modified.
+   - Any operation that modifies a string returns a new string instead.
+2. **Strings are index-based**
+   - Characters in a string can be accessed using **index numbers**, starting from 0 for the first character.
 
 ---
 
-**Indexing**
+### Indexing
 
 **a) Positive Indexing**
 
@@ -439,11 +445,11 @@ Third last character: A
 
 ---
 
-**7) Slice Operator [:] with Strings**
+### 7) Slice Operator [:] with Strings
 
 The **slice operator** is used to extract a portion (substring) of a string. The syntax is:
 
-string[start : end : step]
+`string[start : end : step]`
 
 - **start** (optional): Index to begin the slice (inclusive).
 - **end** (optional): Index to end the slice (exclusive).
@@ -485,7 +491,7 @@ print(s3) # Output: TCL
 
 ---
 
-**8) Concatenation Operator + with Strings**
+### 8) Concatenation Operator + with Strings
 
 The + operator joins two or more strings into one.
 
@@ -502,7 +508,7 @@ print(s3) # Output: TECHLEARN
 
 ---
 
-**9) Repetition Operator \* with Strings**
+### 9) Repetition Operator \* with Strings
 
 The \* operator repeats a string a specified number of times.
 
@@ -518,13 +524,15 @@ print(s2) # Output: TECHTECHTECH
 
 ---
 
-**10) F-Strings (Formatted String Literals)**
+### 10) F-Strings (Formatted String Literals)
 
 Introduced in Python 3.6, **f-strings** provide a concise way to embed expressions inside string literals.
 
 **Syntax:**
 
+```python
 f"string with {expression}"
+```
 
 **Example:**
 
@@ -541,21 +549,21 @@ print(s1)
 Name is: TechLearn and Mobile is: 9676663136
 ```
 
-- You can include any variable or expression inside {}.
+- You can include any variable or expression inside `{}`.
 
 ---
 
-\*\*11) Escape Character \*\*
+### 11) Escape Character
 
-The backslash \ is used to insert characters that are otherwise illegal in strings.
+The backslash `\` is used to insert characters that are otherwise illegal in strings.
 
 **Common Escape Sequences:**
 
-- \" – Double quote
-- \' – Single quote
-- \\ – Backslash
-- \n – New line
-- \t – Tab
+- `\"` – Double quote
+- `\'` – Single quote
+- `\\` – Backslash
+- `\n` – New line
+- `\t` – Tab
 
 **Example:**
 
@@ -572,9 +580,9 @@ This is "TECHLEARN" Solutions.
 
 ---
 
-**12) len() Function**
+### 12) len() Function
 
-The len() function returns the number of characters in a string (including spaces and special characters).
+The `len()` function returns the number of characters in a string (including spaces and special characters).
 
 **Example:**
 
@@ -593,22 +601,22 @@ print(len(s1))
 
 ---
 
-**Summary Table**
+### Summary Table
 
-| **Feature**      | **Operator/Function**        | **Description**                            |
-| :--------------- | :--------------------------- | :----------------------------------------- |
-| Slice            | [:]                          | Extracts substring from a string           |
-| Concatenation    | +                            | Combines strings                           |
-| Repetition       | \*                           | Repeats a string n times                   |
-| Formatted String | f""                          | Inserts variables into a string            |
-| Escape Character | \|Inserts special characters |
-| Length           | len()                        | Returns the number of characters in string |
+| **Feature**      | **Operator/Function** | **Description**                            |
+| :--------------- | :-------------------- | :----------------------------------------- |
+| Slice            | `[:]`                 | Extracts substring from a string           |
+| Concatenation    | `+`                   | Combines strings                           |
+| Repetition       | `*`                   | Repeats a string n times                   |
+| Formatted String | `f""`                 | Inserts variables into a string            |
+| Escape Character | `\`                   | Inserts special characters                 |
+| Length           | `len()`               | Returns the number of characters in string |
 
 ---
 
-**In-built Methods of String Data Type**
+## In-built Methods of String Data Type
 
-**1. capitalize()**
+**1. `capitalize()`**
 
 - Converts the **first character** of the string to uppercase and makes all other characters lowercase.
 
@@ -620,7 +628,7 @@ print(s2) # Output: Apple
 
 ---
 
-**2. count()**
+**2. `count()`**
 
 - Returns the number of **non-overlapping occurrences** of a specified substring in the given string.
 
@@ -632,7 +640,7 @@ print(c) # Output: 3
 
 ---
 
-**3. find()**
+**3. `find()`**
 
 - Returns the **lowest index** where the specified substring is found.
 - If not found, returns -1.
@@ -645,7 +653,7 @@ print(s.find('HYDERABAD')) # Output: -1
 
 ---
 
-**4. split()**
+**4. `split()`**
 
 - Splits the string into a **list of substrings**, using the specified delimiter (default is whitespace).
 
@@ -667,9 +675,9 @@ print(capitalized_names) # Output: ['Vnr', 'Cmr', 'Uoh', 'Mahindra', 'Cbit']
 
 ---
 
-**5. index()**
+**5. `index()`**
 
-- Works like find(), but **raises a ValueError** if the substring is not found.
+- Works like `find()`, but **raises a ValueError** if the substring is not found.
 
 ```python
 sentence = "This is India"
@@ -678,7 +686,7 @@ print(sentence.index("India")) # Output: 8
 
 ---
 
-**6. upper()**
+**6. `upper()`**
 
 - Returns a **new string** where all characters are uppercase.
 
@@ -689,7 +697,7 @@ print(name.upper()) # Output: GUIDO VAN ROSSUM
 
 ---
 
-**7. lower()**
+**7. `lower()`**
 
 - Converts all characters of the string to **lowercase**.
 
@@ -700,7 +708,7 @@ print(name.lower()) # Output: apple
 
 ---
 
-**8. islower()**
+**8. `islower()`**
 
 - Returns True if **all characters** in the string are lowercase.
 
@@ -711,7 +719,7 @@ print(name.islower()) # Output: False
 
 ---
 
-**9. isupper()**
+**9. `isupper()`**
 
 - Returns True if **all characters** in the string are uppercase.
 
@@ -722,7 +730,7 @@ print(name.isupper()) # Output: True
 
 ---
 
-**10. isnumeric()**
+**10. `isnumeric()`**
 
 - Returns True if the string contains **only numeric characters**.
 
@@ -733,19 +741,19 @@ print(ticket.isnumeric()) # Output: True
 
 ---
 
-**List in Python**
+## List in Python
 
 **Key Characteristics of Lists**
 
 1. **Ordered**: Maintains the order of elements.
-1. **Mutable**: Can be modified after creation.
-1. **Allows Duplicates**: Multiple identical elements allowed.
-1. **Heterogeneous Elements**: Can store different data types.
-1. **Defined Using Square Brackets [ ]** or list() constructor.
+2. **Mutable**: Can be modified after creation.
+3. **Allows Duplicates**: Multiple identical elements allowed.
+4. **Heterogeneous Elements**: Can store different data types.
+5. **Defined Using Square Brackets [ ]** or list() constructor.
 
 ---
 
-**Examples**
+### Examples
 
 ```python
 x = [] # Empty list using brackets
@@ -754,7 +762,7 @@ y = list() # Empty list using constructor
 
 ---
 
-**Allows Duplicates**
+### Allows Duplicates
 
 ```python
 xList = [1, 3, 7, 4, 5, 3]
@@ -763,7 +771,7 @@ print(xList) # Output: [1, 3, 7, 4, 5, 3]
 
 ---
 
-**Length of List**
+### Length of List
 
 ```python
 xList = [10, 20, 30, 40, 50]
@@ -772,7 +780,7 @@ print(len(xList)) # Output: 5
 
 ---
 
-**Index-Based Access**
+### Index-Based Access
 
 ```python
 xList = [10, 20, 30, 40, 50]
@@ -782,7 +790,7 @@ print(xList[3]) # Output: 40
 
 ---
 
-**Negative Indexing**
+### Negative Indexing
 
 ```python
 xList = [10, 20, 30, 40]
@@ -791,7 +799,7 @@ print(xList[-1]) # Output: 40 (last element)
 
 ---
 
-**Slicing Lists**
+### Slicing Lists
 
 ```python
 xList = [10, 20, 30, 40, 50, 60]
@@ -801,7 +809,7 @@ print(yList) # Output: [10, 20, 30]
 
 ---
 
-**List Concatenation**
+### List Concatenation
 
 ```python
 xList = [10, 20, 30]
@@ -812,7 +820,7 @@ print(zList) # Output: [10, 20, 30, 40, 50, 60]
 
 ---
 
-**List Repetition**
+### List Repetition
 
 ```python
 xList = [10, 20, 30]
@@ -822,7 +830,7 @@ print(yList) # Output: [10, 20, 30, 10, 20, 30]
 
 ---
 
-**List Comprehension**
+### List Comprehension
 
 A concise way to generate lists using conditions and loops.
 
@@ -873,26 +881,28 @@ b = [val if val % 2 != 0 else '\*' for val in a]
 print(b) # Output: ['\*', 23, 45, 67, 89, '\*']
 ```
 
-**✅ Python Built-in Methods**
+---
+
+## Python Built-in Methods
 
 Organized into three major data types: **String**, **List**, and **Tuple**.
 
 ---
 
-**🔤 STRING DATA TYPE METHODS**
+### STRING DATA TYPE METHODS
 
-| **Method**   | **Description**                                    |
-| :----------- | :------------------------------------------------- |
-| capitalize() | Converts first character to uppercase.             |
-| count(x)     | Returns count of substring x.                      |
-| find(x)      | Returns index of x if found, else -1.              |
-| split(sep)   | Splits string by sep, returns list.                |
-| index(x)     | Same as find(), but gives error if x not found.    |
-| upper()      | Converts entire string to uppercase.               |
-| lower()      | Converts entire string to lowercase.               |
-| islower()    | Checks if string is lowercase.                     |
-| isupper()    | Checks if string is uppercase.                     |
-| isnumeric()  | Checks if string contains only numeric characters. |
+| **Method**     | **Description**                                    |
+| :------------- | :------------------------------------------------- |
+| `capitalize()` | Converts first character to uppercase.             |
+| `count(x)`     | Returns count of substring x.                      |
+| `find(x)`      | Returns index of x if found, else -1.              |
+| `split(sep)`   | Splits string by sep, returns list.                |
+| `index(x)`     | Same as `find()`, but gives error if x not found.  |
+| `upper()`      | Converts entire string to uppercase.               |
+| `lower()`      | Converts entire string to lowercase.               |
+| `islower()`    | Checks if string is lowercase.                     |
+| `isupper()`    | Checks if string is uppercase.                     |
+| `isnumeric()`  | Checks if string contains only numeric characters. |
 
 **Example Problem:**
 
@@ -904,56 +914,60 @@ for name in names.split('-'):
 
 ---
 
-**LIST DATA TYPE METHODS**
+### LIST DATA TYPE METHODS
 
-| **Method**    | **Description**                                             |
-| :------------ | :---------------------------------------------------------- |
-| append(x)     | Adds x to end of list.                                      |
-| insert(i, x)  | Inserts x at index i.                                       |
-| extend(list2) | Appends all elements of list2 to current list.              |
-| remove(x)     | Removes first occurrence of x; throws error if x not found. |
-| pop()         | Removes and returns last item.                              |
-| pop(i)        | Removes and returns item at index i.                        |
-| clear()       | Empties the list.                                           |
-| sort()        | Sorts list in ascending order.                              |
-| reverse()     | Reverses order of items in list.                            |
-| index(x)      | Returns index of x; error if x not found.                   |
-| count(x)      | Counts number of times x appears.                           |
-| copy()        | Returns a new shallow copy of the list.                     |
+| **Method**      | **Description**                                             |
+| :-------------- | :---------------------------------------------------------- |
+| `append(x)`     | Adds x to end of list.                                      |
+| `insert(i, x)`  | Inserts x at index i.                                       |
+| `extend(list2)` | Appends all elements of list2 to current list.              |
+| `remove(x)`     | Removes first occurrence of x; throws error if x not found. |
+| `pop()`         | Removes and returns last item.                              |
+| `pop(i)`        | Removes and returns item at index i.                        |
+| `clear()`       | Empties the list.                                           |
+| `sort()`        | Sorts list in ascending order.                              |
+| `reverse()`     | Reverses order of items in list.                            |
+| `index(x)`      | Returns index of x; error if x not found.                   |
+| `count(x)`      | Counts number of times x appears.                           |
+| `copy()`        | Returns a new shallow copy of the list.                     |
 
-` `**Common Concepts**
+**Common Concepts**
 
-- Indexing: list[i], list[-1]
-- Slicing: list[start:stop]
-- Concatenation: list1 + list2
-- Repetition: list \* n
+- Indexing: `list[i]`, `list[-1]`
+- Slicing: `list[start:stop]`
+- Concatenation: `list1 + list2`
+- Repetition: `list \* n`
 - **List comprehension**:
-- xList = [5, 6, 2, 8, 9, 10, 45]
-- z = [x for x in xList if x % 5 == 0] # [5, 10, 45]
+  - `xList = [5, 6, 2, 8, 9, 10, 45]`
+  - `z = [x for x in xList if x % 5 == 0] # [5, 10, 45]`
 
 ---
 
-` `**TUPLE DATA TYPE**
+## TUPLE DATA TYPE
 
-| **Property**     | **Description**                              |
-| :--------------- | :------------------------------------------- |
-| Immutable        | Cannot be changed after creation.            |
-| Created using    | x = (1, 2, 3) or x = 1, 2, 3                 |
-| Singleton syntax | x = (1,) (note the comma)                    |
-| Access           | Supports indexing (x[0]) and slicing (x[:3]) |
-| Concatenation    | x + y returns new tuple                      |
-| Repetition       | x \* 2 duplicates elements                   |
-| Tuple unpacking  | a, b = (1, 2)                                |
-| Comprehension    | Returns a generator, not a tuple             |
+| **Property**     | **Description**                                  |
+| :--------------- | :----------------------------------------------- |
+| Immutable        | Cannot be changed after creation.                |
+| Created using    | `x = (1, 2, 3)` or `x = 1, 2, 3`                 |
+| Singleton syntax | `x = (1,)` (note the comma)                      |
+| Access           | Supports indexing (`x[0]`) and slicing (`x[:3]`) |
+| Concatenation    | `x + y` returns new tuple                        |
+| Repetition       | `x \* 2` duplicates elements                     |
+| Tuple unpacking  | `a, b = (1, 2)`                                  |
+| Comprehension    | Returns a generator, not a tuple                 |
 
-` `**Tuple Built-in Methods**
+---
+
+### Tuple Built-in Methods
 
 | **Method** | **Description**                                                      |
 | :--------- | :------------------------------------------------------------------- |
-| index(x)   | Returns index of first occurrence of x; throws error if x not found. |
-| count(x)   | Returns the count of x in the tuple.                                 |
+| `index(x)` | Returns index of first occurrence of x; throws error if x not found. |
+| `count(x)` | Returns the count of x in the tuple.                                 |
 
-` `**Tuple Comprehension Example:**
+---
+
+### Tuple Comprehension Example:
 
 ```python
 t = (10, 15, 20, 25)
@@ -965,7 +979,7 @@ for val in z:
 
 ---
 
-**✅ Bonus Comparison**
+## Bonus Comparison
 
 | **Feature** | **String**    | **List**         | **Tuple**      |
 | :---------- | :------------ | :--------------- | :------------- |
@@ -974,17 +988,19 @@ for val in z:
 | Methods     | Many          | Many             | Very Few       |
 | Use Case    | Text handling | Dynamic sequence | Fixed sequence |
 
-` `**What is a Set in Python?**
+---
+
+## What is a Set in Python?
 
 A **set** is a built-in data type in Python that represents a **collection of unique, unordered items**. It is inspired by the concept of sets in mathematics.
 
 ---
 
-` `**BASIC PROPERTIES OF SET:**
+### BASIC PROPERTIES OF SET:
 
 **✅ a) Set Representation:**
 
-A set is created using curly braces {} or the set() constructor.
+A set is created using curly braces `{}` or the `set()` constructor.
 
 ```python
 xSet = {1, 21, 33, 2, 40, 5}
@@ -1088,9 +1104,9 @@ set5 = set1[:2] # ❌ TypeError
 
 ---
 
-**⚙️ SET IN-BUILT METHODS:**
+## ⚙️ SET IN-BUILT METHODS:
 
-**1. add()**
+**1. `add()`**
 
 Adds a **single** new element if it's not already in the set.
 
@@ -1100,11 +1116,11 @@ set1.add(6) # Adds 6
 set1.add(3) # Does nothing (3 already exists)
 ```
 
-- ❌ `set1.add(98, 9)` → invalid: add() only takes one element.
+- ❌ `set1.add(98, 9)` → invalid: `add()` only takes one element.
 
 ---
 
-**2. update()**
+**2. `update()`**
 
 Adds elements from another set or iterable, one by one.
 
@@ -1122,7 +1138,7 @@ set2 |= {85, 3, 7}
 
 ---
 
-**3. union() or |**
+**3. `union()` or `|`**
 
 Returns a **new set** combining all unique elements from both sets.
 
@@ -1134,7 +1150,7 @@ set3 = set1.union(set2) # OR set1 | set2
 
 ---
 
-**4. intersection() or &**
+**4. `intersection()` or `&`**
 
 Returns only the **common elements** in both sets.
 
@@ -1146,7 +1162,7 @@ set3 = set1.intersection(set2) # OR set1 & set2
 
 ---
 
-**5. discard()**
+**5. `discard()`**
 
 Removes element if it exists. If not, does nothing (no error).
 
@@ -1158,7 +1174,7 @@ set1.discard(20) # Does nothing
 
 ---
 
-**6. pop()**
+**6. `pop()`**
 
 Removes and returns a **random** element (usually the first inserted, but depends on hash).
 
@@ -1176,7 +1192,7 @@ set1.pop() # ❌ TypeError
 
 ---
 
-**7. remove()**
+**7. `remove()`**
 
 Removes a specified item from the set.
 
@@ -1188,7 +1204,7 @@ set1.remove(99) # ❌ KeyError (if item doesn't exist)
 
 ---
 
-**8. issuperset() or >=**
+**8. `issuperset()` or `>=`**
 
 Returns True if **all elements of set2 are present in set1**.
 
@@ -1200,7 +1216,7 @@ print(set1.issuperset(set2)) # True
 
 ---
 
-**9. issubset() or <=**
+**9. `issubset()` or `<=`**
 
 Returns True if **all elements of set1 are in set2**.
 
@@ -1212,7 +1228,7 @@ print(set1.issubset(set2)) # True
 
 ---
 
-**10. difference() or -**
+**10. `difference()` or `-`**
 
 Returns elements in set1 that are **not in set2**.
 
@@ -1226,7 +1242,7 @@ set5 = set1.difference(set2, set3) # {5, 6, 7}
 
 ---
 
-**11. difference_update()**
+**11. `difference_update()`**
 
 Removes elements in set2 from set1. **Updates set1**, does not return new set.
 
@@ -1239,7 +1255,7 @@ delhi.difference_update(mumbai)
 
 ---
 
-**12. symmetric_difference() or ^**
+**12. `symmetric_difference()` or `^`**
 
 Returns items **only in one set, not both**.
 
@@ -1252,7 +1268,7 @@ result = delhi.symmetric_difference(mumbai)
 
 ---
 
-**13. isdisjoint()**
+**13. `isdisjoint()`**
 
 Returns **True** if the sets have **no common items**, else False.
 
@@ -1266,29 +1282,29 @@ print(delhi.isdisjoint(mumbai)) # False
 
 ---
 
-**✅ Summary Table**
+### Summary Table
 
-| **Operation**          | **Symbol** | **Description**                      |
-| :--------------------- | :--------- | :----------------------------------- |
-| add()                  | –          | Add one item                         |
-| update()               | –          | Add multiple items                   |
-| union()                | `          | `                                    |
-| intersection()         | &          | Common items                         |
-| difference()           | -          | Items only in first set              |
-| symmetric_difference() | ^          | Items not common                     |
-| remove()               | –          | Remove item or error                 |
-| discard()              | –          | Remove item or do nothing            |
-| pop()                  | –          | Remove random item                   |
-| issuperset()           | >=         | All items of other set exist in this |
-| issubset()             | <=         | All items of this exist in other set |
-| isdisjoint()           | –          | No common items                      |
+| **Operation**            | **Symbol** | **Description**                      |
+| :----------------------- | :--------- | :----------------------------------- |
+| `add()`                  | –          | Add one item                         |
+| `update()`               | –          | Add multiple items                   |
+| `union()`                | `          | `                                    |
+| `intersection()`         | &          | Common items                         |
+| `difference()`           | -          | Items only in first set              |
+| `symmetric_difference()` | ^          | Items not common                     |
+| `remove()`               | –          | Remove item or error                 |
+| `discard()`              | –          | Remove item or do nothing            |
+| `pop()`                  | –          | Remove random item                   |
+| `issuperset()`           | >=         | All items of other set exist in this |
+| `issubset()`             | <=         | All items of this exist in other set |
+| `isdisjoint()`           | –          | No common items                      |
 
 \
 Absolutely, maga! Let’s dive deep into **Python Dictionaries** and all the in-built methods you've listed. I’ll break everything down **clearly, with analogies, edge cases, tips, and practical examples**. This will help you **not only understand but also apply** them in real projects or exams.
 
 ---
 
-**1. What is a Dictionary?**
+## 1. What is a Dictionary?
 
 A **dictionary** is like a **real-life dictionary** where each **word (key)** is associated with a **meaning (value)**.
 
@@ -1296,7 +1312,7 @@ A **dictionary** is like a **real-life dictionary** where each **word (key)** is
 
 | **Feature**     | **Explanation**                                            |
 | :-------------- | :--------------------------------------------------------- |
-| **Syntax**      | { key1: value1, key2: value2 }                             |
+| **Syntax**      | `{ key1: value1, key2: value2 }`                           |
 | **Key Rules**   | Must be **immutable** types (int, float, str, tuple, bool) |
 | **Value Rules** | Can be **any** type (list, dict, set, etc.)                |
 | **No Indexing** | Access is done using keys, not numeric indices             |
@@ -1310,7 +1326,7 @@ print(city[40]) # Output: Hyderabad
 
 ---
 
-**🛠️ 2. In-Built Dictionary Methods Explained**
+## 🛠️ 2. In-Built Dictionary Methods Explained
 
 ---
 
