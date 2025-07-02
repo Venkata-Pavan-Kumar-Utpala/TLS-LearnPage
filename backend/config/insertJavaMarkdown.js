@@ -2,11 +2,13 @@ import mongoose from "mongoose";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import Notes from "./models/Notes.js";
-import Quiz from "./models/Quiz.js";
-import Course from "./models/Course.js";
+import Notes from "../models/Notes.js";
+import Quiz from "../models/Quiz.js";
+import Course from "../models/Course.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// Always resolve from backend root
+import process from "process";
+const __dirname = process.cwd();
 
 // Update directories for notes, quizzes, and images
 const coreJavaDir = path.join(__dirname, "markdown-content", "CoreJava");
@@ -116,7 +118,7 @@ const parseQuizMarkdown = (filePath) => {
   return questions;
 };
 
-export const insertMarkdownContent = async () => {
+export const insertJavaMarkdownContent = async () => {
   try {
     // Only insert if Core Java course does not exist
     let coreJavaCourse = await Course.findOne({ title: "Core Java" });
@@ -141,22 +143,29 @@ export const insertMarkdownContent = async () => {
     }
 
     // Insert notes only if not already present and link to topics
+    let courseModified = false;
     for (const note of predefinedNotes) {
       const filePath = path.join(notesDir, note.file);
       if (fs.existsSync(filePath)) {
         const content = fs.readFileSync(filePath, "utf-8");
+        // Check if a note with this content is already linked to the course topic
+        const topic = coreJavaCourse.topics.find((t) => t.title === note.title);
+        if (topic && topic.notesId) {
+          // Already linked, skip
+          continue;
+        }
+        // Only create if not already present
         let existingNote = await Notes.findOne({ content });
         if (!existingNote) {
           existingNote = await Notes.create({ content });
         }
-        // Link note to topic if not already linked
-        const topic = coreJavaCourse.topics.find((t) => t.title === note.title);
         if (
           topic &&
           (!topic.notesId ||
             topic.notesId.toString() !== existingNote._id.toString())
         ) {
           topic.notesId = existingNote._id;
+          courseModified = true;
         }
       } else {
         console.warn(`Note file not found: ${filePath}`);
@@ -164,6 +173,7 @@ export const insertMarkdownContent = async () => {
     }
 
     // Insert quizzes only if not already present and link to topics
+    let quizModified = false;
     for (const quiz of predefinedQuizzes) {
       const filePath = path.join(quizzesDir, quiz.file);
       if (fs.existsSync(filePath)) {
@@ -173,6 +183,10 @@ export const insertMarkdownContent = async () => {
             (t) => t.title === quiz.title
           );
           if (!topic) continue;
+          if (topic.quizId) {
+            // Already linked, skip
+            continue;
+          }
           let existingQuiz = await Quiz.findOne({ topicTitle: quiz.title });
           if (!existingQuiz) {
             existingQuiz = await Quiz.create({
@@ -188,6 +202,7 @@ export const insertMarkdownContent = async () => {
             topic.quizId.toString() !== existingQuiz._id.toString()
           ) {
             topic.quizId = existingQuiz._id;
+            quizModified = true;
           }
         } else {
           console.warn(`No valid questions found in quiz: ${filePath}`);
@@ -197,8 +212,14 @@ export const insertMarkdownContent = async () => {
       }
     }
 
-    await coreJavaCourse.save();
-    console.log("Notes and quizzes linked to Core Java course successfully");
+    if (courseModified || quizModified) {
+      await coreJavaCourse.save();
+      console.log("Notes and quizzes linked to Core Java course successfully");
+    } else {
+      console.log(
+        "Core Java notes and quizzes already linked, skipping update"
+      );
+    }
   } catch (error) {
     console.error("Error inserting markdown content:", error);
   }

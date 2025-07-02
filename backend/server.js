@@ -8,8 +8,8 @@ import userRoutes from "./routes/userRoutes.js";
 import userProgressRouter from "./routes/userProgressRoutes.js";
 import paymentRouter from "./routes/paymentRoutes.js";
 import certificationRoutes from "./routes/certificationRoutes.js";
-import { insertMarkdownContent } from "./importMarkdownContent.js";
-import { seedCoreJavaCourse } from "./config/seedCoreJava.js";
+import { insertJavaMarkdownContent } from "./config/insertJavaMarkdown.js";
+import { insertPythonMarkdownContent } from "./config/insertPythonMarkdown.js";
 
 dotenv.config();
 const app = express();
@@ -37,8 +37,8 @@ app.use(
 (async () => {
   try {
     await connectDB();
-    await seedCoreJavaCourse();
-    await insertMarkdownContent();
+    await insertJavaMarkdownContent();
+    await insertPythonMarkdownContent();
 
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => console.log(`Server running`));
