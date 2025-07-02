@@ -1,12 +1,12 @@
 # Python Notes – Basics
 
-# **Introduction**
+## Introduction
 
-## **History**
+### History
 
 Python is a high-level, interpreted, interactive, and object-oriented scripting language. It was developed by Guido van Rossum in the late 1980s and early 1990s at the National Research Institute for Mathematics and Computer Science in the Netherlands. Python is derived from several languages like C, C++, SmallTalk, Algol-68, and other scripting languages. It is general-purpose, versatile, concise, easy to read, and can be used in web development, software development, and scientific applications.
 
-## **Features**
+### Features
 
 - Easy to read, learn, and maintain.
 - Comes with a standard library that is portable and cross-platform compatible.
@@ -17,13 +17,13 @@ Python is a high-level, interpreted, interactive, and object-oriented scripting 
 - Offers automatic garbage collection.
 - Supports dynamic type checking and conversion.
 
-## **Setting Up Python**
+### Setting Up Python
 
 1. Download the latest version of Python from: https://www.python.org/downloads/
 2. Install the Python interpreter.
 3. Execute Python code using IDLE (Integrated Development Environment) or via the command prompt.
 
-# **Working with Python**
+## Working with Python
 
 Python code can be written and executed in several ways:
 
@@ -77,9 +77,9 @@ print(x, y, z)
 
 From the command prompt, type `python` to open the shell or `python filename.py` to run a script.
 
-# **Python Identifiers and Keywords**
+## Python Identifiers and Keywords
 
-## **Identifiers**
+### Identifiers
 
 Naming conventions for identifiers:
 
@@ -93,17 +93,17 @@ Naming conventions for identifiers:
 
 \- Leading and trailing double underscores: language-defined special names.
 
-## **Keywords**
+### Keywords
 
 Python has 33 keywords, including:
 
 and, exec, not, assert, finally, or, break, for, pass, class, from, print, continue, global, raise, def, if, return, del, import, try, elif, in, while, else, is, with, except, lambda, yield
 
-# **Lines and Indentation**
+## Lines and Indentation
 
 Python uses indentation instead of braces to define blocks of code. All statements within a block must be indented consistently.
 
-# **Comments in Python**
+## Comments in Python
 
 Use the '#' symbol to write comments.
 
@@ -116,17 +116,13 @@ print("""Computer Training & Development
 2nd Floor, Surabhi Complex, AS Rao Nagar, ECIL, Hyderabad-500062.""")
 ```
 
-# **Variables and Data Types**
+## Variables and Data Types
 
-- ## Variables are nothing but reserved memory locations to store values. This means, when you create a variable, you reserve some space in memory.
+- **Variables** are nothing but reserved memory locations to store values. This means, when you create a variable, you reserve some space in memory.
 
-##
+- Based on the data type of a variable, the interpreter allocates memory and decides what can be stored in the reserved memory. Therefore, by assigning different data types to variables, you can store integers, decimals, or characters in these variables.
 
-- ## Based on the data type of a variable, the interpreter allocates memory and decides what can be stored in the reserved memory. Therefore, by assigning different data types to variables, you can store integers, decimals, or characters in these variables.
-
-##
-
-## **Assigning Values**
+### Assigning Values
 
 ```python
 var = 100
@@ -140,7 +136,7 @@ print(var3)
 print(var4)
 ```
 
-## **Multiple Assignment**
+### Multiple Assignment
 
 ```python
 a = b = c = 1
@@ -152,34 +148,31 @@ print(y)
 print(z)
 ```
 
-## **Standard Data Types**
+### Standard Data Types
 
 Python supports the following data types:
 
-\- Numbers (int, float, complex)
+- Numbers (`int`, `float`, `complex`)
+- Strings
+- List `[ ]`
+- Tuple `( )`
+- Set `{ }`
+- Dictionary `{key: value}`
+- Boolean (`True`/`False`)
+- None (no value)
 
-\- Strings
+### Numbers
 
-\- List [ ]
-
-\- Tuple ( )
-
-\- Set { }
-
-\- Dictionary {key: value}
-
-\- Boolean (True/False)
-
-\- None (no value)
-
-## **Numbers**
+x = 0b1100 # Binary\
 
 Integer examples:
 
-x = 0b1100 # Binary\
-y = 0o14 # Octal\
+```python
+x = 0b1100 # Binary
+y = 0o14 # Octal
 z = 0xc # Hexadecimal
-x = 1_23_450\
+x = 1_23_450
+```
 
 ```python
 a = 1200000000000000000000
@@ -196,14 +189,14 @@ x = 1_23_450
 print(type(x))  # Output: <class 'int'>
 ```
 
-## **Float**
+### Float
 
 ```python
 x = 5.01234567890123456789
 print(x)  # Output: rounded to 15 decimal places
 ```
 
-## **Complex Numbers**
+### Complex Numbers
 
 ```python
 a = 5 + 2j
@@ -211,12 +204,9 @@ print(a)
 print(type(a))  # Output: <class 'complex'>
 ```
 
-**Binary, Octal, Hexadecimal**\
-\
-
 ---
 
-**📘 Number Systems in Python: Binary, Octal, and Hexadecimal**
+#### 📘 Number Systems in Python: Binary, Octal, and Hexadecimal
 
 In computer science, numbers can be represented in **different numeral systems**, such as:
 
@@ -229,52 +219,46 @@ Python natively supports these formats by using **prefixes** to indicate the bas
 
 ---
 
-**🔹 1. Binary Numbers in Python**
+#### 1. Binary Numbers in Python
 
-- **Prefix**: 0b or 0B
+- **Prefix**: `0b` or `0B`
 - **Base**: 2
 - **Digits allowed**: 0 and 1 only
 
 **Example:**
-
-\
 
 ```python
 x = 0b00001100
 print(x)  # Output: 12
 ```
 
-\
-**2. Octal Numbers in Python**
+#### 2. Octal Numbers in Python
 
-- **Prefix**: 0o or 0O
+- **Prefix**: `0o` or `0O`
 - **Base**: 8
 - **Digits allowed**: 0 to 7 only
 
 **Example:**
-
-\
-\
 
 ```python
 x = 0o12
 print(x)  # Output: 10
 ```
 
-**3. Hexadecimal Numbers in Python**
+#### 3. Hexadecimal Numbers in Python
 
-- **Prefix**: 0x or 0X
+- **Prefix**: `0x` or `0X`
 - **Base**: 16
 - **Digits allowed**: 0–9, A–F (or a–f)
 
-\
+**Example:**
 
 ```python
 a = 0xc
 print(a)  # Output: 12
 ```
 
-# **Strings**
+## Strings
 
 Strings are sequences of characters enclosed in quotes (single or double). They are index-based.
 
@@ -294,7 +278,7 @@ print(str*2)
 print(str + " Welcome to TechLearn")
 ```
 
-# **Lists**
+## Lists
 
 Lists are mutable sequences enclosed in square brackets [].
 
@@ -311,7 +295,7 @@ list[0] = 'techlearn'
 print(list)
 ```
 
-# **Tuples**
+## Tuples
 
 Tuples are immutable sequences enclosed in parentheses ().
 
@@ -323,7 +307,7 @@ print(tup2)
 # tup1[0] = "first"  # Error: tuples are immutable
 ```
 
-# **Dictionaries**
+## Dictionaries
 
 Dictionaries are collections of key-value pairs enclosed in curly braces {}.
 
@@ -337,9 +321,9 @@ dic[2] = 'second'
 print(dic)
 ```
 
-# **Boolean and NoneType**
+## Boolean and NoneType
 
-## **Boolean Type**
+### Boolean Type
 
 Boolean values are either True or False, often used in conditions.
 
@@ -348,7 +332,7 @@ num = 12
 print(num > 0)  # Output: True
 ```
 
-## **NoneType**
+### NoneType
 
 Represents the absence of a value. Often used as a function return type when nothing is returned.
 

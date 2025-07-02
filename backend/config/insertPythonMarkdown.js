@@ -17,11 +17,20 @@ export const predefinedPythonNotes = [
   { file: "Python_Introduction_Notes01.md", title: "Introduction" },
   { file: "Python_InbuiltFunctions_Notes02.md", title: "Inbuilt Functions" },
   { file: "Python_Operators_Notes03.md", title: "Operators" },
-  { file: "Python_ControlStatements_Notes04", title: "Control Statements" },
+  { file: "Python_ControlStatements_Notes04.md", title: "Control Statements" },
   {
     file: "Python_DatatypesAndMethods_Notes05.md",
     title: "Data Types and Methods",
   },
+  { file: "Python_Looping_Notes06.md", title: "Looping" },
+  { file: "Python_Functions_Notes07.md", title: "Functions" },
+  {
+    file: "Python_ConstructorAndDestructor_Notes08.md",
+    title: "Constructor and Destructor",
+  },
+  { file: "Python_OOPS_Notes09.md", title: "OOPS" },
+  { file: "Python_Inheritance_Notes10.md", title: "Inheritance" },
+  { file: "Python_Multithreading_Notes11.md", title: "Multithreading" },
 ];
 
 export const insertPythonMarkdownContent = async () => {

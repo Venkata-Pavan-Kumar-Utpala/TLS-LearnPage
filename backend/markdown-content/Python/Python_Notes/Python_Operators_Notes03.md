@@ -1,190 +1,187 @@
-**PYTHON NOTES – PART 3**
+## Python Notes – Part 3
 
-**OPERATORS IN PYTHON**
+### Operators in Python
 
-**Introduction to Operators**
+#### Introduction to Operators
 
-In Python, _operators_ are special symbols or keywords used to perform operations on variables and values. These operations can include arithmetic calculations, comparisons, logical evaluations, and more. Operators allow you to manipulate data and variables effectively, making them essential for any programming task.
+In Python, **operators** are special symbols or keywords used to perform operations on variables and values. These operations can include arithmetic calculations, comparisons, logical evaluations, and more. Operators allow you to manipulate data and variables effectively, making them essential for any programming task.
 
 Python supports several types of operators, each designed for a specific category of tasks.
 
 ---
 
-**Types of Operators in Python**
+### Types of Operators in Python
 
 Python provides the following categories of operators:
 
 1. **Arithmetic Operators**
-1. **Comparison (Relational) Operators**
-1. **Assignment Operators**
-1. **Logical Operators**
-1. **Bitwise Operators**
-1. **Membership Operators**
-1. **Identity Operators**
+2. **Comparison (Relational) Operators**
+3. **Assignment Operators**
+4. **Logical Operators**
+5. **Bitwise Operators**
+6. **Membership Operators**
+7. **Identity Operators**
 
 ---
 
-**1. Arithmetic Operators**
+#### 1. Arithmetic Operators
 
 Arithmetic operators are used to perform common mathematical operations such as addition, subtraction, multiplication, division, and more.
 
 Assume the following values:
 
+```python
 a = 10
-
 b = 20
+```
 
 | **Operator** | **Description**        | **Example** | **Result** |
 | :----------- | :--------------------- | :---------- | :--------- |
-| +            | Addition               | a + b       | 30         |
-| -            | Subtraction            | a - b       | -10        |
-| \*           | Multiplication         | a \* b      | 200        |
-| /            | Division (float)       | a / b       | 0\.5       |
-| //           | Floor Division         | a // b      | 0          |
-| %            | Modulus (Remainder)    | a % b       | 10         |
-| \*\*         | Exponentiation (Power) | a \*\* 2    | 100        |
+| +            | Addition               | `a + b`     | 30         |
+| -            | Subtraction            | `a - b`     | -10        |
+| \*           | Multiplication         | `a * b`     | 200        |
+| /            | Division (float)       | `a / b`     | 0.5        |
+| //           | Floor Division         | `a // b`    | 0          |
+| %            | Modulus (Remainder)    | `a % b`     | 10         |
+| \*\*         | Exponentiation (Power) | `a ** 2`    | 100        |
 
 **Explanation:**
 
-- / gives a floating-point result.
-- // performs integer (floor) division, discarding the decimal part.
-- % returns the remainder after division.
-- \*\* raises the number to the power of the right operand.
+- `/` gives a floating-point result.
+- `//` performs integer (floor) division, discarding the decimal part.
+- `%` returns the remainder after division.
+- `**` raises the number to the power of the right operand.
 
 ---
 
-**2. Comparison (Relational) Operators**
+#### 2. Comparison (Relational) Operators
 
 These operators compare the values of two operands and return a Boolean result (True or False).
 
 | **Operator** | **Description**          | **Example** | **Result** |
 | :----------- | :----------------------- | :---------- | :--------- |
-| ==           | Equal to                 | a == b      | False      |
-| !=           | Not equal to             | a != b      | True       |
-| >            | Greater than             | a > b       | False      |
-| <            | Less than                | a < b       | True       |
-| >=           | Greater than or equal to | a >= b      | False      |
-| <=           | Less than or equal to    | a <= b      | True       |
+| ==           | Equal to                 | `a == b`    | False      |
+| !=           | Not equal to             | `a != b`    | True       |
+| >            | Greater than             | `a > b`     | False      |
+| <            | Less than                | `a < b`     | True       |
+| >=           | Greater than or equal to | `a >= b`    | False      |
+| <=           | Less than or equal to    | `a <= b`    | True       |
 
 **Usage Example:**
 
+```python
 print(a == b) # Output: False
-
-print(a < b) # Output: True
+print(a < b)  # Output: True
+```
 
 ---
 
-**3. Assignment Operators**
+#### 3. Assignment Operators
 
 These operators are used to assign values to variables. They can also combine assignment with other operations.
 
 | **Operator** | **Description**         | **Example** | **Equivalent To** |
 | :----------- | :---------------------- | :---------- | :---------------- |
-| =            | Assign                  | a = 10      | a = 10            |
-| +=           | Add and assign          | a += b      | a = a + b         |
-| -=           | Subtract and assign     | a -= b      | a = a - b         |
-| \*=          | Multiply and assign     | a \*= b     | a = a \* b        |
-| /=           | Divide and assign       | a /= b      | a = a / b         |
-| //=          | Floor divide and assign | a //= b     | a = a // b        |
-| %=           | Modulus and assign      | a %= b      | a = a % b         |
-| \*\*=        | Exponent and assign     | a \*\*= 2   | a = a \*\* 2      |
+| =            | Assign                  | `a = 10`    | `a = 10`          |
+| +=           | Add and assign          | `a += b`    | `a = a + b`       |
+| -=           | Subtract and assign     | `a -= b`    | `a = a - b`       |
+| \*=          | Multiply and assign     | `a *= b`    | `a = a * b`       |
+| /=           | Divide and assign       | `a /= b`    | `a = a / b`       |
+| //=          | Floor divide and assign | `a //= b`   | `a = a // b`      |
+| %=           | Modulus and assign      | `a %= b`    | `a = a % b`       |
+| \*\*=        | Exponent and assign     | `a **= 2`   | `a = a ** 2`      |
 
 ---
 
-**4. Logical Operators**
+#### 4. Logical Operators
 
 Logical operators are used to combine conditional statements and return Boolean values.
 
-| **Operator** | **Description** | **Example**      | **Result** |
-| :----------- | :-------------- | :--------------- | :--------- |
-| and          | Logical AND     | a > 5 and b < 30 | True       |
-| or           | Logical OR      | a < 5 or b < 30  | True       |
-| not          | Logical NOT     | not(a > 5)       | False      |
+| **Operator** | **Description** | **Example**        | **Result** |
+| :----------- | :-------------- | :----------------- | :--------- |
+| and          | Logical AND     | `a > 5 and b < 30` | True       |
+| or           | Logical OR      | `a < 5 or b < 30`  | True       |
+| not          | Logical NOT     | `not(a > 5)`       | False      |
 
 ---
 
-**5. Bitwise Operators**
+#### 5. Bitwise Operators
 
 Bitwise operators perform operations on the binary representation of integers.
 
 Let:
 
+```python
 a = 10 # 1010 in binary
-
-b = 4 # 0100 in binary
+b = 4  # 0100 in binary
+```
 
 | **Operator** | **Description** | **Example** | **Result** | **Binary**     |
 | :----------- | :-------------- | :---------- | :--------- | :------------- |
-| &            | Bitwise AND     | a & b       | 0          | 0000           |
+| &            | Bitwise AND     | `a & b`     | 0          | 0000           |
 | `            | `               | Bitwise OR  | `a         | b`             |
-| ^            | Bitwise XOR     | a ^ b       | 14         | 1110           |
-| ~            | Bitwise NOT     | ~a          | -11        | (inverts bits) |
-| <<           | Left Shift      | a << 2      | 40         | 101000         |
-| >>           | Right Shift     | a >> 2      | 2          | 0010           |
+| ^            | Bitwise XOR     | `a ^ b`     | 14         | 1110           |
+| ~            | Bitwise NOT     | `~a`        | -11        | (inverts bits) |
+| <<           | Left Shift      | `a << 2`    | 40         | 101000         |
+| >>           | Right Shift     | `a >> 2`    | 2          | 0010           |
 
 ---
 
-**6. Membership Operators**
+#### 6. Membership Operators
 
 These operators test whether a value or variable exists in a sequence (like a string, list, tuple, etc.)
 
-| **Operator** | **Description**             | **Example**        | **Result** |
-| :----------- | :-------------------------- | :----------------- | :--------- |
-| in           | Returns True if present     | 'a' in 'apple'     | True       |
-| not in       | Returns True if not present | 'x' not in 'apple' | True       |
+| **Operator** | **Description**             | **Example**          | **Result** |
+| :----------- | :-------------------------- | :------------------- | :--------- |
+| in           | Returns True if present     | `'a' in 'apple'`     | True       |
+| not in       | Returns True if not present | `'x' not in 'apple'` | True       |
 
 ---
 
-**7. Identity Operators**
+#### 7. Identity Operators
 
 Identity operators compare the memory location of two objects.
 
-| **Operator** | **Description**                      | **Example** | **Result** |
-| :----------- | :----------------------------------- | :---------- | :--------- |
-| is           | True if both refer to same object    | a is b      | False      |
-| is not       | True if they are not the same object | a is not b  | True       |
+| **Operator** | **Description**                      | **Example**  | **Result** |
+| :----------- | :----------------------------------- | :----------- | :--------- |
+| is           | True if both refer to same object    | `a is b`     | False      |
+| is not       | True if they are not the same object | `a is not b` | True       |
 
-**Note:** Even if two variables have the same value, is checks whether they refer to the same object in memory.
+**Note:** Even if two variables have the same value, `is` checks whether they refer to the same object in memory.
 
-| **Operator**      | **Description**                                                                                                                                                                                                                                               | **Example**                                               |
-| :---------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-------------------------------------------------------- |
-| + Addition        | Adds values on either side of the operator.                                                                                                                                                                                                                   | a + b = 30                                                |
-| - Subtraction     | Subtracts right hand operand from left hand operand.                                                                                                                                                                                                          | a – b = -10                                               |
-| \* Multiplication | Multiplies values on either side of the operator                                                                                                                                                                                                              | a \* b = 200                                              |
-| / Division        | Divides left hand operand by right hand operand                                                                                                                                                                                                               | b / a = 2                                                 |
-| % Modulus         | Divides left hand operand by right hand operand and returns remainder                                                                                                                                                                                         | b % a = 0                                                 |
-| \*\* Exponent     | Performs exponential (power) calculation on operators                                                                                                                                                                                                         | a\*\*b =10 to the power 20                                |
-| //                | Floor Division - The division of operands where the result is the quotient in which the digits after the decimal point are removed. But if one of the operands is negative, the result is floored, i.e., rounded away from zero (towards negative infinity) − | 9//2 = 4 and 9.0//2.0 = 4.0, -11//3 = -4, -11.0//3 = -4.0 |
+---
 
-**Python Comparison Operators:**
+### Python Comparison Operators:
 
 These operators compare the values on either sides of them and decide the relation among them. They are also called Relational operators.
 
-Assume variable a holds 10 and variable b holds 20, then −
+Assume variable `a` holds 10 and variable `b` holds 20, then −
 
-| **Operator** | **Description**                                                                                                   | **Example**           |
-| :----------- | :---------------------------------------------------------------------------------------------------------------- | :-------------------- |
-| **==**       | If the values of two operands are equal, then the condition becomes true.                                         | (a == b) is not true. |
-| **!=**       | If values of two operands are not equal, then condition becomes true.                                             | (a != b) is true.     |
-| **>**        | If the value of left operand is greater than the value of right operand, then condition becomes true.             | (a > b) is not true.  |
-| **<**        | If the value of left operand is less than the value of right operand, then condition becomes true.                | (a < b) is true.      |
-| **>=**       | If the value of left operand is greater than or equal to the value of right operand, then condition becomes true. | (a >= b) is not true. |
-| **<=**       | If the value of left operand is less than or equal to the value of right operand, then condition becomes true.    | (a <= b) is true.     |
+| **Operator** | **Description**                                                                                                   | **Example**             |
+| :----------- | :---------------------------------------------------------------------------------------------------------------- | :---------------------- |
+| **==**       | If the values of two operands are equal, then the condition becomes true.                                         | `(a == b)` is not true. |
+| **!=**       | If values of two operands are not equal, then condition becomes true.                                             | `(a != b)` is true.     |
+| **>**        | If the value of left operand is greater than the value of right operand, then condition becomes true.             | `(a > b)` is not true.  |
+| **<**        | If the value of left operand is less than the value of right operand, then condition becomes true.                | `(a < b)` is true.      |
+| **>=**       | If the value of left operand is greater than or equal to the value of right operand, then condition becomes true. | `(a >= b)` is not true. |
+| **<=**       | If the value of left operand is less than or equal to the value of right operand, then condition becomes true.    | `(a <= b)` is true.     |
 
-**Python Assignment Operators:**
+---
 
-Assume variable a holds 10 and variable b holds 20, then –
+### Python Assignment Operators:
 
-| **Operator**                                     | **Description**                                                                            | **Example**                                                        |
-| :----------------------------------------------- | :----------------------------------------------------------------------------------------- | :----------------------------------------------------------------- |
-| **=**                                            | Assigns values from right side operands to left side operand                               | c = a + b assigns value of a + b into c                            |
-| += ADD and ASSIGNMENT                            | It adds right operand to the left operand and assign the result to left operand            | c += a is equivalent to c = c + a                                  |
-| -= Subtract AND ASSGINMNET                       | It subtracts right operand from the left operand and assign the result to left operand     | c -= a is equivalent to c = c - a                                  |
-| \*= Multiply AND ASSIGNMENT                      | It multiplies right operand with the left operand and assign the result to left operand    | c \*= a is equivalent to c = c \* a                                |
-| /= Divide AND ASSIGNMENT                         | It divides left operand with the right operand and assign the result to left operand       | c /= a is equivalent to c = c / ac /= a is equivalent to c = c / a |
-| %= Modulus AND ASSIGNMENT                        | It takes modulus using two operands and assign the result to left operand                  | c %= a is equivalent to c = c % a                                  |
-| \*\*= Exponent AND ASSIGNMENT                    | Performs exponential (power) calculation on operators and assign value to the left operand | c \*\*= a is equivalent to c = c \*\* a                            |
-| //= Floor Division FLOOR DIVISION AND ASSIGNMENT | It performs floor division on operators and assign value to the left operand               | c //= a is equivalent to c = c // a                                |
+Assume variable `a` holds 10 and variable `b` holds 20, then –
+
+| **Operator**                                     | **Description**                                                                            | **Example**                                                              |
+| :----------------------------------------------- | :----------------------------------------------------------------------------------------- | :----------------------------------------------------------------------- |
+| **=**                                            | Assigns values from right side operands to left side operand                               | `c = a + b` assigns value of a + b into c                                |
+| += ADD and ASSIGNMENT                            | It adds right operand to the left operand and assign the result to left operand            | `c += a` is equivalent to `c = c + a`                                    |
+| -= Subtract AND ASSGINMNET                       | It subtracts right operand from the left operand and assign the result to left operand     | `c -= a` is equivalent to `c = c - a`                                    |
+| \*= Multiply AND ASSIGNMENT                      | It multiplies right operand with the left operand and assign the result to left operand    | `c \*= a` is equivalent to `c = c \* a`                                  |
+| /= Divide AND ASSIGNMENT                         | It divides left operand with the right operand and assign the result to left operand       | `c /= a` is equivalent to `c = c / ac /= a` is equivalent to `c = c / a` |
+| %= Modulus AND ASSIGNMENT                        | It takes modulus using two operands and assign the result to left operand                  | `c %= a` is equivalent to `c = c % a`                                    |
+| \*\*= Exponent AND ASSIGNMENT                    | Performs exponential (power) calculation on operators and assign value to the left operand | `c \*\*= a` is equivalent to `c = c \*\* a`                              |
+| //= Floor Division FLOOR DIVISION AND ASSIGNMENT | It performs floor division on operators and assign value to the left operand               | `c //= a` is equivalent to `c = c // a`                                  |
 
 \
 **Python Bitwise Operators**
@@ -203,9 +200,10 @@ To understand bitwise operations, it's important to understand binary notation.
 
 Let’s consider two integers:
 
+```python
 a = 60 # Binary: 0011 1100
-
 b = 13 # Binary: 0000 1101
+```
 
 Now, let’s break this down:
 
@@ -235,40 +233,53 @@ Python supports the following bitwise operators:
 
 Let's go through the bitwise operations step by step using the values:
 
+```python
 a = 60 # 0011 1100
-
 b = 13 # 0000 1101
+```
 
 **1. AND (a & b)**
 
+```python
 a & b = 0000 1100 # Only the bits where both a and b are 1 remain 1
+```
 
 `         `= 12
 
 **2. OR (a | b)**
 
+```python
 a | b = 0011 1101 # Bits where either a or b is 1 become 1
+```
 
 `         `= 61
 
 **3. XOR (a ^ b)**
 
+```python
 a ^ b = 0011 0001 # Bits are 1 only if they differ
+```
 
 `         `= 49
 
 **4. NOT (~a)**
 
+```python
 ~a = 1100 0011
+```
 
-- In Python, ~a gives -(a + 1) using 2’s complement.
-- So, ~60 is -61
+- In Python, `~a` gives `-(a + 1)` using 2’s complement.
+- So, `~60` is -61
 
+```python
 print(~60) # Output: -61
+```
 
 **5. Left Shift (a << 2)**
 
+```python
 a << 2 = 1111 0000 # Shift bits two places to the left, append 00
+```
 
 `        `= 240
 
@@ -276,45 +287,52 @@ a << 2 = 1111 0000 # Shift bits two places to the left, append 00
 
 **6. Right Shift (a >> 2)**
 
+```python
 a >> 2 = 0000 1111 # Shift bits two places to the right, discard the last 2 bits
+```
 
 `        `= 15
 
 - Equivalent to dividing a by 2ⁿ (a // 2^2 = 60 // 4 = 15)
 
-| **Operator**             | **Description**                                                                              | **Example**                                                                        |
-| :----------------------- | :------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------- | --- | ------------------------- |
-| & Binary AND             | Operator copies a bit to the result if it exists in both operands                            | (a & b) (means 0000 1100)                                                          |
-|                          | Binary OR                                                                                    | It copies a bit if it exists in either operand.                                    | (a  | b) = 61 (means 0011 1101) |
-| ^ Binary XOR             | It copies the bit if it is set in one operand but not both.                                  | (a ^ b) = 49 (means 0011 0001)                                                     |
-| ~ Binary Ones Complement | It is unary and has the effect of 'flipping' bits.                                           | (~a ) = -61 (means 1100 0011 in 2's complement form due to a signed binary number. |
-| << Binary Left Shift     | The left operands value is moved left by the number of bits specified by the right operand.  | a << 2 = 240 (means 1111 0000)                                                     |
-| >> Binary Right Shift    | The left operands value is moved right by the number of bits specified by the right operand. | a >> 2 = 15 (means 0000 1111)                                                      |
+| **Operator**             | **Description**                                                                              | **Example**                                                                         |
+| :----------------------- | :------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- | --- | ------------------------- |
+| & Binary AND             | Operator copies a bit to the result if it exists in both operands                            | `(a & b)` (means 0000 1100)                                                         |
+|                          | Binary OR                                                                                    | It copies a bit if it exists in either operand.                                     | `(a | b) = 61 (means 0011 1101) |
+| ^ Binary XOR             | It copies the bit if it is set in one operand but not both.                                  | `(a ^ b) = 49 (means 0011 0001)                                                     |
+| ~ Binary Ones Complement | It is unary and has the effect of 'flipping' bits.                                           | `(~a ) = -61 (means 1100 0011 in 2's complement form due to a signed binary number. |
+| << Binary Left Shift     | The left operands value is moved left by the number of bits specified by the right operand.  | `a << 2 = 240 (means 1111 0000)                                                     |
+| >> Binary Right Shift    | The left operands value is moved right by the number of bits specified by the right operand. | `a >> 2 = 15 (means 0000 1111)                                                      |
 
 \
 \
-**Python Logical Operators:**
+
+### Python Logical Operators:
 
 There are following logical operators supported by Python language.
 
-**Ex:** variable a holds 10 and variable b holds 20 then
+**Ex:** variable `a` holds 10 and variable `b` holds 20 then
 
-| **Operator**    | **Description**                                                      | **Example**            |
-| :-------------- | :------------------------------------------------------------------- | :--------------------- |
-| and Logical AND | If both the operands are true then condition becomes true.           | (a and b) is true.     |
-| or Logical OR   | If any of the two operands are non-zero then condition becomes true. | (a or b) is true.      |
-| not Logical NOT | Used to reverse the logical state of its operand.                    | Not(a and b) is false. |
+| **Operator**    | **Description**                                                      | **Example**              |
+| :-------------- | :------------------------------------------------------------------- | :----------------------- |
+| and Logical AND | If both the operands are true then condition becomes true.           | `(a and b)` is true.     |
+| or Logical OR   | If any of the two operands are non-zero then condition becomes true. | `(a or b)` is true.      |
+| not Logical NOT | Used to reverse the logical state of its operand.                    | `Not(a and b)` is false. |
 
-**Python Membership Operators:**
+---
+
+### Python Membership Operators:
 
 Python’s membership operators test for membership in a sequence, such as strings, lists, or tuples is used to search for a particular data in the sequence types. There are two membership operators:
 
-| **Operator** | **Description**                                                                                  | **Example**                                                                |
-| :----------- | :----------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------- |
-| **In**       | Evaluates to true if it finds a variable in the specified sequence and false otherwise.          | x in y, here in results in a 1 if x is a member of sequence y.             |
-| **not in**   | Evaluates to true if it does not finds a variable in the specified sequence and false otherwise. | x not in y, here not in results in a 1 if x is not a member of sequence y. |
+| **Operator** | **Description**                                                                                  | **Example**                                                                    |
+| :----------- | :----------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------- |
+| **In**       | Evaluates to true if it finds a variable in the specified sequence and false otherwise.          | `x in y`, here `in` results in a 1 if x is a member of sequence y.             |
+| **not in**   | Evaluates to true if it does not finds a variable in the specified sequence and false otherwise. | `x not in y`, here `not in` results in a 1 if x is not a member of sequence y. |
 
-**Python Identity Operators**
+---
+
+### Python Identity Operators
 
 **What Are Identity Operators?**
 
@@ -326,7 +344,7 @@ Python stores objects in memory and variables are simply references (or labels) 
 
 **Why Use Identity Operators?**
 
-While comparison operators like == check for **value equality**, identity operators like is and is not check for **object identity**. This is especially important when dealing with:
+While comparison operators like `==` check for **value equality**, identity operators like `is` and `is not` check for **object identity**. This is especially important when dealing with:
 
 - Mutable data types (lists, dictionaries, sets)
 - Object-oriented programming (classes and instances)
@@ -341,7 +359,9 @@ While comparison operators like == check for **value equality**, identity operat
 | is           | Returns True if both variables refer to the **same object** in memory   |
 | is not       | Returns True if both variables refer to **different objects** in memory |
 
-**Python Operator Precedence**
+---
+
+### Python Operator Precedence
 
 **What is Operator Precedence?**
 
@@ -353,7 +373,7 @@ Understanding operator precedence is crucial for writing correct and predictable
 
 ---
 
-**Operator Precedence Table**
+### Operator Precedence Table
 
 Below is the complete operator precedence list in Python, ordered from **highest precedence (executed first)** to **lowest precedence (executed last)**.
 
@@ -376,7 +396,7 @@ Below is the complete operator precedence list in Python, ordered from **highest
 
 ---
 
-**Explanation of Operator Categories**
+### Explanation of Operator Categories
 
 **1. Exponentiation (\*\*)**
 
@@ -451,33 +471,37 @@ Below is the complete operator precedence list in Python, ordered from **highest
 - Used to assign values or update variables.
 - Includes compound assignments like +=, -=, etc.
 
+```python
 x = 5
-
 x += 2 # x = x + 2 → x becomes 7
+```
 
 **11. Identity Operators (is, is not)**
 
 - Checks whether two variables point to the same object in memory.
 
+```python
 a = [1, 2]
-
 b = a
-
 a is b # True
+```
 
 **12. Membership Operators (in, not in)**
 
-- Tests if a value exists in a sequence (like a list, string, etc.)
+- Tests if a value exists in a sequence.
 
+```python
 3 in [1, 2, 3] # True
+```
 
 **13. Logical Operators (not, and, or)**
 
 - Combine boolean expressions.
 
+```python
 True and False # False
-
 not True # False
+```
 
 ---
 

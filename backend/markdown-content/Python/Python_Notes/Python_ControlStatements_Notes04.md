@@ -18,11 +18,11 @@ These mechanisms empower the program to behave intelligently, depending on vario
 
 ### 1. Decision Making Statements (Expanded)
 
-Decision making statements in Python are used to execute certain blocks of code based on specific conditions. These conditions evaluate to either True or False. Python provides flexible and readable syntax for implementing conditional logic.
+Decision making statements in Python are used to execute certain blocks of code based on specific conditions. These conditions evaluate to either `True` or `False`. Python provides flexible and readable syntax for implementing conditional logic.
 
-#### a) if Statement
+#### a) `if` Statement
 
-The simplest decision-making statement. It executes a block of code if the condition evaluates to True.
+The simplest decision-making statement. It executes a block of code if the condition evaluates to `True`.
 
 **Syntax:**
 
@@ -33,7 +33,7 @@ if condition:
 
 **Explanation:**
 
-- If the condition is true, the block inside the if is executed.
+- If the condition is true, the block inside the `if` is executed.
 - If it’s false, nothing happens.
 
 **Example:**
@@ -44,7 +44,7 @@ if age >= 18:
     print("You are eligible to vote.")
 ```
 
-#### b) if...else Statement
+#### b) `if...else` Statement
 
 Allows the program to choose between two blocks of code depending on the condition.
 
@@ -67,7 +67,7 @@ else:
     print("Not eligible to vote")
 ```
 
-#### c) if...elif...else Ladder
+#### c) `if...elif...else` Ladder
 
 Used when multiple conditions need to be checked. The first true condition's block is executed.
 
@@ -98,9 +98,9 @@ else:
     print("Fail")
 ```
 
-#### d) Nested if Statements
+#### d) Nested `if` Statements
 
-Sometimes decisions need to be made within other decisions. Nested if statements allow this hierarchical evaluation.
+Sometimes decisions need to be made within other decisions. Nested `if` statements allow this hierarchical evaluation.
 
 **Example:**
 
@@ -118,12 +118,12 @@ else:
 
 **Note:**
 
-- Each inner if is only evaluated if its outer condition is satisfied.
+- Each inner `if` is only evaluated if its outer condition is satisfied.
 - Proper indentation is critical for readability and correctness.
 
-#### e) Dictionary as a Replacement for switch Statement
+#### e) Dictionary as a Replacement for `switch` Statement
 
-Python does not have a native switch statement like some other languages (e.g., C++, Java). However, you can simulate a similar behavior using a dictionary.
+Python does not have a native `switch` statement like some other languages (e.g., C++, Java). However, you can simulate a similar behavior using a dictionary.
 
 **Example:**
 
@@ -141,18 +141,18 @@ print(menu(1))
 **Key Points:**
 
 - Dictionary keys must be immutable types (int, float, bool, str, or tuple).
-- Use .get() to provide a default value to avoid KeyError.
+- Use `.get()` to provide a default value to avoid `KeyError`.
 - This approach only works for exact matches, not ranges.
 
 ---
 
-**2. Looping Statements (Expanded)**
+### 2. Looping Statements (Expanded)
 
-Looping statements are used when a block of code needs to be executed repeatedly under a certain condition. Python offers two main types of loops: while and for, along with nested and controlled versions using conditions or jump statements.
+Looping statements are used when a block of code needs to be executed repeatedly under a certain condition. Python offers two main types of loops: `while` and `for`, along with nested and controlled versions using conditions or jump statements.
 
-**a) while Loop**
+#### a) `while` Loop
 
-The while loop keeps executing the block of code as long as the condition is true.
+The `while` loop keeps executing the block of code as long as the condition is true.
 
 **Syntax:**
 
@@ -172,13 +172,13 @@ while i <= 5:
 
 **Explanation:**
 
-- Initialization: i = 1
-- Condition check: i <= 5
+- Initialization: `i = 1`
+- Condition check: `i <= 5`
 - Execution of loop body and incrementing value until the condition becomes False.
 
-**b) for Loop with range()**
+#### b) `for` Loop with `range()`
 
-The for loop in Python iterates over a sequence of values. When combined with range(), it becomes a powerful tool to iterate over numerical ranges.
+The `for` loop in Python iterates over a sequence of values. When combined with `range()`, it becomes a powerful tool to iterate over numerical ranges.
 
 **Syntax:**
 
@@ -194,7 +194,7 @@ for i in range(1, 6):
     print(i)
 ```
 
-**c) for Loop with Collections**
+#### c) `for` Loop with Collections
 
 This form is also known as a for-each loop. It’s used to iterate directly over elements of a collection like a list, tuple, string, or dictionary.
 
@@ -206,7 +206,7 @@ for color in colors:
     print(color)
 ```
 
-**d) Nested Loops**
+#### d) Nested Loops
 
 A loop inside another loop is called a nested loop. Commonly used in matrix processing or pattern generation.
 
@@ -225,11 +225,11 @@ for i in range(3):
 
 ---
 
-**3. Jump Statements (Expanded)**
+### 3. Jump Statements (Expanded)
 
 Jump statements alter the flow of control unconditionally. These include:
 
-**a) break Statement**
+#### a) `break` Statement
 
 Terminates the loop prematurely when a condition is met.
 
@@ -242,7 +242,7 @@ for i in range(10):
     print(i)
 ```
 
-**b) continue Statement**
+#### b) `continue` Statement
 
 Skips the current iteration and proceeds to the next one.
 
@@ -255,7 +255,7 @@ for i in range(5):
     print(i)
 ```
 
-**c) pass Statement**
+#### c) `pass` Statement
 
 Acts as a placeholder. It does nothing and is used when the code is syntactically required but not implemented.
 
