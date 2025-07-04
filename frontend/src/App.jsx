@@ -285,13 +285,10 @@ const HomePage = () => {
           {/* Start for Free Button */}
           <button
             onClick={() => navigate('/learn')}
-            className="inline-block font-poppins font-semibold rounded-lg transition-all duration-300"
+            className="inline-block font-poppins font-semibold rounded-lg transition-all duration-300 px-6 py-3 md:px-8 md:py-3 text-sm md:text-base mt-6 md:mt-8"
             style={{
-              padding: '12px 30px',
               backgroundColor: '#ffffffac',
               color: '#001242',
-              fontSize: '1rem',
-              marginTop: '30px',
               border: 'none',
               cursor: 'pointer'
             }}
@@ -308,10 +305,13 @@ const HomePage = () => {
           </button>
         </div>
 
-        {/* Stats Section */}
+      </div>
+
+      {/* Stats Section - New viewport starting after hero */}
+      <div className="flex items-start justify-center px-6 pt-16 pb-8">
         <div
           ref={statsRef}
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 w-full max-w-4xl mt-4 md:mt-16 px-4"
+          className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 w-full max-w-4xl"
         >
           {statsData.map((stat, index) => (
             <div key={index} className="text-center">
@@ -393,7 +393,7 @@ const HomePage = () => {
 
           {/* Center heading */}
           <div className="flex-none flex items-center justify-center px-5">
-            <h2 className="text-3xl lg:text-4xl font-bold text-center text-[#04013d] dark:text-white">
+            <h2 className="text-3xl lg:text-4xl font-bold text-center brand-heading-primary">
               <span className="italic">learn</span> REVIEWS
             </h2>
           </div>
@@ -421,14 +421,15 @@ const HomePage = () => {
         <div className="md:hidden">
           {/* Mobile heading */}
           <div className="text-center mb-2">
-            <h2 className="text-2xl font-bold text-[#04013d] dark:text-white">
+            <h2 className="text-2xl font-bold brand-heading-primary">
               <span className="italic">learn</span> REVIEWS
             </h2>
           </div>
 
           {/* Horizontal scrolling reviews */}
-          <div className="overflow-x-auto pb-4">
-            <div className="flex gap-4 px-4 animate-scroll-horizontal">
+          <div className="overflow-hidden pb-4 w-full">
+            <div className="flex gap-4 animate-scroll-horizontal" style={{width: 'max-content'}}>
+              {/* First set of reviews */}
               {[
                 { name: "Daksh Mavani", text: "I had got myself enrolled in C language course as a beginner. We were given enough theory on all aspects of course so that we would be aware of all important concepts." },
                 { name: "Loknath", text: "Through her experience ma'am has explained the concepts in a way in which everyone can understand easily. If one has pure interest in learning, he/she will thoroughly understand." },
@@ -441,7 +442,25 @@ const HomePage = () => {
                 { name: "Rajani", text: "It was a great experience to be back in classroom after almost 25 years. Prashanthi Ma'm is subject expert with good grasp on fundamentals." },
                 { name: "Shradha", text: "Very good learning experience. I have learnt C language in Techlearn Solutions and I feel really confident with the coding part." }
               ].map((review, index) => (
-                <div key={index} className="bg-transparent border-none rounded-3xl p-4 min-h-[120px] w-72 flex-shrink-0">
+                <div key={`first-${index}`} className="bg-transparent border-none rounded-3xl p-4 min-h-[120px] w-72 flex-shrink-0">
+                  <div className="font-bold mb-2 text-[#490096] dark:text-purple-300">{review.name}</div>
+                  <div className="text-[#00195a] dark:text-gray-300 text-sm leading-relaxed line-clamp-3">{review.text}</div>
+                </div>
+              ))}
+              {/* Duplicate set for seamless loop */}
+              {[
+                { name: "Daksh Mavani", text: "I had got myself enrolled in C language course as a beginner. We were given enough theory on all aspects of course so that we would be aware of all important concepts." },
+                { name: "Loknath", text: "Through her experience ma'am has explained the concepts in a way in which everyone can understand easily. If one has pure interest in learning, he/she will thoroughly understand." },
+                { name: "Sudhakar Reddy", text: "The tutor was really good and explained each and every topic clearly with personal care." },
+                { name: "Pavan Vinayak", text: "TechLearn Solutions is an exceptional coding institution that provides comprehensive and engaging programming education." },
+                { name: "Prakash", text: "Best institute for beginners to learn any programming language. The faculty was highly knowledgeable with personalized attention." },
+                { name: "Samuel Jude Philips", text: "Many people don't know about this centre due to its location but you'll go in as a beginner with zero knowledge and walk out confidently with all the necessary knowledge acquired!" },
+                { name: "Prasanna", text: "Mam explains the class in a very good way. She takes many real-time examples and makes the topic clear to understand so that it makes us easy to take an interview." },
+                { name: "Teja", text: "Very easy to understand the concept and faculty explain doubts very easily. Thank you Techlearn Solutions." },
+                { name: "Rajani", text: "It was a great experience to be back in classroom after almost 25 years. Prashanthi Ma'm is subject expert with good grasp on fundamentals." },
+                { name: "Shradha", text: "Very good learning experience. I have learnt C language in Techlearn Solutions and I feel really confident with the coding part." }
+              ].map((review, index) => (
+                <div key={`second-${index}`} className="bg-transparent border-none rounded-3xl p-4 min-h-[120px] w-72 flex-shrink-0">
                   <div className="font-bold mb-2 text-[#490096] dark:text-purple-300">{review.name}</div>
                   <div className="text-[#00195a] dark:text-gray-300 text-sm leading-relaxed line-clamp-3">{review.text}</div>
                 </div>

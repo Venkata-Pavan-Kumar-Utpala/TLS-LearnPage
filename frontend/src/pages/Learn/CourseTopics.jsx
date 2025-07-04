@@ -276,20 +276,30 @@ print(df.describe())    # Statistical summary`,
         topics: backendCourse.topics.map((topic, index) => {
           const topicId = topic._id || topic.topicId || topic.id || `topic_${index}`;
 
+          // Clean the title by removing numbers and patterns
+          const cleanTitle = (() => {
+            let title = topic.title || '';
+            // Remove "CORE JAVA NOTES - 02" pattern and extract just the subject
+            title = title.replace(/^CORE\s+(\w+)\s+NOTES\s*[-–]\s*\d+$/i, '$1');
+            // Remove other number patterns
+            title = title.replace(/^\d+\.\s*/, '').replace(/\s*[-–]\s*\d+$/, '');
+            return title;
+          })();
+
           return {
             id: topicId,
-            title: topic.title,
-            description: `Learn about ${topic.title} concepts and applications`,
+            title: cleanTitle,
+            description: `Learn about ${cleanTitle} concepts and applications`,
             exercises: 5,
             maxXP: 50,
             completed: false,
             hasNotes: !!topic.notesId, // Check if this topic has notes in the backend
             notesContent: topic.notes, // Store the actual notes content (backend returns it as 'notes')
             content: {
-              theory: topic.notes || `Learn the fundamentals of ${topic.title}. This topic covers essential concepts and practical applications.`,
-              codeExample: `// Example code for ${topic.title}\nconsole.log("Learning ${topic.title}");`,
+              theory: topic.notes || `Learn the fundamentals of ${cleanTitle}. This topic covers essential concepts and practical applications.`,
+              codeExample: `// Example code for ${cleanTitle}\nconsole.log("Learning ${cleanTitle}");`,
               keyPoints: [
-                `Understand ${topic.title} basics`,
+                `Understand ${cleanTitle} basics`,
                 "Apply concepts in practical scenarios",
                 "Master key techniques",
                 "Build real-world applications"
@@ -682,7 +692,7 @@ print(df.describe())    # Statistical summary`,
                         </div>
                       </div>
                       
-                      <h1 
+                      <h1
                         ref={titleRef}
                         className={`Marquee-title-no-border ${isTitleInViewport ? 'in-viewport' : ''} mb-4`}
                       >
@@ -754,9 +764,60 @@ print(df.describe())    # Statistical summary`,
                             remarkPlugins={[remarkGfm]}
                             rehypePlugins={[rehypeHighlight]}
                           components={{
-                            h1: ({children}) => <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-6 pb-3 border-b border-gray-200 dark:border-gray-700">{children}</h1>,
-                            h2: ({children}) => <h2 className="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-4 mt-8">{children}</h2>,
-                            h3: ({children}) => <h3 className="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-3 mt-6">{children}</h3>,
+                            h1: ({children}) => null, // Hide h1 headings
+                            h2: ({children}) => null, // Hide h2 headings
+                            h3: ({children}) => {
+                              // Remove numbers and dashes from h3 headings
+                              const cleanText = typeof children === 'string'
+                                ? children.replace(/^\d+\.\s*/, '').replace(/\s*-\s*\d+$/, '').replace(/\s*–\s*\d+$/, '')
+                                : Array.isArray(children)
+                                  ? children.map(child =>
+                                      typeof child === 'string'
+                                        ? child.replace(/^\d+\.\s*/, '').replace(/\s*-\s*\d+$/, '').replace(/\s*–\s*\d+$/, '')
+                                        : child
+                                    )
+                                  : children;
+                              return <h3 className="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-3 mt-6">{cleanText}</h3>;
+                            },
+                            h4: ({children}) => {
+                              // Remove numbers and dashes from h4 headings
+                              const cleanText = typeof children === 'string'
+                                ? children.replace(/^\d+\.\s*/, '').replace(/\s*-\s*\d+$/, '').replace(/\s*–\s*\d+$/, '')
+                                : Array.isArray(children)
+                                  ? children.map(child =>
+                                      typeof child === 'string'
+                                        ? child.replace(/^\d+\.\s*/, '').replace(/\s*-\s*\d+$/, '').replace(/\s*–\s*\d+$/, '')
+                                        : child
+                                    )
+                                  : children;
+                              return <h4 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-2 mt-4">{cleanText}</h4>;
+                            },
+                            h5: ({children}) => {
+                              // Remove numbers and dashes from h5 headings
+                              const cleanText = typeof children === 'string'
+                                ? children.replace(/^\d+\.\s*/, '').replace(/\s*-\s*\d+$/, '').replace(/\s*–\s*\d+$/, '')
+                                : Array.isArray(children)
+                                  ? children.map(child =>
+                                      typeof child === 'string'
+                                        ? child.replace(/^\d+\.\s*/, '').replace(/\s*-\s*\d+$/, '').replace(/\s*–\s*\d+$/, '')
+                                        : child
+                                    )
+                                  : children;
+                              return <h5 className="text-base font-semibold text-blue-600 dark:text-blue-400 mb-2 mt-3">{cleanText}</h5>;
+                            },
+                            h6: ({children}) => {
+                              // Remove numbers and dashes from h6 headings
+                              const cleanText = typeof children === 'string'
+                                ? children.replace(/^\d+\.\s*/, '').replace(/\s*-\s*\d+$/, '').replace(/\s*–\s*\d+$/, '')
+                                : Array.isArray(children)
+                                  ? children.map(child =>
+                                      typeof child === 'string'
+                                        ? child.replace(/^\d+\.\s*/, '').replace(/\s*-\s*\d+$/, '').replace(/\s*–\s*\d+$/, '')
+                                        : child
+                                    )
+                                  : children;
+                              return <h6 className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2 mt-3">{cleanText}</h6>;
+                            },
                             code: ({inline, className, children, ...props}) => {
                               if (inline) {
                                 return <code className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-2 py-1 rounded text-sm font-mono" {...props}>{children}</code>

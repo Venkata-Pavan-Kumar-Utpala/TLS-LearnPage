@@ -48,8 +48,8 @@ const Navbar = () => {
       }`}
     >
       <nav className="flex justify-between items-center px-4 md:px-15 py-2.5 md:py-8 bg-transparent relative z-[1000]">
-        {/* Logo */}
-        <div className="logo">
+        {/* Logo and XP Badge */}
+        <div className="logo flex items-center gap-3">
           <Link to="/" className="logo flex items-center">
             <div className="relative" style={{ height: '48px', minWidth: '120px' }}>
               <img
@@ -64,6 +64,10 @@ const Navbar = () => {
               />
             </div>
           </Link>
+          {/* XP Badge beside logo - Desktop */}
+          <div className="hidden md:block">
+            <XPBadge />
+          </div>
         </div>
 
         {/* Desktop Navigation Links */}
@@ -128,9 +132,6 @@ const Navbar = () => {
               Log In
             </button>
           )}
-
-          {/* XP Badge */}
-          <XPBadge />
 
           {/* Dark Mode Toggle - Desktop */}
           <button
