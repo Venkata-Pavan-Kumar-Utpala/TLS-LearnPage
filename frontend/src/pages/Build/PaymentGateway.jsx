@@ -95,7 +95,7 @@ const PaymentGateway = () => {
           </div>
 
           <div className="flex justify-center mb-6">
-            <img src="/assets/QR1.jpg" alt="Payment QR Code" className="w-48 h-48 rounded shadow" />
+            <img src="/assets/QR_project.jpg" alt="Payment QR Code" className="w-48 h-48 rounded shadow" />
           </div>
 
           {paymentDetails && (
