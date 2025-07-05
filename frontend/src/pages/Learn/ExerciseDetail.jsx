@@ -74,25 +74,36 @@ This simple line of code will output "Hello, World!" to the console.
     ]
   };
 
-  const tabs = [
+  // Desktop tabs (combined compiler + preview)
+  const desktopTabs = [
+    { id: 'theory', label: 'Theory', icon: BookOpen },
+    { id: 'codePreview', label: 'Code & Preview', icon: Code }
+  ];
+
+  // Mobile tabs (separate tabs)
+  const mobileTabs = [
     { id: 'theory', label: 'Theory', icon: BookOpen },
     { id: 'compiler', label: 'Compiler', icon: Code },
     { id: 'preview', label: 'Live Preview', icon: Eye }
   ];
 
   // Navigation functions for mobile slide
-  const getCurrentTabIndex = () => tabs.findIndex(tab => tab.id === activeTab);
+  const getCurrentTabIndex = () => {
+    // Handle codePreview state for mobile navigation
+    const tabId = activeTab === 'codePreview' ? 'compiler' : activeTab;
+    return mobileTabs.findIndex(tab => tab.id === tabId);
+  };
 
   const goToPreviousTab = () => {
     const currentIndex = getCurrentTabIndex();
-    const previousIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
-    setActiveTab(tabs[previousIndex].id);
+    const previousIndex = currentIndex > 0 ? currentIndex - 1 : mobileTabs.length - 1;
+    setActiveTab(mobileTabs[previousIndex].id);
   };
 
   const goToNextTab = () => {
     const currentIndex = getCurrentTabIndex();
-    const nextIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
-    setActiveTab(tabs[nextIndex].id);
+    const nextIndex = currentIndex < mobileTabs.length - 1 ? currentIndex + 1 : 0;
+    setActiveTab(mobileTabs[nextIndex].id);
   };
 
   // Touch/swipe functionality for mobile
@@ -347,14 +358,16 @@ This simple line of code will output "Hello, World!" to the console.
         >
           {/* Desktop Tab Navigation */}
           <div className="hidden md:flex gap-2">
-            {tabs.map((tab) => {
+            {desktopTabs.map((tab) => {
               const Icon = tab.icon;
+              const isActive = (tab.id === 'theory' && activeTab === 'theory') ||
+                             (tab.id === 'codePreview' && (activeTab === 'compiler' || activeTab === 'preview' || activeTab === 'codePreview'));
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => setActiveTab(tab.id === 'codePreview' ? 'codePreview' : tab.id)}
                   className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-                    activeTab === tab.id
+                    isActive
                       ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200 border border-blue-200/50 dark:border-blue-700/50'
                       : 'bg-white/60 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 border border-white/20 dark:border-gray-700/20'
                   } backdrop-blur-xl`}
@@ -379,7 +392,10 @@ This simple line of code will output "Hello, World!" to the console.
 
               <div className="flex items-center gap-3">
                 {(() => {
-                  const currentTab = tabs.find(tab => tab.id === activeTab);
+                  // Handle codePreview state for mobile (fallback to compiler)
+                  const tabId = activeTab === 'codePreview' ? 'compiler' : activeTab;
+                  const currentTab = mobileTabs.find(tab => tab.id === tabId);
+                  if (!currentTab) return null;
                   const Icon = currentTab.icon;
                   return (
                     <>
@@ -402,17 +418,21 @@ This simple line of code will output "Hello, World!" to the console.
 
             {/* Tab Indicator Dots */}
             <div className="flex justify-center gap-2 mt-3">
-              {tabs.map((tab, index) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    activeTab === tab.id
-                      ? 'bg-blue-600 dark:bg-blue-400 w-6'
-                      : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
-                  }`}
-                />
-              ))}
+              {mobileTabs.map((tab, index) => {
+                // Handle codePreview state for active indicator
+                const isActive = activeTab === tab.id || (activeTab === 'codePreview' && tab.id === 'compiler');
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      isActive
+                        ? 'bg-blue-600 dark:bg-blue-400 w-6'
+                        : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                    }`}
+                  />
+                );
+              })}
             </div>
 
             {/* Swipe Hint */}
@@ -446,6 +466,199 @@ This simple line of code will output "Hello, World!" to the console.
             </div>
           )}
 
+          {/* Combined Code & Preview Tab (Desktop Only) */}
+          {activeTab === 'codePreview' && (
+            <div className="h-[700px] flex gap-4 p-4">
+              {/* Left Side - Code Editor (50%) */}
+              <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+                {/* Code Editor Header */}
+                <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-3 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-2">
+                    <Code className="w-4 h-4" />
+                    <span className="font-medium">Code Editor</span>
+                  </div>
+                  <button
+                    onClick={resetCode}
+                    className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Monaco Editor */}
+                <div className="h-[calc(100%-7rem)] relative overflow-hidden">
+                  <Editor
+                    height="100%"
+                    defaultLanguage="javascript"
+                    theme={editorTheme}
+                    value={userCode}
+                    onChange={(value) => setUserCode(value || '')}
+                    options={{
+                      fontSize: 14,
+                      fontFamily: 'Fira Code, Monaco, Consolas, monospace',
+                      minimap: { enabled: false },
+                      scrollBeyondLastLine: false,
+                      automaticLayout: true,
+                      tabSize: 2,
+                      insertSpaces: true,
+                      wordWrap: 'on',
+                      lineNumbers: 'on',
+                      overviewRulerLanes: 0,
+                      hideCursorInOverviewRuler: true,
+                      renderLineHighlight: 'all',
+                      selectOnLineNumbers: true,
+                      roundedSelection: false,
+                      readOnly: false,
+                      cursorStyle: 'line',
+                      contextmenu: false,
+                      copyWithSyntaxHighlighting: false,
+                      // Enable proper scrolling
+                      scrollbar: {
+                        vertical: 'visible',
+                        horizontal: 'visible',
+                        useShadows: false,
+                        verticalHasArrows: true,
+                        horizontalHasArrows: true,
+                        verticalScrollbarSize: 14,
+                        horizontalScrollbarSize: 14,
+                        alwaysConsumeMouseWheel: false
+                      },
+                      // Enable mouse wheel scrolling
+                      mouseWheelScrollSensitivity: 1,
+                      fastScrollSensitivity: 5,
+                      // Disable all IntelliSense and suggestions
+                      quickSuggestions: false,
+                      suggestOnTriggerCharacters: false,
+                      acceptSuggestionOnEnter: 'off',
+                      tabCompletion: 'off',
+                      wordBasedSuggestions: false,
+                      parameterHints: { enabled: false },
+                      autoClosingBrackets: 'never',
+                      autoClosingQuotes: 'never',
+                      autoSurround: 'never',
+                      snippetSuggestions: 'none',
+                      suggest: {
+                        showKeywords: false,
+                        showSnippets: false,
+                        showClasses: false,
+                        showFunctions: false,
+                        showVariables: false,
+                        showModules: false,
+                        showProperties: false,
+                        showEvents: false,
+                        showOperators: false,
+                        showUnits: false,
+                        showValues: false,
+                        showConstants: false,
+                        showEnums: false,
+                        showEnumMembers: false,
+                        showColors: false,
+                        showFiles: false,
+                        showReferences: false,
+                        showFolders: false,
+                        showTypeParameters: false,
+                        showIssues: false,
+                        showUsers: false,
+                        showWords: false
+                      },
+                      hover: { enabled: false },
+                      lightbulb: { enabled: false },
+                      find: {
+                        addExtraSpaceOnTop: false,
+                        autoFindInSelection: 'never',
+                        seedSearchStringFromSelection: 'never'
+                      }
+                    }}
+                    onMount={(editor, monaco) => {
+                      // Disable copy-paste and other shortcuts
+                      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyC, () => {});
+                      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyV, () => {});
+                      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyA, () => {});
+                      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyZ, () => {});
+                      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyY, () => {});
+
+                      // Disable all language features
+                      monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+                        noLib: true,
+                        allowNonTsExtensions: true
+                      });
+
+                      // Clear all language providers
+                      monaco.languages.registerCompletionItemProvider('javascript', {
+                        provideCompletionItems: () => ({ suggestions: [] })
+                      });
+                    }}
+                  />
+                </div>
+
+                {/* Action Buttons */}
+                <div className="bg-gray-100 dark:bg-gray-700 px-4 py-3 flex gap-3">
+                  <button
+                    onClick={runCode}
+                    disabled={isRunning}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-300 disabled:opacity-50"
+                  >
+                    <Play className="w-4 h-4" />
+                    {isRunning ? 'Running...' : 'Run Code'}
+                  </button>
+                  <button
+                    onClick={submitCode}
+                    disabled={isSubmitting}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-300 disabled:opacity-50"
+                  >
+                    <Send className="w-4 h-4" />
+                    {isSubmitting ? 'Submitting...' : 'Submit'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Side - Live Preview (50%) */}
+              <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+                {/* Output Header */}
+                <div className="bg-white dark:bg-gradient-to-r dark:from-green-500 dark:to-teal-600 bg-gradient-to-r from-green-500 to-teal-600 text-gray-900 dark:text-white px-4 py-3 flex items-center gap-2 border-b border-gray-200 dark:border-gray-700">
+                  <Terminal className="w-4 h-4" />
+                  <span className="font-medium">Output</span>
+                </div>
+
+                {/* Output Content */}
+                <div className="h-[calc(100%-3.5rem)] overflow-hidden">
+                  <div className="h-full p-4 overflow-auto custom-scrollbar">
+                    {output ? (
+                      <>
+                        <div className="mb-4">
+                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Your Output:
+                          </h4>
+                          <pre className="bg-gray-100 dark:bg-gray-900 p-3 rounded-lg text-sm font-mono text-gray-900 dark:text-gray-100 whitespace-pre-wrap overflow-auto">
+                            {output}
+                          </pre>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Expected Output:
+                          </h4>
+                          <pre className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg text-sm font-mono text-gray-900 dark:text-gray-100 whitespace-pre-wrap overflow-auto border border-green-200 dark:border-green-700">
+                            {exercise?.expectedOutput}
+                          </pre>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center h-full text-center">
+                        <Eye className="w-16 h-16 text-gray-500 mb-4" />
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                          Live Preview
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-400">
+                          Run your code to see the output here.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Compiler Tab - Premium Code Editor */}
           {activeTab === 'compiler' && (
             <div className="h-[700px] bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -463,7 +676,7 @@ This simple line of code will output "Hello, World!" to the console.
               </div>
 
               {/* Monaco Editor */}
-              <div className="h-[calc(100%-7rem)] relative">
+              <div className="h-[calc(100%-7rem)] relative overflow-hidden">
                 <Editor
                   height="100%"
                   defaultLanguage="javascript"
@@ -480,6 +693,8 @@ This simple line of code will output "Hello, World!" to the console.
                     insertSpaces: true,
                     wordWrap: 'on',
                     lineNumbers: 'on',
+                    overviewRulerLanes: 0,
+                    hideCursorInOverviewRuler: true,
                     renderLineHighlight: 'all',
                     selectOnLineNumbers: true,
                     roundedSelection: false,
@@ -487,6 +702,20 @@ This simple line of code will output "Hello, World!" to the console.
                     cursorStyle: 'line',
                     contextmenu: false,
                     copyWithSyntaxHighlighting: false,
+                    // Enable proper scrolling
+                    scrollbar: {
+                      vertical: 'visible',
+                      horizontal: 'visible',
+                      useShadows: false,
+                      verticalHasArrows: true,
+                      horizontalHasArrows: true,
+                      verticalScrollbarSize: 14,
+                      horizontalScrollbarSize: 14,
+                      alwaysConsumeMouseWheel: false
+                    },
+                    // Enable mouse wheel scrolling
+                    mouseWheelScrollSensitivity: 1,
+                    fastScrollSensitivity: 5,
                     // Disable all IntelliSense and suggestions
                     quickSuggestions: false,
                     suggestOnTriggerCharacters: false,
