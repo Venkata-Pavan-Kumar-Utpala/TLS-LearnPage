@@ -615,7 +615,7 @@ This simple line of code will output "Hello, World!" to the console.
               {/* Right Side - Live Preview (50%) */}
               <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
                 {/* Output Header */}
-                <div className="bg-white dark:bg-gradient-to-r dark:from-green-500 dark:to-teal-600 bg-gradient-to-r from-green-500 to-teal-600 text-gray-900 dark:text-white px-4 py-3 flex items-center gap-2 border-b border-gray-200 dark:border-gray-700">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 text-white px-4 py-3 flex items-center gap-2 border-b border-gray-200 dark:border-gray-700">
                   <Terminal className="w-4 h-4" />
                   <span className="font-medium">Output</span>
                 </div>
@@ -807,7 +807,7 @@ This simple line of code will output "Hello, World!" to the console.
           {activeTab === 'preview' && (
             <div className="h-[700px] bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
               {/* Output Header */}
-              <div className="bg-white dark:bg-gradient-to-r dark:from-green-500 dark:to-teal-600 bg-gradient-to-r from-green-500 to-teal-600 text-gray-900 dark:text-white px-4 py-3 flex items-center gap-2 border-b border-gray-200 dark:border-gray-700">
+              <div className="bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 text-white px-4 py-3 flex items-center gap-2 border-b border-gray-200 dark:border-gray-700">
                 <Terminal className="w-4 h-4" />
                 <span className="font-medium">Output</span>
               </div>
