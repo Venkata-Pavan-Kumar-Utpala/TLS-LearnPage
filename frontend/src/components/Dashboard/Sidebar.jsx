@@ -2,8 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FiChevronLeft, FiChevronRight, FiCheckCircle, FiX, FiMenu } from 'react-icons/fi';
-import logoo from '../../assets/logoo.png';
-import logoo2 from '../../assets/logoo2.png'; // Import the dark mode logo
+
 
 const Sidebar = ({ onToggle }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -38,13 +37,13 @@ const Sidebar = ({ onToggle }) => {
         <div className="absolute top-4 left-0 right-0 flex justify-center z-50">
           {/* Light mode logo */}
           <img 
-            src={logoo}
+            src='../../../public/logoo.png'
             alt="Logo"
             className="h-20 w-auto transition-all duration-300 dark:hidden" // Only shows in light mode
           />
           {/* Dark mode logo */}
           <img 
-            src={logoo2}
+            src='../../../public/logoo2.png'
             alt="Logo"
             className="h-20 w-auto transition-all duration-300 hidden dark:block" // Only shows in dark mode
           />

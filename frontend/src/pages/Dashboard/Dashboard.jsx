@@ -1,14 +1,14 @@
 import { useState} from 'react';
-import { useTheme } from '../context/ThemeContext';
-import { useUser } from '../context/UserContext'; // Added to use centralized user data
-import Sidebar from '../components/Dashboard/Sidebar';
-import UserGreeting from '../components/Dashboard/UserGreeting';
-import ProgressDonut from '../components/Dashboard/ProgressDonut';
-import Calendar from '../components/Dashboard/Calendar';
-import XPDisplay from '../components/Dashboard/XPDisplay';
-import RecentExercises from '../components/Dashboard/RecentExercises';
-import ThemeToggle from '../components/Dashboard/ThemeToggle';
-import ProgressBar from '../components/Dashboard/ProgressBar';
+import { useTheme } from '../../context/ThemeContext';
+import { useUser } from '../../context/UserContext'; // Added to use centralized user data
+import Sidebar from '../../components/Dashboard/Sidebar';
+import UserGreeting from '../../components/Dashboard/UserGreeting';
+import ProgressDonut from '../../components/Dashboard/ProgressDonut';
+import Calendar from '../../components/Dashboard/Calendar';
+import XPDisplay from '../../components/Dashboard/XPDisplay';
+import RecentExercises from '../../components/Dashboard/RecentExercises';
+import ThemeToggle from '../../components/Dashboard/ThemeToggle';
+import ProgressBar from '../../components/Dashboard/ProgressBar';
 
 const Dashboard = () => {
   const { theme } = useTheme();
