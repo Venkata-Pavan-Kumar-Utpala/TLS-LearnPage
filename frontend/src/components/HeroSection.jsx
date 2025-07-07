@@ -64,14 +64,30 @@ const HeroSection = () => {
             </motion.p>
           </motion.div>
 
-          {/* Right Side - Empty for now */}
+          {/* Right Side - Book Animation */}
           <motion.div
             initial={{ opacity: 0, x: 60, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             transition={{ duration: 1.0, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="relative flex items-center justify-center lg:justify-end"
           >
-            {/* Space reserved for future content */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{ duration: 1.2, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+              whileHover={{
+                scale: 1.05,
+                rotate: 5,
+                transition: { duration: 0.3 }
+              }}
+              className="relative"
+            >
+              <img
+                src="/book.gif"
+                alt="Learning Books Animation"
+                className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 object-contain filter drop-shadow-2xl"
+              />
+            </motion.div>
           </motion.div>
         </div>
 

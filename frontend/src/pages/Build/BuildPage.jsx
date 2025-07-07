@@ -51,32 +51,26 @@ const BuildPage = () => {
         <div className="flex-1"> {/* Added a div to wrap the headings and paragraph for proper flex alignment */}
           <h1
             className="
-              header-gradient
+              brand-heading-primary hover-gradient-text
               mb-2 md:mb-4 lowercase leading-none text-5xl md:text-8xl lg:text-9xl
-              dark:text-transparent
-              dark:bg-gradient-to-r dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300
-              dark:bg-clip-text
             "
             style={{ fontFamily: "'Poppins', sans-serif", lineHeight: 1 }}>
             build
           </h1>
           <h1
             className="
-              header-gradient
+              brand-heading-primary hover-gradient-text
               mt-2 md:mt-4 uppercase leading-none text-5xl md:text-8xl lg:text-9xl
-              dark:text-transparent
-              dark:bg-gradient-to-r dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300
-              dark:bg-clip-text
             "
             style={{ fontFamily: "'Poppins', sans-serif", lineHeight: 1 }}>
             PROJECTS
           </h1>
           <p
             className="
-              mt-6 mb-3 sm:mb-6 text-[#1356D3] text-base md:text-2xl lg:text-3xl
-              dark:text-blue-300
+              mt-6 mb-3 sm:mb-6 text-base md:text-2xl lg:text-3xl
+              font-poppins text-gray-700 dark:text-gray-300 hover-gradient-text
             "
-            style={{ fontFamily: "system-ui, 'Inter', sans-serif" }}>
+            style={{ fontFamily: "'Poppins', sans-serif" }}>
             Whoa! You're dangerously close to becoming a real coder
           </p>
         </div>
@@ -107,19 +101,19 @@ const BuildPage = () => {
       <section className="mb-16 max-w-7xl mx-auto px-2 sm:px-4 md:px-8">
         <div style={{ marginBottom: "0.15rem" }}>
           <span
-            className="section-header italic text-[#1356D3] dark:text-blue-300"
+            className="font-poppins text-3xl md:text-4xl font-medium brand-heading-primary hover-gradient-text italic"
           >
             mini
           </span>
           <span
-            className="section-header ml-2 text-[#1356D3] dark:text-blue-300"
+            className="font-poppins text-3xl md:text-4xl font-medium brand-heading-primary hover-gradient-text ml-2"
           >
             PROJECTS
           </span>
         </div>
         <div
-          className="font-sans text-[#007bff] text-[1.1rem] mb-12 mt-[0.1rem] dark:text-blue-300"
-          style={{ fontFamily: "system-ui, 'Inter', sans-serif" }}>
+          className="font-poppins text-[1.1rem] mb-12 mt-[0.1rem] text-gray-700 dark:text-gray-300 hover-gradient-text"
+          style={{ fontFamily: "'Poppins', sans-serif" }}>
           because crying over big ones is overrated
         </div>
 
@@ -179,16 +173,16 @@ const BuildPage = () => {
       {/* Major Projects Section */}
       <section className="mb-12">
         <div style={{ marginBottom: "0.15rem" }}>
-          <span className="section-header italic text-[#1356D3] dark:text-blue-300">
+          <span className="font-poppins text-3xl md:text-4xl font-medium brand-heading-primary hover-gradient-text italic">
             major
           </span>
-          <span className="section-header ml-2 text-[#1356D3] dark:text-blue-300">
+          <span className="font-poppins text-3xl md:text-4xl font-medium brand-heading-primary hover-gradient-text ml-2">
             PROJECTS
           </span>
         </div>
         <div
-          className="font-sans text-[#007bff] text-[1.1rem] mb-12 mt-[0.1rem] dark:text-blue-300"
-          style={{ fontFamily: "system-ui, 'Inter', sans-serif" }}>
+          className="font-poppins text-[1.1rem] mb-12 mt-[0.1rem] text-gray-700 dark:text-gray-300 hover-gradient-text"
+          style={{ fontFamily: "'Poppins', sans-serif" }}>
           for the ultimate show-off (and placements!)
         </div>
         {loadingMajor ? (
@@ -235,12 +229,12 @@ const BuildPage = () => {
         {/* Heading */}
         <div className="mb-10 px-6">
           <span
-            className="text-3xl font-semibold italic text-[#007bff] dark:text-blue-300"
+            className="font-poppins text-3xl md:text-4xl font-medium brand-heading-primary hover-gradient-text italic"
             style={{ fontFamily: "'Poppins', sans-serif" }}>
             design
           </span>
           <span
-            className="text-3xl font-semibold ml-2 text-[#007bff] dark:text-blue-300"
+            className="font-poppins text-3xl md:text-4xl font-medium brand-heading-primary hover-gradient-text ml-2"
             style={{ fontFamily: "'Poppins', sans-serif" }}>
             LAB
           </span>
