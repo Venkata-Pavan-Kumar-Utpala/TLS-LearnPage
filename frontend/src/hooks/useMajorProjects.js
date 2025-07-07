@@ -8,7 +8,7 @@ const useMajorProjects = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/major-projects`)
+      .get(`${import.meta.env.VITE_API_URL}/major-projects`)
       .then((res) => setMajorProjects(res.data))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));

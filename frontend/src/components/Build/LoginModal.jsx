@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import useAuth from '../hooks/useAuth';
-import { useAuthModalContext } from '../context/AuthModalContext';
+import { useAuth } from '../../hooks/useAuth';
+import { useAuthModalContext } from '../../context/AuthModalContext';
 
 const LoginModal = () => {
   const { isLoginModalOpen, closeModals } = useAuthModalContext();

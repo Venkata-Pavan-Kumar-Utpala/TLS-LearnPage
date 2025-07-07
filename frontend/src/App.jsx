@@ -475,28 +475,7 @@ const HomePage = () => {
 }
 
 
-const BuildPage = () => {
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulate loading time for consistency
-    const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (loading) {
-    return <LoadingScreen showMessage={false} size={48} duration={800} />;
-  }
-
-  return (
-    <div className="min-h-screen pt-24 pb-16 flex items-center justify-center bg-transparent dark:bg-transparent">
-      <div className="max-w-md mx-auto text-center">
-        <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Build Page</h1>
-        <p className="text-gray-600 dark:text-gray-300">Coming soon...</p>
-      </div>
-    </div>
-  );
-};
 
 const CareersPage = () => {
   const [loading, setLoading] = useState(true);
@@ -544,6 +523,14 @@ import CertificationPayment from './pages/Learn/CertificationPayment'
 // Import Compiler component
 import OnlineCompiler from './pages/Learn/OnlineCompiler'
 
+// Import Build components
+import BuildPageMain from './pages/Build/BuildPage'
+import ProjectDetail from './pages/Build/ProjectDetail'
+import MidProjectDetail from './pages/Build/MidProjectDetail'
+import ProjectPayment from './pages/Build/ProjectPayment'
+import PaymentGateway from './pages/Build/PaymentGateway'
+import UILibrary from './pages/Build/UILibrary'
+
 
 
 // Auth components are now handled by modals in AuthModalProvider
@@ -575,7 +562,13 @@ function App() {
                 <Route path="/learn/certification/payment" element={<CertificationPayment />} />
                 <Route path="/learn/compiler" element={<OnlineCompiler />} />
 
-                <Route path="/build" element={<BuildPage />} />
+                <Route path="/build" element={<BuildPageMain />} />
+                <Route path="/build/mini/:id" element={<ProjectDetail />} />
+                <Route path="/build/mid/:id" element={<MidProjectDetail />} />
+                <Route path="/build/major/:id" element={<ProjectDetail />} />
+                <Route path="/build/payment" element={<ProjectPayment />} />
+                <Route path="/payment-gateway" element={<PaymentGateway />} />
+                <Route path="/build/ui-library" element={<UILibrary />} />
                 <Route path="/careers" element={<CareersPage />} />
                 {/* Login and Register routes removed - now handled by modals */}
               </Routes>

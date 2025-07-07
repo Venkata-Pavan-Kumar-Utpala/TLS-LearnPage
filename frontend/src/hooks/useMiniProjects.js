@@ -8,7 +8,7 @@ const useMiniProjects = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/mini-projects`)
+      .get(`${import.meta.env.VITE_API_URL}/mini-projects`)
       .then((res) => setMiniProjects(res.data))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));

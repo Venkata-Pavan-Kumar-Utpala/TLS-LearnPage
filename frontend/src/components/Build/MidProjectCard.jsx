@@ -1,12 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../../context/UserContext";
+import { useAuth } from "../../hooks/useAuth";
 import SignInPopup from "../../utils/SignInPopup";
 // Import midProjects from MidProjectDetail
 import { midProjects } from "../../pages/Build/MidProjectDetail";
 
 const MidProjectCard = ({ project, setShowPopup }) => {
-  const { user } = useContext(UserContext);
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [showSignInPopup, setShowSignInPopup] = useState(false);
 

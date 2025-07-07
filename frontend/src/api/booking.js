@@ -1,4 +1,4 @@
-const api = process.env.REACT_APP_API_URL;
+const api = import.meta.env.VITE_API_URL;
 export const bookProject = (projectId, userEmail) =>
   fetch(`${api}/booking`, {
     method: 'POST',

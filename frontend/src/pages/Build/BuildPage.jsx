@@ -3,7 +3,7 @@ import MiniProjectCard from "../../components/Build/MiniProjectCard";
 import MajorProjectCard from "../../components/Build/MajorProjectCard";
 import MidLevelProjectsAnimatedLayout from "../../components/Build/MidLevelProjectsAnimatedLayout";
 import { useNavigate } from "react-router-dom";
-import AccessPopup from "../../utils/accessPopup";
+import AccessPopup from "../../utils/accessPopup.jsx";
 import useMiniProjects from "../../hooks/useMiniProjects";
 import useMidProjects from "../../hooks/useMidProjects";
 import useMajorProjects from "../../hooks/useMajorProjects";
